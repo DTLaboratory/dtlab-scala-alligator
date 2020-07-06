@@ -1,5 +1,4 @@
-![Scala CI](https://github.com/SoMinds/dt-lab-scala-alligator/workflows/Scala%20CI/badge.svg)
-
+![Scala CI](https://github.com/SoMinds/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg)
 # Digital Twin Lab - Alligator Version
 
 The DtLab is a distributed programmable actor runtime environment.
@@ -24,7 +23,7 @@ newer incompatible approach to the service implementation can fork off without t
 ```
 <projectName>-<langName>-<versionName>
 
-eg: dt-lab-scala-alligator (note: probably should not name projects with hyphens)
+eg: dtlab-scala-alligator
 ```
 
 The build system is (will be) opinionated lint-enabled, `scalafmt` with code stats reports.
