@@ -1,0 +1,18 @@
+{
+  "myobject": {
+    "mychildobject": {
+      "myfield": 42.9
+    }
+  },
+  "myarray": [
+    {"item": {
+      "value": 42.1
+    }},
+    {"item": {
+      "value": 42.2
+    }},
+    {"item": {
+      "value": 42.3
+    }}
+  ]
+}

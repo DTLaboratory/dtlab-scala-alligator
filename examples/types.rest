@@ -1,0 +1,22 @@
+http://localhost:8080
+
+-ks
+
+Content-Type: application/json; charset=utf-8
+
+--
+
+--
+GET /dt/type/myType.t2
+
+--
+POST /dt/type/myType.t2
+
+["four", "five", "six"]
+
+--
+GET /fitness
+
+--
+GET /observe
+
