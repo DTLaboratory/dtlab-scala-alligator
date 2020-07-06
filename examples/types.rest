@@ -1,4 +1,5 @@
-http://localhost:8080
+#http://localhost:8080
+https://sominds.tech
 
 -ks
 
@@ -7,10 +8,10 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
-GET /dtlab-alligator/type/myType.t2
+GET /dtlab-alligator/type/myType
 
 --
-POST /dtlab-alligator/type/myType.t2
+POST /dtlab-alligator/type/myType
 
 ["four", "five", "six"]
 
