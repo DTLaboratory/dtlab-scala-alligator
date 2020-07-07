@@ -1,5 +1,6 @@
 #http://localhost:8080
-https://sominds.tech
+#https://somind.tech
+https://somind.org
 
 -ks
 
