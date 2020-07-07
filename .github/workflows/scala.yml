@@ -30,7 +30,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        repository: sominds/dtlab-scala-alligator
+        repository: somind/dtlab-scala-alligator
         tag_with_ref: true
         tag_with_sha: true
         push: ${{ startsWith(github.ref, 'refs/tags/') }}
