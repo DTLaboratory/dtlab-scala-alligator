@@ -37,6 +37,7 @@ inThisBuild(List(
 
 libraryDependencies ++=
   Seq(
+    "com.github.dnvriend" %% "akka-persistence-jdbc" % "3.5.2",
     "tech.navicore" %% "navipath" % "4.0.1",
     "ch.megard" %% "akka-http-cors" % "1.0.0",
     "ch.qos.logback" % "logback-classic" % "1.2.3",
