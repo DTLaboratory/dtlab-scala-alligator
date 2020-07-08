@@ -1,5 +1,4 @@
 ![Scala CI](https://github.com/SoMind/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg?branch=master)
-![Scala CI](https://github.com/SoMind/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg?event=release)
 
 # Digital Twin Lab - Alligator Version
 
