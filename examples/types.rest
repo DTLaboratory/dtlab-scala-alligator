@@ -2,8 +2,6 @@
 #https://somind.tech
 https://somind.org
 
--ks
-
 Content-Type: application/json; charset=utf-8
 
 --
