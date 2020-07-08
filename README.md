@@ -1,4 +1,5 @@
-![Scala CI](https://github.com/SoMind/dt-lab-scala-alligator/workflows/Scala%20CI/badge.svg)
+![Scala CI](https://github.com/SoMind/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg?branch=master&event=release)
+
 # Digital Twin Lab - Alligator Version
 
 The DtLab is a distributed programmable actor runtime environment.
