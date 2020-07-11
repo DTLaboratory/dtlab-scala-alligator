@@ -1,3 +1,4 @@
+ENV*sh
 .bloop/
 .metals/
 target/

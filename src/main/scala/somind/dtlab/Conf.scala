@@ -28,9 +28,9 @@ object Conf extends LazyLogging {
     FiniteDuration(d.length, d.unit)
   }
 
-  val observer: ActorRef = system.actorOf(Props[Observer])
+  val observer: ActorRef = system.actorOf(Props[Observer], "observer")
 
-  val typeDirectory: ActorRef = system.actorOf(Props[TypeDirectory])
+  val typeDirectory: ActorRef = system.actorOf(Props[TypeDirectory], "typeDirectory")
 
   val persistIdRoot: String = conf.getString("main.persistIdRoot")
   val snapshotInterval: Int = conf.getInt("main.snapshotInterval")
