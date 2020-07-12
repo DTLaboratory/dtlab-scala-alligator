@@ -1,5 +1,4 @@
 package somind.dtlab.models
-
 import java.time.ZonedDateTime
 
 final case class DtType(

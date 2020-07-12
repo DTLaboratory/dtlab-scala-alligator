@@ -37,6 +37,7 @@ inThisBuild(List(
 
 libraryDependencies ++=
   Seq(
+    "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
     "org.postgresql" % "postgresql" % "42.2.14",
     "com.github.dnvriend" %% "akka-persistence-jdbc" % "3.5.2",
     "tech.navicore" %% "navipath" % "4.0.1",
