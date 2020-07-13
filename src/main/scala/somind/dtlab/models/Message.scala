@@ -2,21 +2,30 @@ package somind.dtlab.models
 import java.time.ZonedDateTime
 
 object DtPath {
-   def apply(segs: List[String]): Option[DtPath] = {
-     segs match {
-       case s if s.length < 2 =>  None
-       case s =>
-         Option(DtPath(s.head, s(1), DtPath(s.drop(2))))
-     }
-   }
+  def apply(segs: List[String]): Option[DtPath] = {
+    segs match {
+      case s if s.length < 2 => None
+      case s =>
+        Option(DtPath(s.head, s(1), DtPath(s.drop(2))))
+    }
+  }
 }
 
-case class DtPath(typeId: String, instanceId: String, trail: Option[DtPath] = None) {
+case class DtPath(typeId: String,
+                  instanceId: String,
+                  trail: Option[DtPath] = None) {
   // convenience method to get the final typeName for validation
-  def typeName(): String = {
+  def endTypeName(): String = {
     this match {
-      case p if p.trail.nonEmpty => p.trail.get.typeName()
-      case _ => typeId
+      case p if p.trail.nonEmpty => p.trail.get.endTypeName()
+      case _                     => typeId
+    }
+  }
+  def relationships(): List[(String, String)] = {
+    trail match {
+      case None => List()
+      case Some(dt) if typeId == "root" => dt.relationships()
+      case Some(dt) => (typeId, dt.typeId) :: dt.relationships()
     }
   }
 }
@@ -31,19 +40,33 @@ final case class DtType(
     name: String,
     // the names of the properties (called props instead of attributes because
     // values of props can change - values of attributes cannot change)
-    props: List[String],
+    props: Option[Seq[String]],
+    // the ids/names of the types of child actors that this actor type can instantiate
+    children: Option[Set[String]],
     // datetime of creation - no updates allowed
     created: ZonedDateTime = ZonedDateTime.now()
 )
 
-final case class LazyTelemetry (
-    idx: Int,
-    value: Double
+// for API to avoid setting created
+final case class LazyDtType(
+    props: Option[Seq[String]],
+    children: Option[Set[String]],
+    created: Option[ZonedDateTime]
 ) {
-  def telemetry(): Telemetry = Telemetry(idx, value)
+  def dtType(name: String): DtType =
+    DtType(name, props, children, created.getOrElse(ZonedDateTime.now()))
 }
 
-final case class Telemetry (
+final case class LazyTelemetry(
+    idx: Int,
+    value: Double,
+    datetime: Option[ZonedDateTime]
+) {
+  def telemetry(): Telemetry =
+    Telemetry(idx, value, datetime.getOrElse(ZonedDateTime.now()))
+}
+
+final case class Telemetry(
     idx: Int,
     value: Double,
     datetime: ZonedDateTime = ZonedDateTime.now()
@@ -62,9 +85,9 @@ final case class DtTypeMap(
 final case class DtGetState(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None
-    def trailMsg(): DtGetState = p.trail match {
+  def trailMsg(): DtGetState = p.trail match {
     case Some(tp) => DtGetState(tp)
-    case _ => this
+    case _        => this
   }
 }
 

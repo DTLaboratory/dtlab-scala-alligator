@@ -9,15 +9,15 @@ import spray.json._
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 
   val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX",
-    java.util.Locale.US)
+                                                  java.util.Locale.US)
   dateFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"))
 
-  def parse8601(dateString: String): java.util.Date = {
+  def parse8601(dateString: String): java.util.Date =
     dateFormat.parse(dateString)
-  }
-  def get8601(date: java.util.Date): String = {
+
+  def get8601(date: java.util.Date): String =
     dateFormat.format(date)
-  }
+
   def now8601(): String = {
     val now = new java.util.Date()
     get8601(now)
@@ -57,9 +57,10 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
-  implicit val dttFormat: RootJsonFormat[DtType] = jsonFormat3(DtType)
+  implicit val dttFormat: RootJsonFormat[DtType] = jsonFormat4(DtType)
   implicit val tel: RootJsonFormat[Telemetry] = jsonFormat3(Telemetry)
-  implicit val ltel: RootJsonFormat[LazyTelemetry] = jsonFormat2(LazyTelemetry)
+  implicit val ltel: RootJsonFormat[LazyTelemetry] = jsonFormat3(LazyTelemetry)
+  implicit val ldt: RootJsonFormat[LazyDtType] = jsonFormat3(LazyDtType)
   implicit val dts: RootJsonFormat[DtState] = jsonFormat1(DtState)
 
 }

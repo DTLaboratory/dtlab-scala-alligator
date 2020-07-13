@@ -13,9 +13,16 @@ GET /dtlab-alligator/type/myType9
 GET /dtlab-alligator/type/myOtherType
 
 --
-POST /dtlab-alligator/type/module
+POST /dtlab-alligator/type/badmachine
+{
+  "children": ["module", "badmodule"]
+}
 
-["heat", "altitude", "pressure", "weight"]
+--
+POST /dtlab-alligator/type/badmodule
+{
+  "props": ["heat", "altitude", "pressure", "weight"]
+}
 
 --
 POST /dtlab-alligator/type/myType9

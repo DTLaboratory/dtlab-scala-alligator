@@ -13,26 +13,57 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
 
+  def validateRelationships(path: DtPath): DtResult = {
+    val errs = path
+      .relationships()
+      .flatMap(i => {
+        state.types.get(i._1) match {
+          case Some(dtType) if dtType.children.nonEmpty =>
+            if (dtType.children.get.contains(i._2))
+              None
+            else
+              Some(DtErr(s"${i._1} does not have children of type ${i._2}"))
+          case _ =>
+            Some(DtErr(s"${i._1} does not have children of type ${i._2}"))
+        }
+      })
+    if (errs.nonEmpty)
+      errs.head
+    else
+      DtOk()
+  }
+
   def isValidTelemetry(m: TelemetryMsg): DtResult = {
-    val dtType = m.path().typeName()
-    state.types.get(dtType) match {
-      case Some(t) =>
-        if (m.c.idx >= t.props.length || m.c.idx < 0)
-          DtErr("idx out of bounds")
-        else
-          DtOk()
-      case _ =>
-        DtErr("type not defined")
+    validateRelationships(m.p) match {
+      case DtOk() =>
+        val dtType = m.path().endTypeName()
+        state.types.get(dtType) match {
+          case Some(t) =>
+            if (m.c.idx >= t.props.getOrElse(List()).length || m.c.idx < 0)
+              DtErr("idx out of bounds")
+            else
+              DtOk()
+          case _ =>
+            DtErr("type not defined")
+        }
+      case e =>
+        e
     }
+
   }
 
   def isValid(m: DtMsg[Any]): DtResult = {
-    val dtType = m.path().typeName()
-    state.types.get(dtType) match {
-      case Some(_) =>
-        DtOk()
-      case _ =>
-        DtErr("type not defined")
+    validateRelationships(m.path()) match {
+      case DtOk() =>
+        val dtType = m.path().endTypeName()
+        state.types.get(dtType) match {
+          case Some(_) =>
+            DtOk()
+          case _ =>
+            DtErr("type not defined")
+        }
+      case e =>
+        e
     }
   }
 
