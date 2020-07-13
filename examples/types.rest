@@ -7,18 +7,18 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
-GET /dtlab-alligator/type/myType20
+GET /dtlab-alligator/type/myType9
 
 --
 GET /dtlab-alligator/type/myOtherType
 
 --
-POST /dtlab-alligator/type/myType21
+POST /dtlab-alligator/type/myType9
 
 ["four", "five", "six"]
 
 --
-POST /dtlab-alligator/type/myOtherType5
+POST /dtlab-alligator/type/myOtherType
 
 ["one", "two", "three", "seven"]
 
