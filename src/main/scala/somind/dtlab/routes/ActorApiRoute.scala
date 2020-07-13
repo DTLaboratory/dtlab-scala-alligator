@@ -37,6 +37,10 @@ object ActorApiRoute
               case DtOk() =>
                 Observer("actor_route_post_success")
                 complete(StatusCodes.Accepted)
+              case DtErr(emsg) =>
+                Observer("actor_route_post_failure")
+                logger.debug(s"unable to post telemetry: $emsg")
+                complete(StatusCodes.UnprocessableEntity, emsg)
               case e =>
                 Observer("actor_route_post_unk_err")
                 logger.warn(s"unable to handle: $e")

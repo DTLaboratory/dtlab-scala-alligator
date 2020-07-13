@@ -18,14 +18,14 @@ GET /dtlab-alligator/actor/machine/one/module/2/submodule/three
 --
 POST /dtlab-alligator/actor/machine/one/module/2/
 {
-  "idx": 1,
+  "idx": 0,
   "value": 2.1
 }
 
 --
 POST /dtlab-alligator/actor/machine/one
 {
-  "idx": 0,
+  "idx": 3,
   "value": 1.5
 }
 
