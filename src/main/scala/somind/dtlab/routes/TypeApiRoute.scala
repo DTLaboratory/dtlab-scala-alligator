@@ -34,11 +34,9 @@ object TypeApiRoute
             complete(StatusCodes.InternalServerError)
         }
       } ~ post {
-        logger.debug(s"handling post of $typeName")
         decodeRequest {
-          entity(as[List[String]]) { props =>
-            val newType = DtType(typeName, props)
-            logger.debug(s"handling post of $newType")
+          entity(as[LazyDtType]) { ldt =>
+            val newType = ldt.dtType(typeName)
             onSuccess(dtDirectory ask newType) {
               case Some(currentType: DtType)
                   if currentType.created == newType.created =>

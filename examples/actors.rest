@@ -10,13 +10,13 @@ Content-Type: application/json; charset=utf-8
 GET /dtlab-alligator/actor/machine/one
 
 --
-GET /dtlab-alligator/actor/machine/one/module/2
+GET /dtlab-alligator/actor/badmachine/one/badmodule/2
 
 --
 GET /dtlab-alligator/actor/machine/one/module/2/submodule/three
 
 --
-POST /dtlab-alligator/actor/machine/one/module/2/
+POST /dtlab-alligator/actor/badmachine/one/badmodule/2/
 {
   "idx": 0,
   "value": 2.1,

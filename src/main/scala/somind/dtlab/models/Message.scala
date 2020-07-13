@@ -15,10 +15,17 @@ case class DtPath(typeId: String,
                   instanceId: String,
                   trail: Option[DtPath] = None) {
   // convenience method to get the final typeName for validation
-  def typeName(): String = {
+  def endTypeName(): String = {
     this match {
-      case p if p.trail.nonEmpty => p.trail.get.typeName()
+      case p if p.trail.nonEmpty => p.trail.get.endTypeName()
       case _                     => typeId
+    }
+  }
+  def relationships(): List[(String, String)] = {
+    trail match {
+      case None => List()
+      case Some(dt) if typeId == "root" => dt.relationships()
+      case Some(dt) => (typeId, dt.typeId) :: dt.relationships()
     }
   }
 }
@@ -33,10 +40,22 @@ final case class DtType(
     name: String,
     // the names of the properties (called props instead of attributes because
     // values of props can change - values of attributes cannot change)
-    props: List[String],
+    props: Option[Seq[String]],
+    // the ids/names of the types of child actors that this actor type can instantiate
+    children: Option[Set[String]],
     // datetime of creation - no updates allowed
     created: ZonedDateTime = ZonedDateTime.now()
 )
+
+// for API to avoid setting created
+final case class LazyDtType(
+    props: Option[Seq[String]],
+    children: Option[Set[String]],
+    created: Option[ZonedDateTime]
+) {
+  def dtType(name: String): DtType =
+    DtType(name, props, children, created.getOrElse(ZonedDateTime.now()))
+}
 
 final case class LazyTelemetry(
     idx: Int,

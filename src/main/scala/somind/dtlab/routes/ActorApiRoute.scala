@@ -24,6 +24,9 @@ object ActorApiRoute
           complete(
             HttpEntity(ContentTypes.`application/json`,
                        s.state.values.toJson.prettyPrint))
+        case DtErr(emsg) =>
+          Observer("actor_route_get_failure")
+          complete(StatusCodes.NotFound, emsg)
         case e =>
           Observer("actor_route_get_unk_err")
           logger.warn(s"unable to handle: $e")
