@@ -20,9 +20,10 @@ object ActorApiRoute
     get {
       onSuccess(dtDirectory ask DtGetState(dtp)) {
         case s: DtState =>
-          Observer("type_route_get_success")
+          Observer("actor_route_get_success")
           complete(
-            HttpEntity(ContentTypes.`application/json`, s.state.toJson.prettyPrint))
+            HttpEntity(ContentTypes.`application/json`,
+                       s.state.values.toJson.prettyPrint))
         case e =>
           Observer("actor_route_get_unk_err")
           logger.warn(s"unable to handle: $e")
@@ -30,13 +31,25 @@ object ActorApiRoute
       }
     } ~
       post {
-        complete(StatusCodes.NotImplemented)
+        decodeRequest {
+          entity(as[LazyTelemetry]) { telem =>
+            onSuccess(dtDirectory ask TelemetryMsg(dtp, telem.telemetry())) {
+              case DtOk() =>
+                Observer("actor_route_post_success")
+                complete(StatusCodes.Accepted)
+              case e =>
+                Observer("actor_route_post_unk_err")
+                logger.warn(s"unable to handle: $e")
+                complete(StatusCodes.InternalServerError)
+            }
+          }
+        }
       }
   }
 
   def applySeq(segs: List[String]): Route = {
     DtPath(segs) match {
-      case Some(p) => // the root path is: /root/typeId/ + p so that the root has children for each root type
+      case Some(p) =>
         applyDtPath(DtPath("root", "root", Some(p)))
       case _ =>
         Observer("bad_request")

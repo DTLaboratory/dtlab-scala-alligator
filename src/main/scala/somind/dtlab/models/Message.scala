@@ -13,6 +13,9 @@ object DtPath {
 
 case class DtPath(typeId: String, instanceId: String, trail: Option[DtPath] = None)
 
+final case class DtOk()
+final case class DtErr(message: String)
+
 // particular type of a kind
 final case class DtType(
     // the name of our type
@@ -23,6 +26,13 @@ final case class DtType(
     // datetime of creation - no updates allowed
     created: ZonedDateTime = ZonedDateTime.now()
 )
+
+final case class LazyTelemetry (
+    idx: Int,
+    value: Double
+) {
+  def telemetry(): Telemetry = Telemetry(idx, value)
+}
 
 final case class Telemetry (
     idx: Int,

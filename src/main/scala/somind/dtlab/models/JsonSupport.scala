@@ -59,6 +59,7 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 
   implicit val dttFormat: RootJsonFormat[DtType] = jsonFormat3(DtType)
   implicit val tel: RootJsonFormat[Telemetry] = jsonFormat3(Telemetry)
+  implicit val ltel: RootJsonFormat[LazyTelemetry] = jsonFormat2(LazyTelemetry)
   implicit val dts: RootJsonFormat[DtState] = jsonFormat1(DtState)
 
 }

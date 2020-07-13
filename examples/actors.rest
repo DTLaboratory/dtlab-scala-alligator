@@ -16,6 +16,13 @@ GET /dtlab-alligator/actor/machine/one/module/2
 GET /dtlab-alligator/actor/machine/one/module/2/submodule/three
 
 --
+POST /dtlab-alligator/actor/machine/one
+{
+  "idx": 0,
+  "value": 1.5
+}
+
+--
 GET /fitness
 
 --
