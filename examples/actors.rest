@@ -19,7 +19,8 @@ GET /dtlab-alligator/actor/machine/one/module/2/submodule/three
 POST /dtlab-alligator/actor/machine/one/module/2/
 {
   "idx": 0,
-  "value": 2.1
+  "value": 2.1,
+  "datetime": "2020-06-13T15:31:21.671Z"
 }
 
 --

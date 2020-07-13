@@ -2,21 +2,23 @@ package somind.dtlab.models
 import java.time.ZonedDateTime
 
 object DtPath {
-   def apply(segs: List[String]): Option[DtPath] = {
-     segs match {
-       case s if s.length < 2 =>  None
-       case s =>
-         Option(DtPath(s.head, s(1), DtPath(s.drop(2))))
-     }
-   }
+  def apply(segs: List[String]): Option[DtPath] = {
+    segs match {
+      case s if s.length < 2 => None
+      case s =>
+        Option(DtPath(s.head, s(1), DtPath(s.drop(2))))
+    }
+  }
 }
 
-case class DtPath(typeId: String, instanceId: String, trail: Option[DtPath] = None) {
+case class DtPath(typeId: String,
+                  instanceId: String,
+                  trail: Option[DtPath] = None) {
   // convenience method to get the final typeName for validation
   def typeName(): String = {
     this match {
       case p if p.trail.nonEmpty => p.trail.get.typeName()
-      case _ => typeId
+      case _                     => typeId
     }
   }
 }
@@ -36,14 +38,16 @@ final case class DtType(
     created: ZonedDateTime = ZonedDateTime.now()
 )
 
-final case class LazyTelemetry (
+final case class LazyTelemetry(
     idx: Int,
-    value: Double
+    value: Double,
+    datetime: Option[ZonedDateTime]
 ) {
-  def telemetry(): Telemetry = Telemetry(idx, value)
+  def telemetry(): Telemetry =
+    Telemetry(idx, value, datetime.getOrElse(ZonedDateTime.now()))
 }
 
-final case class Telemetry (
+final case class Telemetry(
     idx: Int,
     value: Double,
     datetime: ZonedDateTime = ZonedDateTime.now()
@@ -62,9 +66,9 @@ final case class DtTypeMap(
 final case class DtGetState(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None
-    def trailMsg(): DtGetState = p.trail match {
+  def trailMsg(): DtGetState = p.trail match {
     case Some(tp) => DtGetState(tp)
-    case _ => this
+    case _        => this
   }
 }
 
