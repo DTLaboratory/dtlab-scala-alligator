@@ -1,15 +1,13 @@
 package somind.dtlab.actors
 
-import akka.actor.Actor
 import akka.persistence.PersistentActor
-import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.Conf._
 import somind.dtlab.observe.Observer
 
-abstract class DtLabActor[T]
-    extends Actor
-    with PersistentActor
-    with LazyLogging {
+// Dt Persistent Actor Base
+abstract class DtPersistentActorBase[T]
+    extends DtActorBase
+    with PersistentActor {
 
   var state: T
 
