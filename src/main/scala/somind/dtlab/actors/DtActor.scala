@@ -20,8 +20,8 @@ class DtActor extends DtPersistentActorBase[DtState] {
 
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
-      sender ! DtOk()
       persistAsync(tm.c) { _ =>
+        sender ! DtOk()
         takeSnapshot()
       }
 

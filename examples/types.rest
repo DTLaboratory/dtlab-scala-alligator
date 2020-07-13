@@ -13,6 +13,11 @@ GET /dtlab-alligator/type/myType9
 GET /dtlab-alligator/type/myOtherType
 
 --
+POST /dtlab-alligator/type/module
+
+["heat", "altitude", "pressure", "weight"]
+
+--
 POST /dtlab-alligator/type/myType9
 
 ["four", "five", "six"]

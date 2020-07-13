@@ -11,10 +11,19 @@ object DtPath {
    }
 }
 
-case class DtPath(typeId: String, instanceId: String, trail: Option[DtPath] = None)
+case class DtPath(typeId: String, instanceId: String, trail: Option[DtPath] = None) {
+  // convenience method to get the final typeName for validation
+  def typeName(): String = {
+    this match {
+      case p if p.trail.nonEmpty => p.trail.get.typeName()
+      case _ => typeId
+    }
+  }
+}
 
-final case class DtOk()
-final case class DtErr(message: String)
+sealed trait DtResult {}
+final case class DtOk() extends DtResult
+final case class DtErr(message: String) extends DtResult
 
 // particular type of a kind
 final case class DtType(

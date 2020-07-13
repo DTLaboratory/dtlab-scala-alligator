@@ -13,10 +13,46 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
 
+  def isValidTelemetry(m: TelemetryMsg): DtResult = {
+    val dtType = m.path().typeName()
+    state.types.get(dtType) match {
+      case Some(t) =>
+        if (m.c.idx >= t.props.length || m.c.idx < 0)
+          DtErr("idx out of bounds")
+        else
+          DtOk()
+      case _ =>
+        DtErr("type not defined")
+    }
+  }
+
+  def isValid(m: DtMsg[Any]): DtResult = {
+    val dtType = m.path().typeName()
+    state.types.get(dtType) match {
+      case Some(_) =>
+        DtOk()
+      case _ =>
+        DtErr("type not defined")
+    }
+  }
+
   override def receiveCommand: Receive = {
 
+    case m: TelemetryMsg if m.path().trail.nonEmpty =>
+      isValidTelemetry(m) match {
+        case DtOk() =>
+          upsert(m.trailMsg())
+        case e =>
+          sender ! e
+      }
+
     case m: DtMsg[Any @unchecked] if m.path().trail.nonEmpty =>
-      upsert(m.trailMsg())
+      isValid(m) match {
+        case DtOk() =>
+          upsert(m.trailMsg())
+        case e =>
+          sender ! e
+      }
 
     case dt: DtType =>
       state.types.get(dt.name) match {
@@ -24,8 +60,8 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
           sender ! Some(prev)
         case _ =>
           state = DtTypeMap(state.types + (dt.name -> dt))
-          sender ! Some(dt)
           persistAsync(dt) { _ =>
+            sender ! Some(dt)
             takeSnapshot()
           }
       }
