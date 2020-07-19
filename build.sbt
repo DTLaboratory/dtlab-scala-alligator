@@ -58,7 +58,7 @@ libraryDependencies ++=
     "org.scalatest" %% "scalatest" % "3.2.0" % "test"
   )
 
-assemblyJarName in assembly := s"${name.value}-${version.value}.jar"
+assemblyJarName in assembly := s"${name.value}.jar"
 
 assemblyMergeStrategy in assembly := {
   case PathList("reference.conf") => MergeStrategy.concat
