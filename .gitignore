@@ -1,4 +1,5 @@
 ENV*sh
+examples/
 .bloop/
 .metals/
 target/
