@@ -18,13 +18,12 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
       .relationships()
       .flatMap(i => {
         state.types.get(i._1) match {
-          case Some(dtType) if dtType.children.nonEmpty =>
-            if (dtType.children.get.contains(i._2))
-              None
-            else
-              Some(DtErr(s"${i._1} does not have children of type ${i._2}"))
+          case Some(dtType)
+              if dtType.children.nonEmpty && dtType.children.get.contains(
+                i._2) =>
+            None
           case _ =>
-            Some(DtErr(s"${i._1} does not have children of type ${i._2}"))
+            Some(DtErr(s"${i._1} type does not have children of type ${i._2}"))
         }
       })
     if (errs.nonEmpty)
