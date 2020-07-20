@@ -1,14 +1,14 @@
 package somind.dtlab.routes
 
-import spray.json._
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
-import akka.http.scaladsl.server.{Directives, Route}
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.server._
 import akka.pattern.ask
-import somind.dtlab.Conf._
 import com.typesafe.scalalogging.LazyLogging
+import somind.dtlab.Conf._
 import somind.dtlab.HttpSupport
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
+import spray.json._
 
 object TypeApiRoute
     extends JsonSupport
@@ -53,7 +53,6 @@ object TypeApiRoute
                 logger.warn(s"unable to handle: $e")
                 complete(StatusCodes.InternalServerError)
             }
-
           }
         }
       }
