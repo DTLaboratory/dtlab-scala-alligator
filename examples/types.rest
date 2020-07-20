@@ -1,0 +1,49 @@
+http://localhost:8081
+#https://somind.tech
+#https://somind.org
+
+Content-Type: application/json; charset=utf-8
+
+--
+
+--
+GET /dtlab-alligator/type/machinery
+
+--
+GET /dtlab-alligator/type/badmodule
+
+--
+POST /dtlab-alligator/type/machinery
+{
+  "props": ["temp", "speed"],
+  "children": ["module", "badmodule"]
+}
+
+--
+POST /dtlab-alligator/type/badmachine
+{
+  "children": ["module", "badmodule"]
+}
+
+--
+POST /dtlab-alligator/type/badmodule
+{
+  "props": ["heat", "altitude", "pressure", "weight"]
+}
+
+--
+POST /dtlab-alligator/type/myType9
+
+["four", "five", "six"]
+
+--
+POST /dtlab-alligator/type/myOtherType
+
+["one", "two", "three", "seven"]
+
+--
+GET /fitness
+
+--
+GET /observe
+
