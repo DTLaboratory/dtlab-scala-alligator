@@ -72,6 +72,12 @@ The concepts are:
 
 ### TYPE API
 
+TODO: ns is not supported yet.  consider using dots for all types so that a DtPath will be:
+
+```
+/machinery.engine1/12345/machinery.alternator_module/67890
+```
+
 HTTP POST of schemas (ns, type name, and list of attr names whose values are all doubles)
   
   * name is not a path, nothing says where this hangs in the graph - ns is just to manage collisions, global to system
@@ -79,12 +85,12 @@ HTTP POST of schemas (ns, type name, and list of attr names whose values are all
   * the actor won't know the difference between derived and observed from its type - its state is just list of named doubles
 
 ```
-ns is location
-type is store
-attrs are custs_in_store,open_closed
+POST /dtlab-alligator/type/engine_model_1
+{
+  "props": ["oil_temp", "rpms"],
+  "children": ["starter_module", "alternator_module"]
+}
 
-POST /schema/location/store
-["customers_in_store", "open_closed"]
 
 ```
 
