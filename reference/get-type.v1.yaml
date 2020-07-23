@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: get type
+  version: '1.0'
+  description: get type definition
+  license:
+    name: MIT
+servers:
+  - url: 'http://localhost:8081'
+paths:
+  '/dtlab-alligator/{typename}':
+    parameters:
+      - schema:
+          type: string
+        name: typename
+        in: path
+        required: true
+    get:
+      summary: get type
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './create-type.v1.yaml#/components/schemas/Type'
+          headers: {}
+        '404':
+          description: Not Found
+      operationId: get-dtlab-alligator-typename
+components:
+  schemas: {}
