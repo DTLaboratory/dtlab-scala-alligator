@@ -8,13 +8,17 @@ info:
 servers:
   - url: 'http://localhost:8081'
 paths:
-  '/dtlab-alligator/{typename}':
+  '/dtlab-alligator/type/{typename}':
     parameters:
       - schema:
           type: string
+          example: machinery
+          minLength: 2
+          maxLength: 44
         name: typename
         in: path
         required: true
+        description: name of dt type
     get:
       summary: get type
       tags: []
@@ -28,6 +32,25 @@ paths:
           headers: {}
         '404':
           description: Not Found
+        '':
+          description: Definition of the type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: './create-type.v1.yaml#/components/schemas/Type'
+              examples:
+                example-1:
+                  value:
+                    children:
+                      - alternator_module
+                      - starter_module
+                    created: '2020-07-23T01:30:24.783Z'
+                    name: machinery1
+                    props:
+                      - temp
+                      - speed
       operationId: get-dtlab-alligator-typename
+      description: Look up a type definition.
 components:
   schemas: {}
