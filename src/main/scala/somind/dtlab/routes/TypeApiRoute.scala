@@ -41,7 +41,8 @@ object TypeApiRoute
               case Some(currentType: DtType)
                   if currentType.created == newType.created =>
                 Observer("type_route_post_success")
-                complete(HttpEntity(ContentTypes.`application/json`,
+                complete(StatusCodes.Created,
+                         HttpEntity(ContentTypes.`application/json`,
                                     currentType.toJson.prettyPrint))
               case Some(currentType: DtType)
                   if currentType.created != newType.created =>
