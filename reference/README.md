@@ -1,14 +1,10 @@
 ---
 title: dtlab alligator v1.0
 language_tabs:
-  - shell: Shell
-  - http: HTTP
-  - javascript: JavaScript
-  - ruby: Ruby
   - python: Python
-  - php: PHP
+  - shell: Shell
+  - javascript: Javascript
   - java: Java
-  - go: Go
 toc_footers: []
 includes: []
 search: true
@@ -40,19 +36,24 @@ License: <a href="https://github.com/SoMind/dtlab-scala-alligator/blob/master/LI
 
 > Code samples
 
+```python
+import requests
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+r = requests.post('http://localhost:8081/dtlab-alligator/type/{typename}', headers = headers)
+
+print(r.json())
+
+```
+
 ```shell
 # You can also use wget
 curl -X POST http://localhost:8081/dtlab-alligator/type/{typename} \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json'
-
-```
-
-```http
-POST http://localhost:8081/dtlab-alligator/type/{typename} HTTP/1.1
-Host: localhost:8081
-Content-Type: application/json
-Accept: application/json
 
 ```
 
@@ -86,68 +87,6 @@ fetch('http://localhost:8081/dtlab-alligator/type/{typename}',
 
 ```
 
-```ruby
-require 'rest-client'
-require 'json'
-
-headers = {
-  'Content-Type' => 'application/json',
-  'Accept' => 'application/json'
-}
-
-result = RestClient.post 'http://localhost:8081/dtlab-alligator/type/{typename}',
-  params: {
-  }, headers: headers
-
-p JSON.parse(result)
-
-```
-
-```python
-import requests
-headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
-
-r = requests.post('http://localhost:8081/dtlab-alligator/type/{typename}', headers = headers)
-
-print(r.json())
-
-```
-
-```php
-<?php
-
-require 'vendor/autoload.php';
-
-$headers = array(
-    'Content-Type' => 'application/json',
-    'Accept' => 'application/json',
-);
-
-$client = new \GuzzleHttp\Client();
-
-// Define array of request body.
-$request_body = array();
-
-try {
-    $response = $client->request('POST','http://localhost:8081/dtlab-alligator/type/{typename}', array(
-        'headers' => $headers,
-        'json' => $request_body,
-       )
-    );
-    print_r($response->getBody()->getContents());
- }
- catch (\GuzzleHttp\Exception\BadResponseException $e) {
-    // handle exception or api errors.
-    print_r($e->getMessage());
- }
-
- // ...
-
-```
-
 ```java
 URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typename}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -162,32 +101,6 @@ while ((inputLine = in.readLine()) != null) {
 }
 in.close();
 System.out.println(response.toString());
-
-```
-
-```go
-package main
-
-import (
-       "bytes"
-       "net/http"
-)
-
-func main() {
-
-    headers := map[string][]string{
-        "Content-Type": []string{"application/json"},
-        "Accept": []string{"application/json"},
-    }
-
-    data := bytes.NewBuffer([]byte{jsonReq})
-    req, err := http.NewRequest("POST", "http://localhost:8081/dtlab-alligator/type/{typename}", data)
-    req.Header = headers
-
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    // ...
-}
 
 ```
 
@@ -257,17 +170,22 @@ This operation does not require authentication
 
 > Code samples
 
+```python
+import requests
+headers = {
+  'Accept': 'application/json'
+}
+
+r = requests.get('http://localhost:8081/dtlab-alligator/type/{typename}', headers = headers)
+
+print(r.json())
+
+```
+
 ```shell
 # You can also use wget
 curl -X GET http://localhost:8081/dtlab-alligator/type/{typename} \
   -H 'Accept: application/json'
-
-```
-
-```http
-GET http://localhost:8081/dtlab-alligator/type/{typename} HTTP/1.1
-Host: localhost:8081
-Accept: application/json
 
 ```
 
@@ -291,65 +209,6 @@ fetch('http://localhost:8081/dtlab-alligator/type/{typename}',
 
 ```
 
-```ruby
-require 'rest-client'
-require 'json'
-
-headers = {
-  'Accept' => 'application/json'
-}
-
-result = RestClient.get 'http://localhost:8081/dtlab-alligator/type/{typename}',
-  params: {
-  }, headers: headers
-
-p JSON.parse(result)
-
-```
-
-```python
-import requests
-headers = {
-  'Accept': 'application/json'
-}
-
-r = requests.get('http://localhost:8081/dtlab-alligator/type/{typename}', headers = headers)
-
-print(r.json())
-
-```
-
-```php
-<?php
-
-require 'vendor/autoload.php';
-
-$headers = array(
-    'Accept' => 'application/json',
-);
-
-$client = new \GuzzleHttp\Client();
-
-// Define array of request body.
-$request_body = array();
-
-try {
-    $response = $client->request('GET','http://localhost:8081/dtlab-alligator/type/{typename}', array(
-        'headers' => $headers,
-        'json' => $request_body,
-       )
-    );
-    print_r($response->getBody()->getContents());
- }
- catch (\GuzzleHttp\Exception\BadResponseException $e) {
-    // handle exception or api errors.
-    print_r($e->getMessage());
- }
-
- // ...
-
-```
-
 ```java
 URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typename}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -364,31 +223,6 @@ while ((inputLine = in.readLine()) != null) {
 }
 in.close();
 System.out.println(response.toString());
-
-```
-
-```go
-package main
-
-import (
-       "bytes"
-       "net/http"
-)
-
-func main() {
-
-    headers := map[string][]string{
-        "Accept": []string{"application/json"},
-    }
-
-    data := bytes.NewBuffer([]byte{jsonReq})
-    req, err := http.NewRequest("GET", "http://localhost:8081/dtlab-alligator/type/{typename}", data)
-    req.Header = headers
-
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    // ...
-}
 
 ```
 
