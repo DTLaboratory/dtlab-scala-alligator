@@ -19,7 +19,9 @@ headingLevel: 2
 
 > Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
 
-manage DtLab actor runtime cloud
+Manage DtLab actor runtime cloud.
+
+DtLab is an actor environment that enables the instantiation of DTs (digital twins) with persistence and messaging and basic schema checking.
 
 Base URLs:
 

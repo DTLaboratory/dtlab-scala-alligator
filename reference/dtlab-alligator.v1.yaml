@@ -8,7 +8,10 @@ info:
   license:
     name: MIT
     url: 'https://github.com/SoMind/dtlab-scala-alligator/blob/master/LICENSE'
-  description: manage DtLab actor runtime cloud
+  description: |-
+    Manage DtLab actor runtime cloud.
+
+    DtLab is an actor environment that enables the instantiation of DTs (digital twins) with persistence and messaging and basic schema checking.
 servers:
   - url: 'http://localhost:8081'
     description: dev local mode
@@ -60,10 +63,9 @@ paths:
         description: a copy of the successfully created type definition
     get:
       summary: get type
-      tags: [ask]
+      tags:
+        - ask
       responses:
-        '404':
-          description: Not Found
         '200':
           description: Definition of the type
           headers: {}
@@ -82,6 +84,8 @@ paths:
                     props:
                       - temp
                       - speed
+        '404':
+          description: Not Found
       operationId: get-dtlab-alligator-typename
       description: Look up a type definition.
 components:
@@ -133,7 +137,7 @@ components:
           props:
             - temp
             - speed
-      description: Constrains digital twins to have certain properties and children of certain types.  A type can be recursive and also show up in multiple locations in a DT tree / graph
+      description: "Constrains digital twins to have certain properties and children of certain types.  \n\nA type can be recursive and also show up in multiple locations in a DT tree / graph."
 tags:
   - name: create
   - name: delete
