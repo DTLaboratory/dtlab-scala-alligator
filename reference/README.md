@@ -32,9 +32,9 @@ License: <a href="https://github.com/SoMind/dtlab-scala-alligator/blob/master/LI
 
 <h1 id="dtlab-alligator-create">create</h1>
 
-## post-dtlab-alligator-type-typename
+## post-dtlab-alligator-type-typeId
 
-<a id="opIdpost-dtlab-alligator-type-typename"></a>
+<a id="opIdpost-dtlab-alligator-type-typeId"></a>
 
 > Code samples
 
@@ -45,7 +45,7 @@ headers = {
   'Accept': 'application/json'
 }
 
-r = requests.post('http://localhost:8081/dtlab-alligator/type/{typename}', headers = headers)
+r = requests.post('http://localhost:8081/dtlab-alligator/type/{typeId}', headers = headers)
 
 print(r.json())
 
@@ -53,7 +53,7 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X POST http://localhost:8081/dtlab-alligator/type/{typename} \
+curl -X POST http://localhost:8081/dtlab-alligator/type/{typeId} \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json'
 
@@ -75,7 +75,7 @@ const headers = {
   'Accept':'application/json'
 };
 
-fetch('http://localhost:8081/dtlab-alligator/type/{typename}',
+fetch('http://localhost:8081/dtlab-alligator/type/{typeId}',
 {
   method: 'POST',
   body: inputBody,
@@ -90,7 +90,7 @@ fetch('http://localhost:8081/dtlab-alligator/type/{typename}',
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typename}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typeId}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("POST");
 int responseCode = con.getResponseCode();
@@ -106,7 +106,7 @@ System.out.println(response.toString());
 
 ```
 
-`POST /dtlab-alligator/type/{typename}`
+`POST /dtlab-alligator/type/{typeId}`
 
 *create type*
 
@@ -127,38 +127,147 @@ create a new type with property names and allowable children types
 }
 ```
 
-<h3 id="post-dtlab-alligator-type-typename-parameters">Parameters</h3>
+<h3 id="post-dtlab-alligator-type-typeid-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[CreateTypeRequest](#schemacreatetyperequest)|false|a copy of the successfully created type definition|
-|typename|path|string|true|the name of the type that can show up in a path|
+|body|body|[Type](#schematype)|false|a copy of the successfully created type definition|
+|typeId|path|string|true|the name of the type that can show up in a path|
 
 > Example responses
 
-> 201 Response
+> If successfully created, returned object will be updated with typeId and create datetime
 
 ```json
 {
-  "name": "string",
-  "created": "string",
-  "props": [
-    "string"
-  ],
   "children": [
-    "string"
+    "alternator_module",
+    "starter_module"
+  ],
+  "created": "2020-07-26T18:09:06.592Z",
+  "name": "machinery66",
+  "props": [
+    "temp",
+    "speed"
   ]
 }
 ```
 
-<h3 id="post-dtlab-alligator-type-typename-responses">Responses</h3>
+> 409 Response
+
+```json
+{}
+```
+
+<h3 id="post-dtlab-alligator-type-typeid-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
-|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|If successfully created, returned object will be updated with typename and create datetime|[Type](#schematype)|
+|201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|If successfully created, returned object will be updated with typeId and create datetime|[Type](#schematype)|
 |409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict - you must delete the previous entry before creating a type of the same name.|Inline|
 
-<h3 id="post-dtlab-alligator-type-typename-responseschema">Response Schema</h3>
+<h3 id="post-dtlab-alligator-type-typeid-responseschema">Response Schema</h3>
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## post-dtlab-alligator-type-actorId
+
+<a id="opIdpost-dtlab-alligator-type-actorId"></a>
+
+> Code samples
+
+```python
+import requests
+headers = {
+  'Content-Type': 'application/json'
+}
+
+r = requests.post('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
+
+print(r.json())
+
+```
+
+```shell
+# You can also use wget
+curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
+  -H 'Content-Type: application/json'
+
+```
+
+```javascript
+const inputBody = '{
+  "datetime": "string",
+  "idx": 0,
+  "value": 0
+}';
+const headers = {
+  'Content-Type':'application/json'
+};
+
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+{
+  method: 'POST',
+  body: inputBody,
+  headers: headers
+})
+.then(function(res) {
+    return res.json();
+}).then(function(body) {
+    console.log(body);
+});
+
+```
+
+```java
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+con.setRequestMethod("POST");
+int responseCode = con.getResponseCode();
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(con.getInputStream()));
+String inputLine;
+StringBuffer response = new StringBuffer();
+while ((inputLine = in.readLine()) != null) {
+    response.append(inputLine);
+}
+in.close();
+System.out.println(response.toString());
+
+```
+
+`POST /dtlab-alligator/actor/{typeId}/{instanceId}`
+
+*update a single actor property*
+
+update an actor instance with attached property value indentified by the index of the property in the typeId
+
+> Body parameter
+
+```json
+{
+  "datetime": "string",
+  "idx": 0,
+  "value": 0
+}
+```
+
+<h3 id="post-dtlab-alligator-type-actorid-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|body|body|[Telemetry](#schematelemetry)|false|The value of the property to upate identified by its index in its type definition.|
+|typeId|path|string|true|the name of the type that can show up in a path|
+|instanceId|path|string|true|the id of the instance of the type|
+
+<h3 id="post-dtlab-alligator-type-actorid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|202|[Accepted](https://tools.ietf.org/html/rfc7231#section-6.3.3)|Accepted|None|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Unprocessable Entity (WebDAV)|None|
 
 <aside class="success">
 This operation does not require authentication
@@ -166,9 +275,9 @@ This operation does not require authentication
 
 <h1 id="dtlab-alligator-ask">ask</h1>
 
-## get-dtlab-alligator-typename
+## get-dtlab-alligator-typeId
 
-<a id="opIdget-dtlab-alligator-typename"></a>
+<a id="opIdget-dtlab-alligator-typeId"></a>
 
 > Code samples
 
@@ -178,7 +287,7 @@ headers = {
   'Accept': 'application/json'
 }
 
-r = requests.get('http://localhost:8081/dtlab-alligator/type/{typename}', headers = headers)
+r = requests.get('http://localhost:8081/dtlab-alligator/type/{typeId}', headers = headers)
 
 print(r.json())
 
@@ -186,7 +295,7 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X GET http://localhost:8081/dtlab-alligator/type/{typename} \
+curl -X GET http://localhost:8081/dtlab-alligator/type/{typeId} \
   -H 'Accept: application/json'
 
 ```
@@ -197,7 +306,7 @@ const headers = {
   'Accept':'application/json'
 };
 
-fetch('http://localhost:8081/dtlab-alligator/type/{typename}',
+fetch('http://localhost:8081/dtlab-alligator/type/{typeId}',
 {
   method: 'GET',
 
@@ -212,7 +321,7 @@ fetch('http://localhost:8081/dtlab-alligator/type/{typename}',
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typename}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typeId}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("GET");
 int responseCode = con.getResponseCode();
@@ -228,17 +337,17 @@ System.out.println(response.toString());
 
 ```
 
-`GET /dtlab-alligator/type/{typename}`
+`GET /dtlab-alligator/type/{typeId}`
 
 *get type*
 
 Look up a type definition.
 
-<h3 id="get-dtlab-alligator-typename-parameters">Parameters</h3>
+<h3 id="get-dtlab-alligator-typeid-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|typename|path|string|true|the name of the type that can show up in a path|
+|typeId|path|string|true|the name of the type that can show up in a path|
 
 > Example responses
 
@@ -259,7 +368,7 @@ Look up a type definition.
 }
 ```
 
-<h3 id="get-dtlab-alligator-typename-responses">Responses</h3>
+<h3 id="get-dtlab-alligator-typeid-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
@@ -270,35 +379,124 @@ Look up a type definition.
 This operation does not require authentication
 </aside>
 
-# Schemas
+## get-dtlab-alligator-actorId
 
-<h2 id="tocS_CreateTypeRequest">CreateTypeRequest</h2>
-<!-- backwards compatibility -->
-<a id="schemacreatetyperequest"></a>
-<a id="schema_CreateTypeRequest"></a>
-<a id="tocScreatetyperequest"></a>
-<a id="tocscreatetyperequest"></a>
+<a id="opIdget-dtlab-alligator-actorId"></a>
 
-```json
-{
-  "props": [
-    "string"
-  ],
-  "children": [
-    "string"
-  ]
+> Code samples
+
+```python
+import requests
+headers = {
+  'Accept': 'application/json'
 }
+
+r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
+
+print(r.json())
 
 ```
 
-CreateTypeRequest
+```shell
+# You can also use wget
+curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
+  -H 'Accept: application/json'
 
-### Properties
+```
+
+```javascript
+
+const headers = {
+  'Accept':'application/json'
+};
+
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+{
+  method: 'GET',
+
+  headers: headers
+})
+.then(function(res) {
+    return res.json();
+}).then(function(body) {
+    console.log(body);
+});
+
+```
+
+```java
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+con.setRequestMethod("GET");
+int responseCode = con.getResponseCode();
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(con.getInputStream()));
+String inputLine;
+StringBuffer response = new StringBuffer();
+while ((inputLine = in.readLine()) != null) {
+    response.append(inputLine);
+}
+in.close();
+System.out.println(response.toString());
+
+```
+
+`GET /dtlab-alligator/actor/{typeId}/{instanceId}`
+
+*get actor*
+
+Look up a the state of an actor.
+
+<h3 id="get-dtlab-alligator-actorid-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|typeId|path|string|true|the name of the type that can show up in a path|
+|instanceId|path|string|true|the id of the instance of the type|
+
+> Example responses
+
+> OK
+
+```json
+[
+  {
+    "datetime": "2020-09-13T15:31:21.671Z",
+    "idx": 0,
+    "value": 2.1
+  },
+  {
+    "datetime": "2020-07-26T17:25:21.803Z",
+    "idx": 1,
+    "value": 2.2
+  }
+]
+```
+
+<h3 id="get-dtlab-alligator-actorid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
+
+<h3 id="get-dtlab-alligator-actorid-responseschema">Response Schema</h3>
+
+Status Code **200**
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|props|[string]|false|none|none|
-|children|[string]|false|none|none|
+|*anonymous*|[[Telemetry](#schematelemetry)]|false|none|[Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.]|
+|» Telemetry|[Telemetry](#schematelemetry)|false|none|Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.|
+|»» datetime|string|false|none|none|
+|»» idx|integer|true|none|none|
+|»» value|number|true|none|none|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+# Schemas
 
 <h2 id="tocS_Type">Type</h2>
 <!-- backwards compatibility -->
@@ -331,4 +529,30 @@ Type
 |created|string|false|none|none|
 |props|[string]|false|none|none|
 |children|[string]|false|none|none|
+
+<h2 id="tocS_Telemetry">Telemetry</h2>
+<!-- backwards compatibility -->
+<a id="schematelemetry"></a>
+<a id="schema_Telemetry"></a>
+<a id="tocStelemetry"></a>
+<a id="tocstelemetry"></a>
+
+```json
+{
+  "datetime": "string",
+  "idx": 0,
+  "value": 0
+}
+
+```
+
+Telemetry
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|datetime|string|false|none|none|
+|idx|integer|true|none|none|
+|value|number|true|none|none|
 

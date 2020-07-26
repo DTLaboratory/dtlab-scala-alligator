@@ -16,12 +16,12 @@ servers:
   - url: 'http://localhost:8081'
     description: dev local mode
 paths:
-  '/dtlab-alligator/type/{typename}':
+  '/dtlab-alligator/type/{typeId}':
     parameters:
       - schema:
           type: string
           example: machinery
-        name: typename
+        name: typeId
         in: path
         description: the name of the type that can show up in a path
         required: true
@@ -32,11 +32,22 @@ paths:
         - tell
       responses:
         '201':
-          description: 'If successfully created, returned object will be updated with typename and create datetime'
+          description: 'If successfully created, returned object will be updated with typeId and create datetime'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Type'
+              examples:
+                example-1:
+                  value:
+                    children:
+                      - alternator_module
+                      - starter_module
+                    created: '2020-07-26T18:09:06.592Z'
+                    name: machinery66
+                    props:
+                      - temp
+                      - speed
         '409':
           description: Conflict - you must delete the previous entry before creating a type of the same name.
           content:
@@ -44,13 +55,13 @@ paths:
               schema:
                 type: object
                 properties: {}
-      operationId: post-dtlab-alligator-type-typename
+      operationId: post-dtlab-alligator-type-typeId
       description: create a new type with property names and allowable children types
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateTypeRequest'
+              $ref: '#/components/schemas/Type'
             examples:
               example-1:
                 value:
@@ -86,34 +97,84 @@ paths:
                       - speed
         '404':
           description: Not Found
-      operationId: get-dtlab-alligator-typename
+      operationId: get-dtlab-alligator-typeId
       description: Look up a type definition.
+  '/dtlab-alligator/actor/{typeId}/{instanceId}':
+    parameters:
+      - schema:
+          type: string
+          example: machinery
+        name: typeId
+        in: path
+        description: the name of the type that can show up in a path
+        required: true
+      - schema:
+          type: string
+          example: module0091
+        name: instanceId
+        in: path
+        description: the id of the instance of the type
+        required: true
+    post:
+      summary: update a single actor property
+      tags:
+        - create
+        - tell
+      responses:
+        '202':
+          description: Accepted
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      operationId: post-dtlab-alligator-type-actorId
+      description: update an actor instance with attached property value indentified by the index of the property in the typeId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Telemetry'
+        description: The value of the property to upate identified by its index in its type definition.
+    get:
+      summary: get actor
+      tags:
+        - ask
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Telemetry'
+              examples:
+                example-1:
+                  value:
+                    - datetime: '2020-09-13T15:31:21.671Z'
+                      idx: 0
+                      value: 2.1
+                    - datetime: '2020-07-26T17:25:21.803Z'
+                      idx: 1
+                      value: 2.2
+        '404':
+          description: Not Found
+      operationId: get-dtlab-alligator-actorId
+      description: Look up a the state of an actor.
 components:
   schemas:
-    CreateTypeRequest:
-      title: CreateTypeRequest
-      type: object
-      properties:
-        props:
-          type: array
-          items:
-            type: string
-        children:
-          type: array
-          items:
-            type: string
-      x-examples:
-        example-1:
-          props:
-            - temp
-            - speed
-          children:
-            - alternator_module
-            - starter_module
-      description: Data needed to create new type
     Type:
       title: Type
       type: object
+      x-examples:
+        example-1:
+          children:
+            - alternator_module
+            - starter_module
+          created: '2020-07-23T01:30:24.783Z'
+          name: machinery
+          props:
+            - temp
+            - speed
+      description: "Constrains digital twins to have certain properties and children of certain types.  \n\nA type can be recursive and also show up in multiple locations in a DT tree / graph."
       properties:
         name:
           type: string
@@ -127,17 +188,28 @@ components:
           type: array
           items:
             type: string
+    Telemetry:
+      title: Telemetry
+      type: object
+      properties:
+        datetime:
+          type: string
+        idx:
+          type: integer
+        value:
+          type: number
+      required:
+        - idx
+        - value
+      description: "Telemetry is a time series entity - each change to a DT's state is journaled with a datetime."
       x-examples:
         example-1:
-          children:
-            - alternator_module
-            - starter_module
-          created: '2020-07-23T01:30:24.783Z'
-          name: machinery
-          props:
-            - temp
-            - speed
-      description: "Constrains digital twins to have certain properties and children of certain types.  \n\nA type can be recursive and also show up in multiple locations in a DT tree / graph."
+          idx: 0
+          value: 2.1
+          datetime: '2020-09-13T15:31:21.671Z'
+        example-2:
+          idx: 1
+          value: 2.2
 tags:
   - name: create
   - name: delete
