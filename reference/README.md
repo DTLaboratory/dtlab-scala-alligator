@@ -30,7 +30,230 @@ Base URLs:
 Email: <a href="mailto:ed@onextent.com">navicore</a> 
 License: <a href="https://github.com/SoMind/dtlab-scala-alligator/blob/master/LICENSE">MIT</a>
 
-<h1 id="dtlab-alligator-create">create</h1>
+<h1 id="dtlab-alligator-ask">ask</h1>
+
+## get-dtlab-alligator-typeId
+
+<a id="opIdget-dtlab-alligator-typeId"></a>
+
+> Code samples
+
+```python
+import requests
+headers = {
+  'Accept': 'application/json'
+}
+
+r = requests.get('http://localhost:8081/dtlab-alligator/type/{typeId}', headers = headers)
+
+print(r.json())
+
+```
+
+```shell
+# You can also use wget
+curl -X GET http://localhost:8081/dtlab-alligator/type/{typeId} \
+  -H 'Accept: application/json'
+
+```
+
+```javascript
+
+const headers = {
+  'Accept':'application/json'
+};
+
+fetch('http://localhost:8081/dtlab-alligator/type/{typeId}',
+{
+  method: 'GET',
+
+  headers: headers
+})
+.then(function(res) {
+    return res.json();
+}).then(function(body) {
+    console.log(body);
+});
+
+```
+
+```java
+URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typeId}");
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+con.setRequestMethod("GET");
+int responseCode = con.getResponseCode();
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(con.getInputStream()));
+String inputLine;
+StringBuffer response = new StringBuffer();
+while ((inputLine = in.readLine()) != null) {
+    response.append(inputLine);
+}
+in.close();
+System.out.println(response.toString());
+
+```
+
+`GET /dtlab-alligator/type/{typeId}`
+
+*get type*
+
+Look up a type definition.
+
+<h3 id="get-dtlab-alligator-typeid-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|typeId|path|string|true|the name of the type that can show up in a path|
+
+> Example responses
+
+> Definition of the type
+
+```json
+{
+  "children": [
+    "alternator_module",
+    "starter_module"
+  ],
+  "created": "2020-07-23T01:30:24.783Z",
+  "name": "machinery1",
+  "props": [
+    "temp",
+    "speed"
+  ]
+}
+```
+
+<h3 id="get-dtlab-alligator-typeid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Definition of the type|[Type](#schematype)|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## get-dtlab-alligator-actorId
+
+<a id="opIdget-dtlab-alligator-actorId"></a>
+
+> Code samples
+
+```python
+import requests
+headers = {
+  'Accept': 'application/json'
+}
+
+r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
+
+print(r.json())
+
+```
+
+```shell
+# You can also use wget
+curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
+  -H 'Accept: application/json'
+
+```
+
+```javascript
+
+const headers = {
+  'Accept':'application/json'
+};
+
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+{
+  method: 'GET',
+
+  headers: headers
+})
+.then(function(res) {
+    return res.json();
+}).then(function(body) {
+    console.log(body);
+});
+
+```
+
+```java
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+con.setRequestMethod("GET");
+int responseCode = con.getResponseCode();
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(con.getInputStream()));
+String inputLine;
+StringBuffer response = new StringBuffer();
+while ((inputLine = in.readLine()) != null) {
+    response.append(inputLine);
+}
+in.close();
+System.out.println(response.toString());
+
+```
+
+`GET /dtlab-alligator/actor/{typeId}/{instanceId}`
+
+*get actor*
+
+Look up a the state of an actor.
+
+<h3 id="get-dtlab-alligator-actorid-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|typeId|path|string|true|the name of the type that can show up in a path|
+|instanceId|path|string|true|the id of the instance of the type|
+
+> Example responses
+
+> OK
+
+```json
+[
+  {
+    "datetime": "2020-09-13T15:31:21.671Z",
+    "idx": 0,
+    "value": 2.1
+  },
+  {
+    "datetime": "2020-07-26T17:25:21.803Z",
+    "idx": 1,
+    "value": 2.2
+  }
+]
+```
+
+<h3 id="get-dtlab-alligator-actorid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
+
+<h3 id="get-dtlab-alligator-actorid-responseschema">Response Schema</h3>
+
+Status Code **200**
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|*anonymous*|[[Telemetry](#schematelemetry)]|false|none|[Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.]|
+|» Telemetry|[Telemetry](#schematelemetry)|false|none|Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.|
+|»» datetime|string|false|none|none|
+|»» idx|integer|true|none|none|
+|»» value|number|true|none|none|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+<h1 id="dtlab-alligator-tell">tell</h1>
 
 ## post-dtlab-alligator-type-typeId
 
@@ -268,229 +491,6 @@ update an actor instance with attached property value indentified by the index o
 |---|---|---|---|
 |202|[Accepted](https://tools.ietf.org/html/rfc7231#section-6.3.3)|Accepted|None|
 |422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Unprocessable Entity (WebDAV)|None|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-<h1 id="dtlab-alligator-ask">ask</h1>
-
-## get-dtlab-alligator-typeId
-
-<a id="opIdget-dtlab-alligator-typeId"></a>
-
-> Code samples
-
-```python
-import requests
-headers = {
-  'Accept': 'application/json'
-}
-
-r = requests.get('http://localhost:8081/dtlab-alligator/type/{typeId}', headers = headers)
-
-print(r.json())
-
-```
-
-```shell
-# You can also use wget
-curl -X GET http://localhost:8081/dtlab-alligator/type/{typeId} \
-  -H 'Accept: application/json'
-
-```
-
-```javascript
-
-const headers = {
-  'Accept':'application/json'
-};
-
-fetch('http://localhost:8081/dtlab-alligator/type/{typeId}',
-{
-  method: 'GET',
-
-  headers: headers
-})
-.then(function(res) {
-    return res.json();
-}).then(function(body) {
-    console.log(body);
-});
-
-```
-
-```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typeId}");
-HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-con.setRequestMethod("GET");
-int responseCode = con.getResponseCode();
-BufferedReader in = new BufferedReader(
-    new InputStreamReader(con.getInputStream()));
-String inputLine;
-StringBuffer response = new StringBuffer();
-while ((inputLine = in.readLine()) != null) {
-    response.append(inputLine);
-}
-in.close();
-System.out.println(response.toString());
-
-```
-
-`GET /dtlab-alligator/type/{typeId}`
-
-*get type*
-
-Look up a type definition.
-
-<h3 id="get-dtlab-alligator-typeid-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|typeId|path|string|true|the name of the type that can show up in a path|
-
-> Example responses
-
-> Definition of the type
-
-```json
-{
-  "children": [
-    "alternator_module",
-    "starter_module"
-  ],
-  "created": "2020-07-23T01:30:24.783Z",
-  "name": "machinery1",
-  "props": [
-    "temp",
-    "speed"
-  ]
-}
-```
-
-<h3 id="get-dtlab-alligator-typeid-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Definition of the type|[Type](#schematype)|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
-
-<aside class="success">
-This operation does not require authentication
-</aside>
-
-## get-dtlab-alligator-actorId
-
-<a id="opIdget-dtlab-alligator-actorId"></a>
-
-> Code samples
-
-```python
-import requests
-headers = {
-  'Accept': 'application/json'
-}
-
-r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
-
-print(r.json())
-
-```
-
-```shell
-# You can also use wget
-curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
-  -H 'Accept: application/json'
-
-```
-
-```javascript
-
-const headers = {
-  'Accept':'application/json'
-};
-
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
-{
-  method: 'GET',
-
-  headers: headers
-})
-.then(function(res) {
-    return res.json();
-}).then(function(body) {
-    console.log(body);
-});
-
-```
-
-```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
-HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-con.setRequestMethod("GET");
-int responseCode = con.getResponseCode();
-BufferedReader in = new BufferedReader(
-    new InputStreamReader(con.getInputStream()));
-String inputLine;
-StringBuffer response = new StringBuffer();
-while ((inputLine = in.readLine()) != null) {
-    response.append(inputLine);
-}
-in.close();
-System.out.println(response.toString());
-
-```
-
-`GET /dtlab-alligator/actor/{typeId}/{instanceId}`
-
-*get actor*
-
-Look up a the state of an actor.
-
-<h3 id="get-dtlab-alligator-actorid-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|typeId|path|string|true|the name of the type that can show up in a path|
-|instanceId|path|string|true|the id of the instance of the type|
-
-> Example responses
-
-> OK
-
-```json
-[
-  {
-    "datetime": "2020-09-13T15:31:21.671Z",
-    "idx": 0,
-    "value": 2.1
-  },
-  {
-    "datetime": "2020-07-26T17:25:21.803Z",
-    "idx": 1,
-    "value": 2.2
-  }
-]
-```
-
-<h3 id="get-dtlab-alligator-actorid-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
-|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
-
-<h3 id="get-dtlab-alligator-actorid-responseschema">Response Schema</h3>
-
-Status Code **200**
-
-|Name|Type|Required|Restrictions|Description|
-|---|---|---|---|---|
-|*anonymous*|[[Telemetry](#schematelemetry)]|false|none|[Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.]|
-|» Telemetry|[Telemetry](#schematelemetry)|false|none|Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.|
-|»» datetime|string|false|none|none|
-|»» idx|integer|true|none|none|
-|»» value|number|true|none|none|
 
 <aside class="success">
 This operation does not require authentication
