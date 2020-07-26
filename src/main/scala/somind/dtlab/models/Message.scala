@@ -34,6 +34,8 @@ sealed trait DtResult {}
 final case class DtOk() extends DtResult
 final case class DtErr(message: String) extends DtResult
 
+final case class DeleteDtType(typeId: String)
+
 // particular type of a kind
 final case class DtType(
     // the name of our type

@@ -30,6 +30,161 @@ Base URLs:
 Email: <a href="mailto:ed@onextent.com">navicore</a> 
 License: <a href="https://github.com/SoMind/dtlab-scala-alligator/blob/master/LICENSE">MIT</a>
 
+<h1 id="dtlab-alligator-default">Default</h1>
+
+## delete-dtlab-alligator-type-typeId
+
+<a id="opIddelete-dtlab-alligator-type-typeId"></a>
+
+> Code samples
+
+```python
+import requests
+
+r = requests.delete('http://localhost:8081/dtlab-alligator/type/{typeId}')
+
+print(r.json())
+
+```
+
+```shell
+# You can also use wget
+curl -X DELETE http://localhost:8081/dtlab-alligator/type/{typeId}
+
+```
+
+```javascript
+
+fetch('http://localhost:8081/dtlab-alligator/type/{typeId}',
+{
+  method: 'DELETE'
+
+})
+.then(function(res) {
+    return res.json();
+}).then(function(body) {
+    console.log(body);
+});
+
+```
+
+```java
+URL obj = new URL("http://localhost:8081/dtlab-alligator/type/{typeId}");
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+con.setRequestMethod("DELETE");
+int responseCode = con.getResponseCode();
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(con.getInputStream()));
+String inputLine;
+StringBuffer response = new StringBuffer();
+while ((inputLine = in.readLine()) != null) {
+    response.append(inputLine);
+}
+in.close();
+System.out.println(response.toString());
+
+```
+
+`DELETE /dtlab-alligator/type/{typeId}`
+
+Delete the typeId.  
+
+Note, this should be a developer operation and not available to normal client services.  Deleting a type makes instances of that type unavailable.  If you recreate a type and lookup an old instance created under the original type, that type with its old state will be resurected.  See the actor API to clean up instances of actors if that behavior is unwanted.
+
+<h3 id="delete-dtlab-alligator-type-typeid-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|typeId|path|string|true|the name of the type that can show up in a path|
+
+<h3 id="delete-dtlab-alligator-type-typeid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|202|[Accepted](https://tools.ietf.org/html/rfc7231#section-6.3.3)|Accepted|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
+## delete-dtlab-alligator-actor-typeId-instanceId
+
+<a id="opIddelete-dtlab-alligator-actor-typeId-instanceId"></a>
+
+> Code samples
+
+```python
+import requests
+
+r = requests.delete('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}')
+
+print(r.json())
+
+```
+
+```shell
+# You can also use wget
+curl -X DELETE http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}
+
+```
+
+```javascript
+
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+{
+  method: 'DELETE'
+
+})
+.then(function(res) {
+    return res.json();
+}).then(function(body) {
+    console.log(body);
+});
+
+```
+
+```java
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+con.setRequestMethod("DELETE");
+int responseCode = con.getResponseCode();
+BufferedReader in = new BufferedReader(
+    new InputStreamReader(con.getInputStream()));
+String inputLine;
+StringBuffer response = new StringBuffer();
+while ((inputLine = in.readLine()) != null) {
+    response.append(inputLine);
+}
+in.close();
+System.out.println(response.toString());
+
+```
+
+`DELETE /dtlab-alligator/actor/{typeId}/{instanceId}`
+
+remove all traces of the DT - removes the journal.
+
+<h3 id="delete-dtlab-alligator-actor-typeid-instanceid-parameters">Parameters</h3>
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|typeId|path|string|true|the name of the type that can show up in a path|
+|instanceId|path|string|true|the id of the instance of the type|
+
+<h3 id="delete-dtlab-alligator-actor-typeid-instanceid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|202|[Accepted](https://tools.ietf.org/html/rfc7231#section-6.3.3)|Accepted|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
+|404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
+
+<aside class="success">
+This operation does not require authentication
+</aside>
+
 <h1 id="dtlab-alligator-ask">ask</h1>
 
 ## get-dtlab-alligator-typeId
@@ -130,6 +285,7 @@ Look up a type definition.
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Definition of the type|[Type](#schematype)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
 
 <aside class="success">
@@ -237,6 +393,7 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|Inline|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
 |404|[Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)|Not Found|None|
 
 <h3 id="get-dtlab-alligator-actorid-responseschema">Response Schema</h3>
@@ -389,6 +546,7 @@ create a new type with property names and allowable children types
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |201|[Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)|If successfully created, returned object will be updated with typeId and create datetime|[Type](#schematype)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
 |409|[Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)|Conflict - you must delete the previous entry before creating a type of the same name.|Inline|
 
 <h3 id="post-dtlab-alligator-type-typeid-responseschema">Response Schema</h3>
@@ -494,6 +652,7 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
 |202|[Accepted](https://tools.ietf.org/html/rfc7231#section-6.3.3)|Accepted|None|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
 |422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Unprocessable Entity (WebDAV)|None|
 
 <aside class="success">
