@@ -156,7 +156,10 @@ paths:
         '404':
           description: Not Found
       operationId: get-dtlab-alligator-actorId
-      description: Look up a the state of an actor.
+      description: |-
+        Look up a the state of an actor.
+
+        Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
 components:
   schemas:
     Type:

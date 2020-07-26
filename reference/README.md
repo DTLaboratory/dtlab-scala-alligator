@@ -204,6 +204,8 @@ System.out.println(response.toString());
 
 Look up a the state of an actor.
 
+Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+
 <h3 id="get-dtlab-alligator-actorid-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
