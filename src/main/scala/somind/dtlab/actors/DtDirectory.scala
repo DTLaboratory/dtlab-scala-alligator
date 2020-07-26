@@ -96,8 +96,17 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
           }
       }
 
-    case typeName: String =>
-      state.types.get(typeName) match {
+    case DeleteDtType(typeId) =>
+      state.types.get(typeId) match {
+        case Some(_) =>
+          state = DtTypeMap(state.types - typeId)
+          sender ! DtOk()
+        case _ =>
+          sender ! None
+      }
+
+    case typeId: String =>
+      state.types.get(typeId) match {
         case Some(dt) =>
           sender ! Some(dt)
         case _ =>

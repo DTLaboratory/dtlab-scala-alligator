@@ -17,9 +17,9 @@ object TypeApiRoute
     with HttpSupport {
 
   def apply: Route = {
-    path("type" / Segment) { typeName =>
+    path("type" / Segment) { typeId =>
       get {
-        onSuccess(dtDirectory ask typeName) {
+        onSuccess(dtDirectory ask typeId) {
           case Some(currentType: DtType) =>
             Observer("type_route_get_success")
             complete(
@@ -33,10 +33,24 @@ object TypeApiRoute
             logger.warn(s"unable to handle: $e")
             complete(StatusCodes.InternalServerError)
         }
-      } ~ post {
+      } ~
+        delete {
+          onSuccess(dtDirectory ask DeleteDtType(typeId)) {
+            case DtOk() =>
+              Observer("type_route_delete_success")
+              complete(StatusCodes.Accepted)
+            case None =>
+              Observer("type_route_get_notfound")
+              complete(StatusCodes.NotFound)
+            case e =>
+              Observer("type_route_get_unk_err")
+              logger.warn(s"unable to handle: $e")
+              complete(StatusCodes.InternalServerError)
+          }
+        } ~ post {
         decodeRequest {
           entity(as[LazyDtType]) { ldt =>
-            val newType = ldt.dtType(typeName)
+            val newType = ldt.dtType(typeId)
             onSuccess(dtDirectory ask newType) {
               case Some(currentType: DtType)
                   if currentType.created == newType.created =>

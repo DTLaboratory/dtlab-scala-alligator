@@ -33,6 +33,9 @@ object ActorApiRoute
           complete(StatusCodes.InternalServerError)
       }
     } ~
+      delete {
+        complete(StatusCodes.NotImplemented)
+      } ~
       post {
         decodeRequest {
           entity(as[LazyTelemetry]) { telem =>
