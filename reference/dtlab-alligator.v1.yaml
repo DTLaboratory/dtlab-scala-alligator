@@ -124,7 +124,10 @@ paths:
         '422':
           description: Unprocessable Entity (WebDAV)
       operationId: post-dtlab-alligator-type-actorId
-      description: update an actor instance with attached property value indentified by the index of the property in the typeId
+      description: |-
+        update an actor instance with attached property value indentified by the index of the property in the typeId
+
+        Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
       requestBody:
         content:
           application/json:

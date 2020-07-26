@@ -469,6 +469,8 @@ System.out.println(response.toString());
 
 update an actor instance with attached property value indentified by the index of the property in the typeId
 
+Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+
 > Body parameter
 
 ```json
