@@ -13,7 +13,7 @@ GET /dtlab-alligator/type/machinery
 GET /dtlab-alligator/type/badmodule
 
 --
-POST /dtlab-alligator/type/machinery1
+POST /dtlab-alligator/type/machinery66
 {
   "props": ["temp", "speed"],
   "children": ["alternator_module", "starter_module"]

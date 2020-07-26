@@ -1,4 +1,4 @@
-http://localhost:8080
+http://localhost:8081
 #https://somind.tech
 #https://somind.org
 
@@ -14,6 +14,13 @@ GET /dtlab-alligator/actor/badmachine/one/badmodule/2
 
 --
 GET /dtlab-alligator/actor/machine/one/module/2/submodule/three
+
+--
+POST /dtlab-alligator/actor/badmachine/one/badmodule/2/
+{
+  "idx": 1,
+  "value": 2.2
+}
 
 --
 POST /dtlab-alligator/actor/badmachine/one/badmodule/2/

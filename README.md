@@ -147,3 +147,8 @@ TODO:
 * OPERATOR might not be the best name for what is really event handlers, analogous to RD stored-proc stuff
 
 
+# GEN API DOCS
+
+```
+widdershins --environment reference/env.json reference/dtlab-alligator.v1.yaml reference/README.md
+```
