@@ -96,11 +96,14 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
           }
       }
 
-    case DeleteDtType(typeId) =>
-      state.types.get(typeId) match {
+    case del: DeleteDtType =>
+      state.types.get(del.typeId) match {
         case Some(_) =>
-          state = DtTypeMap(state.types - typeId)
-          sender ! DtOk()
+          state = DtTypeMap(state.types - del.typeId)
+          persistAsync(del) { _ =>
+            sender ! DtOk()
+            takeSnapshot()
+          }
         case _ =>
           sender ! None
       }
@@ -125,6 +128,10 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
     case dt: DtType =>
       state = DtTypeMap(state.types + (dt.name -> dt))
       Observer("reapplied_type_actor_command_from_jrnl")
+
+    case del: DeleteDtType =>
+      state = DtTypeMap(state.types - del.typeId)
+      Observer("reapplied_type_actor_command_delete_from_jrnl")
 
     case SnapshotOffer(_, s: DtTypeMap @unchecked) =>
       Observer("recovered_type_actor_state_from_snapshot")
