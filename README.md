@@ -1,8 +1,7 @@
-![Scala CI](https://github.com/SoMind/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg) ![Scala CI](https://github.com/SoMind/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg?branch=master)
+![Scala CI](https://github.com/SoMind/dtlab-scala-alligator/workflows/Scala%20CI/badge.svg?branch=master) 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3f57111974a34940b2ec91904c1c37a6)](https://app.codacy.com/gh/SoMind/dtlab-scala-alligator?utm_source=github.com&utm_medium=referral&utm_content=SoMind/dtlab-scala-alligator&utm_campaign=Badge_Grade_Dashboard)
 
 # Digital Twin Lab - Alligator Version
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3f57111974a34940b2ec91904c1c37a6)](https://app.codacy.com/gh/SoMind/dtlab-scala-alligator?utm_source=github.com&utm_medium=referral&utm_content=SoMind/dtlab-scala-alligator&utm_campaign=Badge_Grade_Dashboard)
 
 The DtLab is a distributed programmable actor runtime environment.
 
