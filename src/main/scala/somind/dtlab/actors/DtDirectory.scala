@@ -71,7 +71,7 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
     case m: TelemetryMsg if m.path().trail.nonEmpty =>
       isValidTelemetry(m) match {
         case DtOk() =>
-          upsert(m.trailMsg())
+          upsert(m)
         case e =>
           sender ! e
       }
@@ -79,7 +79,7 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
     case m: DtMsg[Any @unchecked] if m.path().trail.nonEmpty =>
       isValid(m) match {
         case DtOk() =>
-          upsert(m.trailMsg())
+          upsert(m)
         case e =>
           sender ! e
       }

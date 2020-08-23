@@ -16,7 +16,7 @@ class DtActor extends DtPersistentActorBase[DtState] {
   override def receiveCommand: Receive = {
 
     case m: DtMsg[Any @unchecked] if m.path().trail.nonEmpty =>
-      upsert(m.trailMsg())
+      upsert(m)
 
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
@@ -25,7 +25,7 @@ class DtActor extends DtPersistentActorBase[DtState] {
         takeSnapshot()
       }
 
-    case _: DtGetState =>
+    case q: DtGetState =>
       sender ! state
 
     case _: SaveSnapshotSuccess =>
