@@ -23,9 +23,9 @@ case class DtPath(typeId: String,
   }
   def relationships(): List[(String, String)] = {
     trail match {
-      case None => List()
+      case None                         => List()
       case Some(dt) if typeId == "root" => dt.relationships()
-      case Some(dt) => (typeId, dt.typeId) :: dt.relationships()
+      case Some(dt)                     => (typeId, dt.typeId) :: dt.relationships()
     }
   }
 }
@@ -93,7 +93,7 @@ final case class DtGetState(p: DtPath) extends DtMsg[Any] {
   }
 }
 
-sealed trait DtMsg[T] {
+sealed trait DtMsg[+T] {
   def path(): DtPath
   def content(): T
   def trailMsg(): DtMsg[T]
@@ -103,7 +103,7 @@ final case class TelemetryMsg(p: DtPath, c: Telemetry)
     extends DtMsg[Telemetry] {
   def path(): DtPath = p
   def content(): Telemetry = c
-  def trailMsg(): TelemetryMsg = p.trail match {
+  def trailMsg(): DtMsg[Telemetry] = p.trail match {
     case Some(tp) =>
       TelemetryMsg(tp, c)
     case _ => this

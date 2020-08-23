@@ -7,42 +7,25 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
-GET /dtlab-alligator/type/machinery
+GET /dtlab-alligator/type/orbiting_body
 
 --
-GET /dtlab-alligator/type/badmodule
+GET /dtlab-alligator/type/object
 
 --
-DELETE /dtlab-alligator/type/badmodule
+DELETE /dtlab-alligator/type/object
 
 --
-POST /dtlab-alligator/type/machinery66
+POST /dtlab-alligator/type/object
 {
-  "props": ["temp", "speed"],
-  "children": ["alternator_module", "starter_module"]
+  "props": ["absolute_magnitude", "diameter_min", "diameter_max"]
 }
 
 --
-POST /dtlab-alligator/type/badmachine
+POST /dtlab-alligator/type/orbiting_body
 {
-  "children": ["module", "badmodule"]
+  "children": ["object"]
 }
-
---
-POST /dtlab-alligator/type/badmodule
-{
-  "props": ["heat", "altitude", "pressure", "weight"]
-}
-
---
-POST /dtlab-alligator/type/myType9
-
-["four", "five", "six"]
-
---
-POST /dtlab-alligator/type/myOtherType
-
-["one", "two", "three", "seven"]
 
 --
 GET /fitness
