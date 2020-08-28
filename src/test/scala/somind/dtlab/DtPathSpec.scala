@@ -40,6 +40,8 @@ class DtPathSpec extends AnyFlatSpec with should.Matchers {
     r(1)._1 should be ("mysubtype1")
     r(1)._2 should be ("mysubtype2")
 
+    //println("path:\n" + dtp)
+
   }
 
 }

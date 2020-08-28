@@ -28,6 +28,12 @@ POST /dtlab-alligator/type/orbiting_body
 }
 
 --
+POST /dtlab-alligator/type/machinery
+{
+  "props": ["height"]
+}
+
+--
 GET /fitness
 
 --
