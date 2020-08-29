@@ -31,11 +31,12 @@ object Marshallers extends JsonSupport with LazyLogging {
           val names: List[String] = dt.props.getOrElse(Set()).toList
           Some(
             s.state
-              .map(i => {
-                val namePath: String = s"$dtp/${names(i._1)}"
+              .map(pair => {
+                val origTelem = pair._2
+                val nameIdx = pair._1
+                val namePath: String = s"$dtp/${names(nameIdx)}"
                 val nameDots: String = namePath.replace('/', '.')
                 val lookedUpName: String = nameDots.substring(11)
-                val origTelem = i._2
                 val origValue = origTelem.value
                 val origDatetime = origTelem.datetime
                 NamedTelemetry(lookedUpName, origValue, origDatetime)
@@ -58,7 +59,8 @@ object Marshallers extends JsonSupport with LazyLogging {
           Some(
             s.state
               .map(i => {
-                val lookedUpName = names(i._1)
+                val nameIdx = i._1
+                val lookedUpName = names(nameIdx)
                 val origTelem = i._2
                 val origValue = origTelem.value
                 val origDatetime = origTelem.datetime
