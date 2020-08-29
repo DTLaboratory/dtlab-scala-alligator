@@ -32,9 +32,12 @@ object Marshallers extends JsonSupport with LazyLogging {
           Some(
             s.state
               .map(i => {
-                val name: String =
-                  s"$dtp/${names(i._1)}".replace('/', '.').substring(11)
-                NamedTelemetry(name, i._2.value, i._2.datetime)
+                val namePath: String = s"$dtp/${names(i._1)}"
+                val nameDots: String = namePath.replace('/', '.')
+                val name: String = nameDots.substring(11)
+                val value = i._2.value
+                val datetime = i._2.datetime
+                NamedTelemetry(name, value, datetime)
               })
               .toJson
               .prettyPrint)
@@ -54,7 +57,10 @@ object Marshallers extends JsonSupport with LazyLogging {
           Some(
             s.state
               .map(i => {
-                NamedTelemetry(names(i._1), i._2.value, i._2.datetime)
+                val name = names(i._1)
+                val value = i._2.value
+                val datetime = i._2.datetime
+                NamedTelemetry(name, value, datetime)
               })
               .toJson
               .prettyPrint)
