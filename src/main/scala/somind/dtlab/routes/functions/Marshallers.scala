@@ -35,8 +35,9 @@ object Marshallers extends JsonSupport with LazyLogging {
                 val namePath: String = s"$dtp/${names(i._1)}"
                 val nameDots: String = namePath.replace('/', '.')
                 val lookedUpName: String = nameDots.substring(11)
-                val origValue = i._2.value
-                val origDatetime = i._2.datetime
+                val origTelem = i._2
+                val origValue = origTelem.value
+                val origDatetime = origTelem.datetime
                 NamedTelemetry(lookedUpName, origValue, origDatetime)
               })
               .toJson
@@ -58,8 +59,9 @@ object Marshallers extends JsonSupport with LazyLogging {
             s.state
               .map(i => {
                 val lookedUpName = names(i._1)
-                val origValue = i._2.value
-                val origDatetime = i._2.datetime
+                val origTelem = i._2
+                val origValue = origTelem.value
+                val origDatetime = origTelem.datetime
                 NamedTelemetry(lookedUpName, origValue, origDatetime)
               })
               .toJson

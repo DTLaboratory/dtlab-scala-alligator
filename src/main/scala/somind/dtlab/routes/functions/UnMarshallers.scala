@@ -28,7 +28,7 @@ object UnMarshallers extends JsonSupport with LazyLogging {
         f.map((r: Any) => {
           r match {
             case Some(dt: DtType) if dt.props.nonEmpty =>
-              val names: List[String] = dt.props.get.toList
+              val names: List[String] = dt.props.getOrElse(Set()).toList
               makeTelemetry(names, ntelem)
             case _ => None
           }
@@ -47,7 +47,7 @@ object UnMarshallers extends JsonSupport with LazyLogging {
           r match {
             case Some(dt: DtType) if dt.props.nonEmpty =>
               val names: List[String] = {
-                dt.props.get.toList
+                dt.props.getOrElse(Set()).toList
               }
               makeTelemetry(names, ntelem)
             case _ =>
