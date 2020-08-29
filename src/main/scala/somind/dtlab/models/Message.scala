@@ -102,21 +102,6 @@ final case class NamedTelemetry(
     datetime: ZonedDateTime = ZonedDateTime.now()
 )
 
-final case class PathedTelemetry(
-    path: DtPath,
-    value: Double,
-    datetime: ZonedDateTime = ZonedDateTime.now()
-)
-
-final case class LazyPathedTelemetry(
-    path: DtPath,
-    value: Double,
-    datetime: Option[ZonedDateTime]
-) {
-  def telemetry(): PathedTelemetry =
-    PathedTelemetry(path, value, datetime.getOrElse(ZonedDateTime.now()))
-}
-
 // collection of all props in an actor instance
 final case class DtState(
     state: Map[Int, Telemetry] = Map()

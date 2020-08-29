@@ -8,7 +8,7 @@ import somind.dtlab.Conf._
 import somind.dtlab.HttpSupport
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import spray.json._
+import somind.dtlab.routes.functions.Unmarshallers._
 
 import scala.concurrent.Future
 
@@ -17,47 +17,6 @@ object ActorApiRoute
     with LazyLogging
     with Directives
     with HttpSupport {
-
-  def unmarshalPathed(s: DtState, t: String, dtp: DtPath): Future[Option[String]] = {
-    val f = dtDirectory ask t
-    f.map((r: Any) => {
-      r match {
-        case Some(dt: DtType) =>
-          val names: List[String] = dt.props.getOrElse(Set()).toList
-          Some(
-            s.state
-              .map(i => {
-                PathedTelemetry(dtp, i._2.value, i._2.datetime)
-              })
-              .toJson
-              .prettyPrint)
-        case _ => None
-      }
-    })
-  }
-
-  def unmarshalNamed(s: DtState, t: String, dtp: DtPath): Future[Option[String]] = {
-    val f = dtDirectory ask t
-    f.map((r: Any) => {
-      r match {
-        case Some(dt: DtType) =>
-          val names: List[String] = dt.props.getOrElse(Set()).toList
-          Some(
-            s.state
-              .map(i => {
-                NamedTelemetry(names(i._1), i._2.value, i._2.datetime)
-              })
-              .toJson
-              .prettyPrint)
-        case _ => None
-      }
-    })
-  }
-
-  def unmarshalIdx(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
-    Future {
-      Some(s.state.values.toJson.prettyPrint)
-    }
 
   def applyDtPath(
       dtp: DtPath,
@@ -105,12 +64,13 @@ object ActorApiRoute
       }
   }
 
-  def applySeq(
-      segs: List[String],
-      unmarshall: (DtState, String, DtPath) => Future[Option[String]]): Route = {
+  def applySeq(segs: List[String],
+               unmarshall: (DtState, String, DtPath) => Future[Option[String]])
+    : Route = {
     somind.dtlab.models.DtPath(segs) match {
       case Some(p) =>
-        applyDtPath(somind.dtlab.models.DtPath("root", "root", Some(p)), unmarshall)
+        applyDtPath(somind.dtlab.models.DtPath("root", "root", Some(p)),
+                    unmarshall)
       case _ =>
         Observer("bad_request")
         complete(StatusCodes.BadRequest)
