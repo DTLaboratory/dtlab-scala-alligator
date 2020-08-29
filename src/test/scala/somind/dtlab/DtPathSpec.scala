@@ -10,12 +10,15 @@ class DtPathSpec extends AnyFlatSpec with should.Matchers {
 
     val segs = List("mytype1", "t1", "mysubtype1", "s1")
 
-    DtPath(segs) should be ('defined)
-    DtPath(segs).get.instanceId should be("t1")
-    DtPath(segs).get.typeId should be("mytype1")
-    DtPath(segs).get.trail should be ('defined)
-    DtPath(segs).get.trail.get.typeId should be("mysubtype1")
-    DtPath(segs).get.trail.get.instanceId should be("s1")
+    val dtpo = DtPath(segs)
+    dtpo should be ('defined)
+    val dtp = dtpo.get
+    dtp.instanceId should be("t1")
+    dtp.typeId should be("mytype1")
+    dtp.trail should be ('defined)
+    val trailDtp = dtp.trail.get
+    trailDtp.typeId should be("mysubtype1")
+    trailDtp.instanceId should be("s1")
   }
 
   "A state" should "expand" in {
