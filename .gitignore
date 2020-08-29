@@ -1,5 +1,5 @@
 ENV*sh
-examples/
+examples/*token*
 .bloop/
 .metals/
 target/

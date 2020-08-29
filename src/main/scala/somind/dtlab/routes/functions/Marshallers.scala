@@ -8,11 +8,22 @@ import spray.json._
 
 import scala.concurrent.Future
 
-object Unmarshallers extends JsonSupport with LazyLogging {
+/**
+ * Enable working with telemetry with meaningful names instead of the index values from
+ * the type definition.
+ *
+ * Each marshaller will lookup the type definition and replace the index field with a text string.
+ *
+ * A "named" text string is the name of the DT prop.
+ * A "pathed" text string is a DtPath with dot notation and the name of the DT prop appended.
+ */
+object Marshallers extends JsonSupport with LazyLogging {
 
-  def unmarshalPathed(s: DtState,
-                      t: String,
-                      dtp: DtPath): Future[Option[String]] = {
+  type Marshaller = (DtState, String, DtPath) => Future[Option[String]]
+
+  def pathedFmt(s: DtState,
+                t: String,
+                dtp: DtPath): Future[Option[String]] = {
     val f = dtDirectory ask t
     f.map((r: Any) => {
       r match {
@@ -32,9 +43,9 @@ object Unmarshallers extends JsonSupport with LazyLogging {
     })
   }
 
-  def unmarshalNamed(s: DtState,
-                     t: String,
-                     dtp: DtPath): Future[Option[String]] = {
+  def namedFmt(s: DtState,
+               t: String,
+               dtp: DtPath): Future[Option[String]] = {
     val f = dtDirectory ask t
     f.map((r: Any) => {
       r match {
@@ -52,7 +63,7 @@ object Unmarshallers extends JsonSupport with LazyLogging {
     })
   }
 
-  def unmarshalIdx(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
+  def indexedFmt(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
     Future {
       Some(s.state.values.toJson.prettyPrint)
     }
