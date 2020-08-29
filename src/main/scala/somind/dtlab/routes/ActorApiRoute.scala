@@ -18,30 +18,55 @@ object ActorApiRoute
     with Directives
     with HttpSupport {
 
-  def unmarshalPathed(s: DtState): Future[Option[String]] =
+  def unmarshalPathed(s: DtState, t: String, dtp: DtPath): Future[Option[String]] = {
+    val f = dtDirectory ask t
+    f.map((r: Any) => {
+      r match {
+        case Some(dt: DtType) =>
+          val names: List[String] = dt.props.getOrElse(Set()).toList
+          Some(
+            s.state
+              .map(i => {
+                PathedTelemetry(dtp, i._2.value, i._2.datetime)
+              })
+              .toJson
+              .prettyPrint)
+        case _ => None
+      }
+    })
+  }
+
+  def unmarshalNamed(s: DtState, t: String, dtp: DtPath): Future[Option[String]] = {
+    val f = dtDirectory ask t
+    f.map((r: Any) => {
+      r match {
+        case Some(dt: DtType) =>
+          val names: List[String] = dt.props.getOrElse(Set()).toList
+          Some(
+            s.state
+              .map(i => {
+                NamedTelemetry(names(i._1), i._2.value, i._2.datetime)
+              })
+              .toJson
+              .prettyPrint)
+        case _ => None
+      }
+    })
+  }
+
+  def unmarshalIdx(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
     Future {
-      // ejs todo: process type
       Some(s.state.values.toJson.prettyPrint)
     }
 
-  def unmarshalNamed(s: DtState): Future[Option[String]] =
-    Future {
-      // ejs todo: process type
-      Some(s.state.values.toJson.prettyPrint)
-    }
-
-  def unmarshalIdx(s: DtState): Future[Option[String]] =
-    Future {
-      Some(s.state.values.toJson.prettyPrint)
-    }
-
-  def applyDtPath(dtp: DtPath,
-                  unmarshal: DtState => Future[Option[String]]): Route = {
+  def applyDtPath(
+      dtp: DtPath,
+      unmarshal: (DtState, String, DtPath) => Future[Option[String]]): Route = {
     get {
       onSuccess(dtDirectory ask DtGetState(dtp)) {
         case s: DtState =>
           Observer("actor_route_get_success")
-          onSuccess(unmarshal(s)) {
+          onSuccess(unmarshal(s, dtp.endTypeName(), dtp)) {
             case Some(r) =>
               complete(HttpEntity(ContentTypes.`application/json`, r))
             case _ =>
@@ -80,11 +105,12 @@ object ActorApiRoute
       }
   }
 
-  def applySeq(segs: List[String],
-               unmarshall: DtState => Future[Option[String]]): Route = {
-    DtPath(segs) match {
+  def applySeq(
+      segs: List[String],
+      unmarshall: (DtState, String, DtPath) => Future[Option[String]]): Route = {
+    somind.dtlab.models.DtPath(segs) match {
       case Some(p) =>
-        applyDtPath(DtPath("root", "root", Some(p)), unmarshall)
+        applyDtPath(somind.dtlab.models.DtPath("root", "root", Some(p)), unmarshall)
       case _ =>
         Observer("bad_request")
         complete(StatusCodes.BadRequest)
