@@ -17,13 +17,14 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
     val errs = path
       .relationships()
       .flatMap(i => {
-        state.types.get(i._1) match {
+        val (parent, child) = i
+        state.types.get(parent) match {
           case Some(dtType)
               if dtType.children.nonEmpty && dtType.children.get.contains(
-                i._2) =>
+                child) =>
             None
           case _ =>
-            Some(DtErr(s"${i._1} type does not have children of type ${i._2}"))
+            Some(DtErr(s"$parent type does not have children of type $child"))
         }
       })
     if (errs.nonEmpty)

@@ -10,8 +10,10 @@ class DtPathSpec extends AnyFlatSpec with should.Matchers {
 
     val segs = List("mytype1", "t1", "mysubtype1", "s1")
 
+    DtPath(segs) should be ('defined)
     DtPath(segs).get.instanceId should be("t1")
     DtPath(segs).get.typeId should be("mytype1")
+    DtPath(segs).get.trail should be ('defined)
     DtPath(segs).get.trail.get.typeId should be("mysubtype1")
     DtPath(segs).get.trail.get.instanceId should be("s1")
   }
