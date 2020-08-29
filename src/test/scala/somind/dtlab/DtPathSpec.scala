@@ -45,17 +45,16 @@ class DtPathSpec extends AnyFlatSpec with should.Matchers {
 
   "A path" should "validate" in {
 
-    val dtp =
-      DtPath(List("mytype1", "t1", "mysubtype1", "s1", "mysubtype2", "ss2")).get
-
-    val r = dtp.relationships()
-
-    r.head._1 should be("mytype1")
-    r.head._2 should be("mysubtype1")
-    r(1)._1 should be("mysubtype1")
-    r(1)._2 should be("mysubtype2")
-
-    //println("path:\n" + dtp)
+    DtPath(List("mytype1", "t1", "mysubtype1", "s1", "mysubtype2", "ss2")) match {
+      case Some(dtp) =>
+        val r = dtp.relationships()
+        r.head._1 should be("mytype1")
+        r.head._2 should be("mysubtype1")
+        r(1)._1 should be("mysubtype1")
+        r(1)._2 should be("mysubtype2")
+      case _ =>
+        fail()
+    }
 
   }
 
