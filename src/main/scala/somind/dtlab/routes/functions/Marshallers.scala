@@ -58,9 +58,8 @@ object Marshallers extends JsonSupport with LazyLogging {
           Some(
             s.state
               .map(i => {
-                val nameIdx = i._1
+                val (nameIdx, origTelem) = i
                 val lookedUpName = names(nameIdx)
-                val origTelem = i._2
                 val origValue = origTelem.value
                 val origDatetime = origTelem.datetime
                 NamedTelemetry(lookedUpName, origValue, origDatetime)
