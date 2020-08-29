@@ -32,8 +32,7 @@ object Marshallers extends JsonSupport with LazyLogging {
           Some(
             s.state
               .map(pair => {
-                val origTelem = pair._2
-                val nameIdx = pair._1
+                val (nameIdx, origTelem) = pair
                 val namePath: String = s"$dtp/${names(nameIdx)}"
                 val nameDots: String = namePath.replace('/', '.')
                 val lookedUpName: String = nameDots.substring(11)
