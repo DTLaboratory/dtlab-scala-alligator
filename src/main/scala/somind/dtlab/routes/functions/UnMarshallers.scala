@@ -38,28 +38,4 @@ object UnMarshallers extends JsonSupport with LazyLogging {
 
   }
 
-  def PathedUnMarshaller(t: Option[NamedTelemetry],
-                         dtp: DtPath): Future[Option[Telemetry]] = {
-    t match {
-      case Some(ntelem) =>
-        val f = dtDirectory ask dtp.endTypeName()
-        f.map((r: Any) => {
-          r match {
-            case Some(dt: DtType) if dt.props.nonEmpty =>
-              val names: List[String] = {
-                dt.props.getOrElse(Set()).toList
-              }
-              makeTelemetry(names, ntelem)
-            case _ =>
-              logger.warn(s"Can not unmarshall telemetry to internal format.")
-              None
-          }
-        })
-      case _ =>
-        logger.warn(s"Route requires NamedTelemetry with path notation.")
-        Future { None }
-    }
-
-  }
-
 }

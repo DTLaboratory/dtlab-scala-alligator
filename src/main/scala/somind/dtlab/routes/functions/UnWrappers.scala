@@ -11,20 +11,6 @@ object UnWrappers extends JsonSupport with Directives with LazyLogging {
 
   type UnWrapper = DtPath => Route
 
-  def PathedUnWrapper(dtp: DtPath): Route = {
-    entity(as[LazyNamedTelemetry]) { ntelem =>
-      {
-        onSuccess(PathedUnMarshaller(Some(ntelem.telemetry()), dtp)) {
-          case Some(telemetry: Telemetry) =>
-            applyTelemetryMsg(dtp, telemetry)
-          case _ =>
-            logger.warn(s"PathedUnMarshaller did not return telemetry for path: $dtp")
-            complete(StatusCodes.InternalServerError)
-        }
-      }
-    }
-  }
-
   def NamedUnWrapper(dtp: DtPath): Route = {
     entity(as[LazyNamedTelemetry]) { ntelem =>
       {

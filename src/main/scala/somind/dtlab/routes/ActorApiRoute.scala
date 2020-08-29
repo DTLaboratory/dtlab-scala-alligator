@@ -83,7 +83,7 @@ object ActorApiRoute
 
   def applySegs(segs: List[String]): Route =
     path("pathed") {
-      applySeq(segs, pathedFmt, PathedUnWrapper)
+      applySeq(segs, pathedFmt, NamedUnWrapper)
     } ~
       path("named") {
         applySeq(segs, namedFmt, NamedUnWrapper)
