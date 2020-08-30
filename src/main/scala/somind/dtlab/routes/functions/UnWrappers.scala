@@ -18,7 +18,11 @@ object UnWrappers extends JsonSupport with Directives with LazyLogging {
           case Some(telemetry: Telemetry) =>
             applyTelemetryMsg(dtp, telemetry)
           case _ =>
-            complete(StatusCodes.InternalServerError)
+            logger.warn(s"can not unmarshall telemetry")
+            complete(
+              StatusCodes.BadRequest,
+              s"Can not validate - please check that type definition '${dtp
+                .endTypeName()}' supports property '${ntelem.name}'.")
         }
       }
     }

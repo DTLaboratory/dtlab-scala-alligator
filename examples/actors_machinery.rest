@@ -4,6 +4,9 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
+GET /dtlab-alligator/type/machinery
+
+--
 GET /dtlab-alligator/actor/machinery/one
 
 --

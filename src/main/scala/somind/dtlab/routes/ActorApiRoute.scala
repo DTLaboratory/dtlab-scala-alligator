@@ -11,6 +11,24 @@ import somind.dtlab.observe.Observer
 import somind.dtlab.routes.functions.Marshallers._
 import somind.dtlab.routes.functions.UnWrappers._
 
+/**
+  * Enables CRUD for actors and their states.
+  *
+  * Actors are automatically created if you post telemetry to
+  * them.  If they already exist, the new telemetry gets added
+  * to their journal and is reflected in the current state view.
+  *
+  * (When implemented), DELETE will remove the journals of the actor.
+  *
+  * Telemetry may be expressed in 3 ways:
+  *   1. indexed (the native internal format)
+  *   2. named
+  *   3. pathed
+  *
+  * When addressing an actor, suffix the path with named or pathed to
+  * use the named or pathed telemetry model.
+  *
+  */
 object ActorApiRoute
     extends JsonSupport
     with LazyLogging
@@ -58,6 +76,7 @@ object ActorApiRoute
       }
     } ~
       delete {
+        Observer("actor_route_delete")
         complete(StatusCodes.NotImplemented)
       } ~
       post {
@@ -67,15 +86,16 @@ object ActorApiRoute
       }
   }
 
-  def applySeq(segs: List[String],
+  def applyFmt(segs: List[String],
                marshall: Marshaller,
                unWrapper: UnWrapper): Route = {
     somind.dtlab.models.DtPath(segs) match {
-      case Some(p) =>
-        applyDtPath(somind.dtlab.models.DtPath("root", "root", Some(p)),
+      case p: Some[DtPath] =>
+        applyDtPath(somind.dtlab.models.DtPath("root", "root", p),
                     marshall,
                     unWrapper)
       case _ =>
+        logger.warn(s"can not extract DtPath from $segs")
         Observer("bad_request")
         complete(StatusCodes.BadRequest)
     }
@@ -83,12 +103,16 @@ object ActorApiRoute
 
   def applySegs(segs: List[String]): Route =
     path("pathed") {
-      applySeq(segs, pathedFmt, NamedUnWrapper)
+      Observer("actor_route_telemetry_pathed")
+      applyFmt(segs, pathedFmt, NamedUnWrapper)
     } ~
       path("named") {
-        applySeq(segs, namedFmt, NamedUnWrapper)
-      } ~
-      applySeq(segs, indexedFmt, IdxUnWrapper)
+        Observer("actor_route_telemetry_named")
+        applyFmt(segs, namedFmt, NamedUnWrapper)
+      } ~ {
+      Observer("actor_route_telemetry_idx")
+      applyFmt(segs, indexedFmt, IdxUnWrapper)
+    }
 
   def apply: Route =
     pathPrefix("actor") {
