@@ -16,9 +16,10 @@ case class DtPath(typeId: String,
                   trail: Option[DtPath] = None) {
   // convenience method to get the final typeName for validation
   def endTypeName(): String = {
-    this match {
-      case p if p.trail.nonEmpty => p.trail.get.endTypeName()
-      case _                     => typeId
+    trail match {
+      case Some(t) =>
+        t.endTypeName()
+      case _ => typeId
     }
   }
   def relationships(): List[(String, String)] = {

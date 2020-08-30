@@ -25,7 +25,7 @@ class DtActor extends DtPersistentActorBase[DtState] {
         takeSnapshot()
       }
 
-    case q: DtGetState =>
+    case _: DtGetState =>
       sender ! state
 
     case _: SaveSnapshotSuccess =>
