@@ -1,7 +1,5 @@
 FROM openjdk:13-alpine
 
-MAINTAINER Ed Sweeney <ed@onextent.com>
-
 EXPOSE 8080
 
 RUN mkdir -p /app

@@ -28,6 +28,19 @@ case class DtPath(typeId: String,
       case Some(dt)                     => (typeId, dt.typeId) :: dt.relationships()
     }
   }
+  private def pathToString(p: DtPath): String = {
+    s"/${p.typeId}/${p.instanceId}" + {
+      p.trail match {
+        case None =>
+          ""
+        case Some(t) =>
+          pathToString(t)
+      }
+    }
+  }
+  override def toString: String = {
+    pathToString(this)
+  }
 }
 
 sealed trait DtResult {}
@@ -70,6 +83,21 @@ final case class LazyTelemetry(
 
 final case class Telemetry(
     idx: Int,
+    value: Double,
+    datetime: ZonedDateTime = ZonedDateTime.now()
+)
+
+final case class LazyNamedTelemetry(
+    name: String,
+    value: Double,
+    datetime: Option[ZonedDateTime]
+) {
+  def telemetry(): NamedTelemetry =
+    NamedTelemetry(name, value, datetime.getOrElse(ZonedDateTime.now()))
+}
+
+final case class NamedTelemetry(
+    name: String,
     value: Double,
     datetime: ZonedDateTime = ZonedDateTime.now()
 )
