@@ -34,12 +34,14 @@ object Marshallers extends JsonSupport with LazyLogging {
             .map(pair => {
               val (nameIdx, origTelem) = pair
               val lookedUpName: String = {
-                if (nameIdx >= names.length)
-                  "unknown"
-                else if (dottedName)
-                  s"$dtp/${names(nameIdx)}".replace('/', '.').substring(11)
-                else
-                  names(nameIdx)
+                nameIdx match {
+                  case idx if idx >= names.length =>
+                    "unknown"
+                  case idx if dottedName =>
+                    s"$dtp/${names(idx)}".replace('/', '.').substring(11)
+                  case idx =>
+                    names(idx)
+                }
               }
               NamedTelemetry(lookedUpName, origTelem.value, origTelem.datetime)
             })
