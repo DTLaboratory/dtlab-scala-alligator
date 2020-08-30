@@ -173,6 +173,190 @@ paths:
                     - datetime: '2020-07-26T17:25:21.803Z'
                       idx: 1
                       value: 2.2
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: get-dtlab-alligator-actorId
+      description: |-
+        Look up a the state of an actor.
+
+        Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+    delete:
+      summary: ''
+      operationId: delete-dtlab-alligator-actor-typeId-instanceId
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: remove all traces of the DT - removes the journal.
+  '/dtlab-alligator/actor/{typeId}/{instanceId}/named':
+    parameters:
+      - schema:
+          type: string
+          example: machinery
+        name: typeId
+        in: path
+        description: the name of the type that can show up in a path
+        required: true
+      - schema:
+          type: string
+          example: module0091
+        name: instanceId
+        in: path
+        description: the id of the instance of the type
+        required: true
+    post:
+      summary: update a single actor property
+      tags:
+        - tell
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      operationId: post-dtlab-alligator-type-actorId
+      description: |-
+        Update an actor instance with attached property value indentified by the index of the property in the typeId.
+
+        Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NamedTelemetry'
+        description: The value of the property to upate identified by its index in its type definition.
+    get:
+      summary: get actor
+      tags:
+        - ask
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedTelemetry'
+              examples:
+                example-1:
+                  value:
+                    - datetime: '2020-09-13T15:31:21.671Z'
+                      idx: 0
+                      value: 2.1
+                    - datetime: '2020-07-26T17:25:21.803Z'
+                      idx: 1
+                      value: 2.2
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: get-dtlab-alligator-actorId
+      description: |-
+        Look up a the state of an actor.
+
+        Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+    delete:
+      summary: ''
+      operationId: delete-dtlab-alligator-actor-typeId-instanceId
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: remove all traces of the DT - removes the journal.
+  '/dtlab-alligator/actor/{typeId}/{instanceId}/pathed':
+    parameters:
+      - schema:
+          type: string
+          example: machinery
+        name: typeId
+        in: path
+        description: the name of the type that can show up in a path
+        required: true
+      - schema:
+          type: string
+          example: module0091
+        name: instanceId
+        in: path
+        description: the id of the instance of the type
+        required: true
+    post:
+      summary: update a single actor property
+      tags:
+        - tell
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      operationId: post-dtlab-alligator-type-actorId
+      description: |-
+        Update an actor instance with attached property value indentified by the index of the property in the typeId.
+
+        Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NamedTelemetry'
+        description: The value of the property to upate identified by its index in its type definition.
+    get:
+      summary: get actor
+      tags:
+        - ask
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedTelemetry'
+              examples:
+                example-1:
+                  value:
+                    - datetime: '2020-09-13T15:31:21.671Z'
+                      idx: 0
+                      value: 2.1
+                    - datetime: '2020-07-26T17:25:21.803Z'
+                      idx: 1
+                      value: 2.2
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
         '401':
           description: Unauthorized
         '404':
@@ -243,6 +427,28 @@ components:
           datetime: '2020-09-13T15:31:21.671Z'
         example-2:
           idx: 1
+          value: 2.2
+    NamedTelemetry:
+      title: NamedTelemetry
+      type: object
+      properties:
+        datetime:
+          type: string
+        name:
+          type: string
+        value:
+          type: number
+      required:
+        - name
+        - value
+      description: "Convenience format for Telemetry when idx is unavailable."
+      x-examples:
+        example-1:
+          name: height
+          value: 2.1
+          datetime: '2020-09-13T15:31:21.671Z'
+        example-2:
+          name: height
           value: 2.2
 tags:
   - name: create

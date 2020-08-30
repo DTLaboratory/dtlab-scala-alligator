@@ -118,7 +118,7 @@ This operation does not require authentication
 ```python
 import requests
 
-r = requests.delete('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}')
+r = requests.delete('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed')
 
 print(r.json())
 
@@ -126,13 +126,13 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X DELETE http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}
+curl -X DELETE http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed
 
 ```
 
 ```javascript
 
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed',
 {
   method: 'DELETE'
 
@@ -146,7 +146,7 @@ fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("DELETE");
 int responseCode = con.getResponseCode();
@@ -162,7 +162,7 @@ System.out.println(response.toString());
 
 ```
 
-`DELETE /dtlab-alligator/actor/{typeId}/{instanceId}`
+`DELETE /dtlab-alligator/actor/{typeId}/{instanceId}/pathed`
 
 remove all traces of the DT - removes the journal.
 
@@ -304,7 +304,7 @@ headers = {
   'Accept': 'application/json'
 }
 
-r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
+r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed', headers = headers)
 
 print(r.json())
 
@@ -312,7 +312,7 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
+curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed \
   -H 'Accept: application/json'
 
 ```
@@ -323,7 +323,7 @@ const headers = {
   'Accept':'application/json'
 };
 
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed',
 {
   method: 'GET',
 
@@ -338,7 +338,7 @@ fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("GET");
 int responseCode = con.getResponseCode();
@@ -354,7 +354,7 @@ System.out.println(response.toString());
 
 ```
 
-`GET /dtlab-alligator/actor/{typeId}/{instanceId}`
+`GET /dtlab-alligator/actor/{typeId}/{instanceId}/pathed`
 
 *get actor*
 
@@ -388,6 +388,12 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 ]
 ```
 
+> 200 Response
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+```
+
 <h3 id="get-dtlab-alligator-actorid-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
@@ -402,10 +408,10 @@ Status Code **200**
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|[[Telemetry](#schematelemetry)]|false|none|[Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.]|
-|» Telemetry|[Telemetry](#schematelemetry)|false|none|Telemetry is a time series entity - each change to a DT's state is journaled with a datetime.|
+|*anonymous*|[[NamedTelemetry](#schemanamedtelemetry)]|false|none|[Convenience format for Telemetry when idx is unavailable.]|
+|» NamedTelemetry|[NamedTelemetry](#schemanamedtelemetry)|false|none|Convenience format for Telemetry when idx is unavailable.|
 |»» datetime|string|false|none|none|
-|»» idx|integer|true|none|none|
+|»» name|string|true|none|none|
 |»» value|number|true|none|none|
 
 <aside class="success">
@@ -567,7 +573,7 @@ headers = {
   'Content-Type': 'application/json'
 }
 
-r = requests.post('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
+r = requests.post('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed', headers = headers)
 
 print(r.json())
 
@@ -575,7 +581,7 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
+curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed \
   -H 'Content-Type: application/json'
 
 ```
@@ -583,14 +589,14 @@ curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
 ```javascript
 const inputBody = '{
   "datetime": "string",
-  "idx": 0,
+  "name": "string",
   "value": 0
 }';
 const headers = {
   'Content-Type':'application/json'
 };
 
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed',
 {
   method: 'POST',
   body: inputBody,
@@ -605,7 +611,7 @@ fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/pathed");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("POST");
 int responseCode = con.getResponseCode();
@@ -621,7 +627,7 @@ System.out.println(response.toString());
 
 ```
 
-`POST /dtlab-alligator/actor/{typeId}/{instanceId}`
+`POST /dtlab-alligator/actor/{typeId}/{instanceId}/pathed`
 
 *update a single actor property*
 
@@ -634,7 +640,7 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 ```json
 {
   "datetime": "string",
-  "idx": 0,
+  "name": "string",
   "value": 0
 }
 ```
@@ -643,7 +649,7 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[Telemetry](#schematelemetry)|false|The value of the property to upate identified by its index in its type definition.|
+|body|body|[NamedTelemetry](#schemanamedtelemetry)|false|The value of the property to upate identified by its index in its type definition.|
 |typeId|path|string|true|the name of the type that can show up in a path|
 |instanceId|path|string|true|the id of the instance of the type|
 
@@ -717,5 +723,31 @@ Telemetry
 |---|---|---|---|---|
 |datetime|string|false|none|none|
 |idx|integer|true|none|none|
+|value|number|true|none|none|
+
+<h2 id="tocS_NamedTelemetry">NamedTelemetry</h2>
+<!-- backwards compatibility -->
+<a id="schemanamedtelemetry"></a>
+<a id="schema_NamedTelemetry"></a>
+<a id="tocSnamedtelemetry"></a>
+<a id="tocsnamedtelemetry"></a>
+
+```json
+{
+  "datetime": "string",
+  "name": "string",
+  "value": 0
+}
+
+```
+
+NamedTelemetry
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|datetime|string|false|none|none|
+|name|string|true|none|none|
 |value|number|true|none|none|
 

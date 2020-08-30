@@ -22,7 +22,7 @@ object UnWrappers extends JsonSupport with Directives with LazyLogging {
             complete(
               StatusCodes.BadRequest,
               s"Can not validate - please check that type definition '${dtp
-                .endTypeName()}' supports property '${ntelem.name}'.")
+                .endTypeName()}' exists and supports property '${ntelem.name}'.")
         }
       }
     }

@@ -19,9 +19,7 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
       .flatMap(i => {
         val (parent, child) = i
         state.types.get(parent) match {
-          case Some(dtType)
-              if dtType.children.nonEmpty && dtType.children.get.contains(
-                child) =>
+          case Some(dtType) if dtType.children.exists(_.contains(child)) =>
             None
           case _ =>
             Some(DtErr(s"$parent type does not have children of type $child"))
