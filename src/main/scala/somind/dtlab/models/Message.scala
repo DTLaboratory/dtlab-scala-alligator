@@ -44,7 +44,7 @@ case class DtPath(typeId: String,
   }
 }
 
-sealed trait DtResult {}
+sealed trait DtResult
 final case class DtOk() extends DtResult
 final case class DtErr(message: String) extends DtResult
 

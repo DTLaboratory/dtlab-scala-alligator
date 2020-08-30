@@ -74,7 +74,10 @@ class Observer extends Actor with LazyLogging {
 
     case _: FitnessQuery =>
       val agingState = state
-        .filter(_._1.contains("fitness"))
+        .filter(entry => {
+          val (key, _) = entry
+          key.contains("fitness")
+        })
         .values
         .filter(m =>
           seconds(ZonedDateTime.now, m.datetime) > healthToleranceSeconds)

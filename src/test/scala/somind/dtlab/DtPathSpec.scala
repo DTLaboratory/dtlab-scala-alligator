@@ -48,10 +48,12 @@ class DtPathSpec extends AnyFlatSpec with should.Matchers {
     DtPath(List("mytype1", "t1", "mysubtype1", "s1", "mysubtype2", "ss2")) match {
       case Some(dtp) =>
         val r = dtp.relationships()
-        r.head._1 should be("mytype1")
-        r.head._2 should be("mysubtype1")
-        r(1)._1 should be("mysubtype1")
-        r(1)._2 should be("mysubtype2")
+        val (parent, child) = r.head
+        parent should be("mytype1")
+        child should be("mysubtype1")
+        val (parent2, child2) = r(1)
+        parent2 should be("mysubtype1")
+        child2 should be("mysubtype2")
       case _ =>
         fail()
     }
