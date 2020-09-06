@@ -1,6 +1,4 @@
 http://localhost:8081
-#https://somind.tech
-#https://somind.org
 
 Content-Type: application/json; charset=utf-8
 
@@ -25,12 +23,6 @@ POST /dtlab-alligator/type/object
 POST /dtlab-alligator/type/orbiting_body
 {
   "children": ["object"]
-}
-
---
-POST /dtlab-alligator/type/machinery
-{
-  "props": ["height"]
 }
 
 --
