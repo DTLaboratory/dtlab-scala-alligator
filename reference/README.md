@@ -603,7 +603,10 @@ curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{
 ```
 
 ```javascript
-const inputBody = 'undefined';
+const inputBody = '{
+  "idx": 0,
+  "value": 5.5
+}';
 const headers = {
   'Content-Type':'application/json'
 };
@@ -643,21 +646,24 @@ System.out.println(response.toString());
 
 *update a single actor property*
 
-Update an actor instance with attached property value indentified by the index of the property in the typeId.
+Update an actor instance with attached property value identified by the index of the property in the typeId.
 
 Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
 
 > Body parameter
 
 ```json
-undefined
+{
+  "idx": 0,
+  "value": 5.5
+}
 ```
 
 <h3 id="post-dtlab-alligator-type-actorid-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[Telemetry](#schematelemetry)|false|The value of the property to upate identified by its index in its type definition.|
+|body|body|[Telemetry](#schematelemetry)|false|The value of the property to update identified by its index in its type definition.|
 |typeId|path|string|true|the name of the type that can show up in a path|
 |instanceId|path|string|true|the id of the instance of the type|
 |telemetryFmt|path|string|false|optional suffix to the path indicating telemetry is using 'name' instead of 'idx'|

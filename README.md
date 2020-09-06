@@ -151,5 +151,15 @@ TODO:
 # GEN API DOCS
 
 ```
+npm install -g widdershins
+
 widdershins --environment reference/env.json reference/dtlab-alligator.v1.yaml reference/README.md
+
+```
+
+or
+
+```
+npm i -g redoc-cli
+redoc-cli serve ./ reference/dtlab-alligator.v1.yaml
 ```
