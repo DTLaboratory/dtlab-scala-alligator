@@ -603,11 +603,7 @@ curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{
 ```
 
 ```javascript
-const inputBody = '{
-  "datetime": "string",
-  "idx": 0,
-  "value": 0
-}';
+const inputBody = 'undefined';
 const headers = {
   'Content-Type':'application/json'
 };
@@ -654,11 +650,7 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 > Body parameter
 
 ```json
-{
-  "datetime": "string",
-  "idx": 0,
-  "value": 0
-}
+undefined
 ```
 
 <h3 id="post-dtlab-alligator-type-actorid-parameters">Parameters</h3>

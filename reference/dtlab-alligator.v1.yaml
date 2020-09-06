@@ -159,6 +159,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Telemetry'
+            examples:
+              '{   "idx": 0,   "value": 5.5 }': {}
         description: The value of the property to upate identified by its index in its type definition.
     get:
       summary: get actor
