@@ -8,22 +8,17 @@ info:
   license:
     name: MIT
     url: 'https://github.com/SoMind/dtlab-scala-alligator/blob/master/LICENSE'
-  description: |-
-    Manage DtLab actor runtime cloud.
-
-    DtLab is an actor environment that enables the instantiation of DTs (digital twins) with persistence and messaging and basic schema checking.
+  description: "Manage DtLab actor runtime cloud.\n\nThe DtLab is a distributed programmable actor runtime environment.\n\n  * optimized to enable graphs of digital twins\n  * for IOT and non-IOT applications (neural nets, etc...)\n  * programmable via API (cURL)\n  * persistent\n  * asynchronous\n  * horizontally scalable\n  * schema-enforcing safety and correctness\n  \nThe DtLab API is the lowest level of interaction with the software that hosts the digital twins.\n\nThe building blocks of the DtLab system are:\n\n  1. DtType\n  2. DtActor\n  3. DtOperator (UNDER CONSTRUCTION)\n  4. DtLink (UNDER CONSTRUCTION)\n\nThe foundation of DtLab is that a DT (actor) state consists of a collection of the most recent named numeric observation of the DT's external analog.  IE: a DT for an oven would be a DtActor of a predefined DtType of \"oven\" that has a property called temperature that holds the last measured temperature of the oven.  The temperature observation is sent in a strict standard DTLab telemetry representation consisting of a \"name\", a datetime, and a numerical value.\n\nOriginal data sources will not transmit observations in this terse format.  Usually observations are sent from external systems as collections of information in hierarchical complex messages.  It is the responsibility of preprocessing systems like dtlab-ingest to decompose this complex verbose noisy inputs into the normalized timeseries observations sent to the DTs.\n\nDTs may be programmed to maintain properties that reflect computed states as well as observations.  A DtType for the above oven example may also have a \"tempurature_stability\" property that is maintained by a DtOperator assigned to the DtType.  The operator will be executed inside the actor every time its state advances - the operator can maintain other properties and has access to the actor's journal so it can perform timeseries calculations for every update.\n\nDTs can be linked (TBD - there is lifecycle and loop short circuit stuff to figure out when applying links).  The links let DTs monitor the state of collections of other DTs and they themselves can in turn be linked.  This graph resulting from DtLink connections supports complex systems needed for IOT and AR.\n"
 servers:
   - url: 'http://localhost:8081'
     description: dev local mode
 paths:
-  '/dtlab-alligator/type/{typeId}':
+  '/dtlab-alligator/type/{typer}':
     parameters:
       - schema:
           type: string
-          example: machinery
-        name: typeId
+        name: typer
         in: path
-        description: the name of the type that can show up in a path
         required: true
     post:
       summary: create type
@@ -72,6 +67,10 @@ paths:
                   children:
                     - alternator_module
                     - starter_module
+          application/xml:
+            schema:
+              type: object
+              properties: {}
         description: a copy of the successfully created type definition
     get:
       summary: get type
@@ -103,7 +102,9 @@ paths:
       operationId: get-dtlab-alligator-typeId
       description: Look up a type definition.
     delete:
-      summary: ''
+      summary: 'delete dttype'
+      tags:
+        - tell
       operationId: delete-dtlab-alligator-type-typeId
       responses:
         '202':
@@ -202,7 +203,9 @@ paths:
 
         Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
     delete:
-      summary: ''
+      summary: 'delete dtactor'
+      tags:
+        - tell
       operationId: delete-dtlab-alligator-actor-typeId-instanceId
       responses:
         '202':
@@ -286,7 +289,5 @@ components:
           name: height
           value: 2.2
 tags:
-  - name: create
-  - name: delete
   - name: ask
   - name: tell
