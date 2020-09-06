@@ -103,7 +103,9 @@ paths:
       operationId: get-dtlab-alligator-typeId
       description: Look up a type definition.
     delete:
-      summary: ''
+      summary: 'delete type'
+      tags:
+        - tell
       operationId: delete-dtlab-alligator-type-typeId
       responses:
         '202':
@@ -205,7 +207,9 @@ paths:
 
         Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
     delete:
-      summary: ''
+      summary: 'delete actor'
+      tags:
+        - tell
       operationId: delete-dtlab-alligator-actor-typeId-instanceId
       responses:
         '202':
@@ -289,7 +293,5 @@ components:
           name: height
           value: 2.2
 tags:
-  - name: create
-  - name: delete
   - name: ask
   - name: tell
