@@ -102,16 +102,20 @@ object ActorApiRoute
   }
 
   def applySegs(segs: List[String]): Route =
-    path("pathed") {
-      Observer("actor_route_telemetry_pathed")
-      applyFmt(segs, pathedFmt, NamedUnWrapper)
-    } ~
-      path("named") {
-        Observer("actor_route_telemetry_named")
-        applyFmt(segs, namedFmt, NamedUnWrapper)
-      } ~ {
-      Observer("actor_route_telemetry_idx")
-      applyFmt(segs, indexedFmt, IdxUnWrapper)
+    parameters('format.?) { format =>
+      {
+        format match {
+          case Some("pathed") =>
+            Observer("actor_route_telemetry_pathed")
+            applyFmt(segs, pathedFmt, NamedUnWrapper)
+          case Some("named") =>
+            Observer("actor_route_telemetry_named")
+            applyFmt(segs, namedFmt, NamedUnWrapper)
+          case _ =>
+            Observer("actor_route_telemetry_idx")
+            applyFmt(segs, indexedFmt, IdxUnWrapper)
+        }
+      }
     }
 
   def apply: Route =

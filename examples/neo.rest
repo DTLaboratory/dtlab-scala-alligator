@@ -4,6 +4,18 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
+POST /dtlab-alligator/type/object
+{
+  "props": ["absolute_magnitude", "diameter_min", "diameter_max", "miles_per_hour", "distance_in_miles"]
+}
+
+--
+POST /dtlab-alligator/type/orbiting_body
+{
+  "children": ["object"]
+}
+
+--
 DELETE /dtlab-alligator/actor/orbiting_body/Earth
 
 --
@@ -13,10 +25,10 @@ GET /dtlab-alligator/actor/orbiting_body/Earth
 GET /dtlab-alligator/actor/orbiting_body/Earth/object/3799865
 
 --
-GET /dtlab-alligator/actor/orbiting_body/Earth/object/3799865/named
+GET /dtlab-alligator/actor/orbiting_body/Earth/object/3799865?format=named
 
 --
-GET /dtlab-alligator/actor/orbiting_body/Earth/object/3799865/pathed
+GET /dtlab-alligator/actor/orbiting_body/Earth/object/3799865?format=pathed
 
 --
 GET /dtlab-alligator/actor/orbiting_body/Earth/object/3827337
