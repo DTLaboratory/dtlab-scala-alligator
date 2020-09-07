@@ -156,13 +156,16 @@ paths:
 
         Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
       requestBody:
+        description: The value of the property to update identified by its index in its type definition.
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Telemetry'
             examples:
-              '{   "idx": 0,   "value": 5.5 }': {}
-        description: The value of the property to upate identified by its index in its type definition.
+              example-1:
+                value:
+                  idx: 0
+                  value: 5.5
     get:
       summary: get actor
       tags:

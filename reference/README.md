@@ -40,11 +40,11 @@ The building blocks of the DtLab system are:
   3. DtOperator (UNDER CONSTRUCTION)
   4. DtLink (UNDER CONSTRUCTION)
 
-The foundation of DtLab is that a DT (actor) state consists of a collection of the most recent named numeric observation of the DT's external analog.  IE: a DT for an oven would be a DtActor of a predefined DtType of "oven" that has a property called temperature that holds the last measured temperature of the oven.  The temperature observation is sent in a strict standard DTLab telemetry representation consisting of a "name", a datetime, and a numerical value.
+The foundation of DtLab is that a DT (actor) state consists of a collection of the most recent named numeric observations of the DT's external analog.  IE: a DT for an oven would be a DtActor of a predefined DtType of "oven" that has a property called temperature that holds the last measured temperature of the oven.  The temperature observation is sent in a strict standard DTLab telemetry representation consisting of a "name", a datetime, and a numerical value.
 
 Original data sources will not transmit observations in this terse format.  Usually observations are sent from external systems as collections of information in hierarchical complex messages.  It is the responsibility of preprocessing systems like dtlab-ingest to decompose this complex verbose noisy inputs into the normalized timeseries observations sent to the DTs.
 
-DTs may be programmed to maintain properties that reflect computed states as well as observations.  A DtType for the above oven example may also have a "tempurature_stability" property that is maintained by a DtOperator assigned to the DtType.  The operator will be executed inside the actor every time its state advances - the operator can maintain other properties and has access to the actor's journal so it can perform timeseries calculations for every update.
+DTs may be programmed to maintain properties that reflect computed states as well as observations.  A DtType for the above oven example may also have a "tempurature_stability" property that is maintained by a DtOperator assigned to the DtType.  The operator will be executed inside the actor every time its state advances - the operator can maintain other properties and has access to the actor's journal so it can perform timeseries-assisted calculations for every update.
 
 DTs can be linked (TBD - there is lifecycle and loop short circuit stuff to figure out when applying links).  The links let DTs monitor the state of collections of other DTs and they themselves can in turn be linked.  This graph resulting from DtLink connections supports complex systems needed for IOT and AR.
 
@@ -554,7 +554,10 @@ curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{
 ```
 
 ```javascript
-const inputBody = 'undefined';
+const inputBody = '{
+  "idx": 0,
+  "value": 5.5
+}';
 const headers = {
   'Content-Type':'application/json'
 };
@@ -601,14 +604,17 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 > Body parameter
 
 ```json
-undefined
+{
+  "idx": 0,
+  "value": 5.5
+}
 ```
 
 <h3 id="post-dtlab-alligator-type-actorid-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[Telemetry](#schematelemetry)|false|The value of the property to upate identified by its index in its type definition.|
+|body|body|[Telemetry](#schematelemetry)|false|The value of the property to update identified by its index in its type definition.|
 |typeId|path|string|true|the name of the type that can show up in a path|
 |instanceId|path|string|true|the id of the instance of the type|
 |telemetryFmt|path|string|false|optional suffix to the path indicating telemetry is using 'name' instead of 'idx'|
