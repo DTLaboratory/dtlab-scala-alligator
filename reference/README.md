@@ -40,19 +40,19 @@ The building blocks of the DtLab system are:
   3. DtOperator (UNDER CONSTRUCTION)
   4. DtLink (UNDER CONSTRUCTION)
 
-The foundation of DtLab is that a DT (actor) state consists of a collection of the most recent named numeric observations of the DT's external analog.  IE: a DT for an oven would be a DtActor of a predefined DtType of "oven" that has a property called temperature that holds the last measured temperature of the oven.  The temperature observation is sent in a strict standard DTLab telemetry representation consisting of a "name", a datetime, and a numerical value.
+The foundation of DtLab is that a DT (actor) state consists of a collection of the most recent named numeric observations of the DT's external analog.  IE: a DT for an oven would be a DtActor of a predefined DtType of "oven" that has a property called "temperature" that holds the last measured temperature of the oven.  The temperature observation is sent in a strict standard DTLab telemetry representation consisting of a "name", a datetime, and a numerical value.
 
-Original data sources will not transmit observations in this terse format.  Usually observations are sent from external systems as collections of information in hierarchical complex messages.  It is the responsibility of preprocessing systems like dtlab-ingest to decompose this complex verbose noisy inputs into the normalized timeseries observations sent to the DTs.
+Original data sources will not transmit observations in this terse format.  Often, observations are sent from external systems in complex messages containing hierarchical collections of information.  It is the responsibility of preprocessing systems like dtlab-ingest to decompose these complex verbose noisy inputs into the normalized timeseries observations expected by the DTs.
 
 DTs may be programmed to maintain properties that reflect computed states as well as observations.  A DtType for the above oven example may also have a "tempurature_stability" property that is maintained by a DtOperator assigned to the DtType.  The operator will be executed inside the actor every time its state advances - the operator can maintain other properties and has access to the actor's journal so it can perform timeseries-assisted calculations for every update.
 
-DTs can be linked (TBD - there is lifecycle and loop short circuit stuff to figure out when applying links).  The links let DTs monitor the state of collections of other DTs and they themselves can in turn be linked.  This graph resulting from DtLink connections supports complex systems needed for IOT and AR.
+DTs can be linked (TBD - there is lifecycle and the normal hard graph issues like loop short circuits to figure out when applying links).  The links let DTs monitor the state of collections of other DTs and they themselves can in turn be linked.  This graph resulting from DtLink connections supports complex graph systems needed for IOT, AR, and pervasive computing.
 
 Base URLs:
 
 * <a href="http://localhost:8081">http://localhost:8081</a>
 
-Email: <a href="mailto:ed@onextent.com">navicore</a> 
+Email: <a href="mailto:ed@onextent.com">navicore</a> Web: <a href="https://somind.github.io/">navicore</a> 
 License: <a href="https://github.com/SoMind/dtlab-scala-alligator/blob/master/LICENSE">MIT</a>
 
 <h1 id="dtlab-alligator-ask">ask</h1>
@@ -174,7 +174,7 @@ headers = {
   'Accept': 'application/json'
 }
 
-r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}', headers = headers)
+r = requests.get('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
 
 print(r.json())
 
@@ -182,7 +182,7 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt} \
+curl -X GET http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
   -H 'Accept: application/json'
 
 ```
@@ -193,7 +193,7 @@ const headers = {
   'Accept':'application/json'
 };
 
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}',
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
 {
   method: 'GET',
 
@@ -208,7 +208,7 @@ fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{teleme
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("GET");
 int responseCode = con.getResponseCode();
@@ -224,28 +224,28 @@ System.out.println(response.toString());
 
 ```
 
-`GET /dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}`
+`GET /dtlab-alligator/actor/{typeId}/{instanceId}`
 
 *get actor*
 
 Look up a the state of an actor.
 
-Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+Note that OpenAPI 3.0 does not support repeating path components.  The OpenAPI position is that variable numbers of segments means they are optional - however, they are not optional in the DtLab system.  Fully specified paths point to a single unambiguous resource.  The OpenAPI team's solution to turn the segments into query params is not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support more parent child paths than the doc generation tools create examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
 
 <h3 id="get-dtlab-alligator-actorid-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
+|format|query|string|false|none|
 |typeId|path|string|true|the name of the type that can show up in a path|
 |instanceId|path|string|true|the id of the instance of the type|
-|telemetryFmt|path|string|false|optional suffix to the path indicating telemetry is using 'name' instead of 'idx'|
 
 #### Enumerated Values
 
 |Parameter|Value|
 |---|---|
-|telemetryFmt|named|
-|telemetryFmt|pathed|
+|format|named|
+|format|pathed|
 
 > Example responses
 
@@ -262,6 +262,26 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
     "datetime": "2020-07-26T17:25:21.803Z",
     "idx": 1,
     "value": 2.2
+  }
+]
+```
+
+```json
+[
+  {
+    "datetime": "2020-09-07T17:32:58.407Z",
+    "name": "height",
+    "value": 5.5
+  }
+]
+```
+
+```json
+[
+  {
+    "datetime": "2020-09-07T17:32:58.407Z",
+    "name": "machinery.one.height",
+    "value": 5.5
   }
 ]
 ```
@@ -540,7 +560,7 @@ headers = {
   'Content-Type': 'application/json'
 }
 
-r = requests.post('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}', headers = headers)
+r = requests.post('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}', headers = headers)
 
 print(r.json())
 
@@ -548,7 +568,7 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt} \
+curl -X POST http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId} \
   -H 'Content-Type: application/json'
 
 ```
@@ -562,7 +582,7 @@ const headers = {
   'Content-Type':'application/json'
 };
 
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}',
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
 {
   method: 'POST',
   body: inputBody,
@@ -577,7 +597,7 @@ fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{teleme
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("POST");
 int responseCode = con.getResponseCode();
@@ -593,13 +613,13 @@ System.out.println(response.toString());
 
 ```
 
-`POST /dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}`
+`POST /dtlab-alligator/actor/{typeId}/{instanceId}`
 
 *update a single actor property*
 
 Update an actor instance with attached property value indentified by the index of the property in the typeId.
 
-Note that OpenAPI 3.0 does not support repeating path components that are very natural in REST.  They feel variable numbers of segments means they are optional - they are not optional at all in the DtLab system.  They are the way to point to the resource, making them correct use of path segments.  The OpenAPI team's solution to turn the segents into query params is hacky and not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support deeper parent child paths than the spec creates examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+Note that OpenAPI 3.0 does not support repeating path components.  The OpenAPI position is that variable numbers of segments means they are optional - however, they are not optional in the DtLab system.  Fully specified paths point to a single unambiguous resource.  The OpenAPI team's solution to turn the segments into query params is not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support more parent child paths than the doc generation tools create examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
 
 > Body parameter
 
@@ -614,17 +634,17 @@ Note that OpenAPI 3.0 does not support repeating path components that are very n
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
+|format|query|string|false|telemetry in idx, named, or pathed formats|
 |body|body|[Telemetry](#schematelemetry)|false|The value of the property to update identified by its index in its type definition.|
 |typeId|path|string|true|the name of the type that can show up in a path|
 |instanceId|path|string|true|the id of the instance of the type|
-|telemetryFmt|path|string|false|optional suffix to the path indicating telemetry is using 'name' instead of 'idx'|
 
 #### Enumerated Values
 
 |Parameter|Value|
 |---|---|
-|telemetryFmt|named|
-|telemetryFmt|pathed|
+|format|named|
+|format|pathed|
 
 <h3 id="post-dtlab-alligator-type-actorid-responses">Responses</h3>
 
@@ -647,7 +667,7 @@ This operation does not require authentication
 ```python
 import requests
 
-r = requests.delete('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}')
+r = requests.delete('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}')
 
 print(r.json())
 
@@ -655,13 +675,13 @@ print(r.json())
 
 ```shell
 # You can also use wget
-curl -X DELETE http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}
+curl -X DELETE http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}
 
 ```
 
 ```javascript
 
-fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}',
+fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}',
 {
   method: 'DELETE'
 
@@ -675,7 +695,7 @@ fetch('http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{teleme
 ```
 
 ```java
-URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}");
+URL obj = new URL("http://localhost:8081/dtlab-alligator/actor/{typeId}/{instanceId}");
 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 con.setRequestMethod("DELETE");
 int responseCode = con.getResponseCode();
@@ -691,7 +711,7 @@ System.out.println(response.toString());
 
 ```
 
-`DELETE /dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}`
+`DELETE /dtlab-alligator/actor/{typeId}/{instanceId}`
 
 *delete dtactor*
 
@@ -703,14 +723,6 @@ remove all traces of the DT - removes the journal.
 |---|---|---|---|---|
 |typeId|path|string|true|the name of the type that can show up in a path|
 |instanceId|path|string|true|the id of the instance of the type|
-|telemetryFmt|path|string|false|optional suffix to the path indicating telemetry is using 'name' instead of 'idx'|
-
-#### Enumerated Values
-
-|Parameter|Value|
-|---|---|
-|telemetryFmt|named|
-|telemetryFmt|pathed|
 
 <h3 id="delete-dtlab-alligator-actor-typeid-instanceid-responses">Responses</h3>
 

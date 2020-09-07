@@ -5,6 +5,7 @@ info:
   contact:
     name: navicore
     email: ed@onextent.com
+    url: 'https://somind.github.io/'
   license:
     name: MIT
     url: 'https://github.com/SoMind/dtlab-scala-alligator/blob/master/LICENSE'
@@ -102,7 +103,7 @@ paths:
       operationId: get-dtlab-alligator-typeId
       description: Look up a type definition.
     delete:
-      summary: 'delete dttype'
+      summary: delete dttype
       tags:
         - tell
       operationId: delete-dtlab-alligator-type-typeId
@@ -114,7 +115,7 @@ paths:
         '404':
           description: Not Found
       description: "Delete the typeId.  \n\nNote, this should be a developer operation and not available to normal client services.  Deleting a type makes instances of that type unavailable.  If you recreate a type and lookup an old instance created under the original type, that type with its old state will be resurected.  See the actor API to clean up instances of actors if that behavior is unwanted."
-  '/dtlab-alligator/actor/{typeId}/{instanceId}/{telemetryFmt}':
+  '/dtlab-alligator/actor/{typeId}/{instanceId}':
     parameters:
       - schema:
           type: string
@@ -130,15 +131,6 @@ paths:
         in: path
         description: the id of the instance of the type
         required: true
-      - schema:
-          type: string
-          enum:
-            - named
-            - pathed
-          example: named
-        name: telemetryFmt
-        in: path
-        description: "optional suffix to the path indicating telemetry is using 'name' instead of 'idx'"
     post:
       summary: update a single actor property
       tags:
@@ -166,6 +158,16 @@ paths:
                 value:
                   idx: 0
                   value: 5.5
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - named
+              - pathed
+            example: named
+          in: query
+          name: format
+          description: 'telemetry in idx, named, or pathed formats'
     get:
       summary: get actor
       tags:
@@ -180,7 +182,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Telemetry'
               examples:
-                example-1:
+                default idx example:
                   value:
                     - datetime: '2020-09-13T15:31:21.671Z'
                       idx: 0
@@ -188,6 +190,16 @@ paths:
                     - datetime: '2020-07-26T17:25:21.803Z'
                       idx: 1
                       value: 2.2
+                named example:
+                  value:
+                    - datetime: '2020-09-07T17:32:58.407Z'
+                      name: height
+                      value: 5.5
+                pathed example:
+                  value:
+                    - datetime: '2020-09-07T17:32:58.407Z'
+                      name: machinery.one.height
+                      value: 5.5
             application/xml:
               schema:
                 type: object
@@ -205,8 +217,17 @@ paths:
         Look up a the state of an actor.
 
         Note that OpenAPI 3.0 does not support repeating path components.  The OpenAPI position is that variable numbers of segments means they are optional - however, they are not optional in the DtLab system.  Fully specified paths point to a single unambiguous resource.  The OpenAPI team's solution to turn the segments into query params is not followed here.  To document a path for every supported level of parent / child relations would create massive duplication of documentation.  So know that DtPaths in DtLab support more parent child paths than the doc generation tools create examples for.  `/dtlab-alligator/actor/{grandParentTypeId}/{grandParentInstanceId}/{parentTypeId}/{parentInstanceId}/{typeId}/{instanceId}` is valid.
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - named
+              - pathed
+            example: pathed
+          in: query
+          name: format
     delete:
-      summary: 'delete dtactor'
+      summary: delete dtactor
       tags:
         - tell
       operationId: delete-dtlab-alligator-actor-typeId-instanceId
