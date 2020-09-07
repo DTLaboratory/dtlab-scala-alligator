@@ -4,16 +4,22 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
+POST /dtlab-alligator/type/machinery
+{
+  "props": ["height"]
+}
+
+--
 GET /dtlab-alligator/type/machinery
 
 --
 GET /dtlab-alligator/actor/machinery/one
 
 --
-GET /dtlab-alligator/actor/machinery/one/named
+GET /dtlab-alligator/actor/machinery/one?format=named
 
 --
-GET /dtlab-alligator/actor/machinery/one/pathed
+GET /dtlab-alligator/actor/machinery/one?format=pathed
 
 --
 POST /dtlab-alligator/actor/machinery/one
@@ -23,14 +29,14 @@ POST /dtlab-alligator/actor/machinery/one
 }
 
 --
-POST /dtlab-alligator/actor/machinery/one/pathed
+POST /dtlab-alligator/actor/machinery/one?format=pathed
 {
   "name": "machinery.one.height",
   "value": 6.5
 }
 
 --
-POST /dtlab-alligator/actor/machinery/one/named
+POST /dtlab-alligator/actor/machinery/one?format=named
 {
   "name": "height",
   "value": 7.5
