@@ -17,8 +17,8 @@ parallelExecution in test := false
 crossScalaVersions := List("2.12.11")
 version := "1.0"
 
-val akkaVersion = "2.6.6"
 val akkaHttpVersion = "10.2.0"
+val akkaVersion = "2.6.8"
 val swaggerVersion = "2.0.8"
 
 inThisBuild(List(
@@ -38,10 +38,10 @@ inThisBuild(List(
 libraryDependencies ++=
   Seq(
     "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
-    "org.postgresql" % "postgresql" % "42.2.14",
-    "com.github.dnvriend" %% "akka-persistence-jdbc" % "3.5.2",
-    "tech.navicore" %% "navipath" % "4.0.1",
-    "ch.megard" %% "akka-http-cors" % "1.0.0",
+    "tech.navicore" %% "navipath" % "4.0.2",
+    "org.postgresql" % "postgresql" % "42.2.16",
+    "com.github.dnvriend" %% "akka-persistence-jdbc" % "3.5.3",
+    "ch.megard" %% "akka-http-cors" % "1.1.0",
     "ch.qos.logback" % "logback-classic" % "1.2.3",
     "com.typesafe" % "config" % "1.4.0",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
@@ -55,7 +55,7 @@ libraryDependencies ++=
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
     "org.json4s" %% "json4s-native" % "3.6.9",
     "com.github.nscala-time" %% "nscala-time" % "2.24.0",
-    "org.scalatest" %% "scalatest" % "3.2.0" % "test"
+    "org.scalatest" %% "scalatest" % "3.2.2" % "test"
   )
 
 assemblyJarName in assembly := s"${name.value}.jar"
