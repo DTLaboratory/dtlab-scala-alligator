@@ -32,6 +32,6 @@ object Main extends LazyLogging with JsonSupport with HttpSupport {
           }
         }
 
-    Http().bindAndHandle(route, "0.0.0.0", port)
+    Http().newServerAt("0.0.0.0", port).bindFlow(route)
   }
 }
