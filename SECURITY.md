@@ -10,4 +10,4 @@ Versions of project currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Report vulnerabilities to <team@somind.tech>
+Report vulnerabilities to <mailto:team@somind.tech>
