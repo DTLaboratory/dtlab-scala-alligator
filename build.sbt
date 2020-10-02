@@ -17,7 +17,7 @@ parallelExecution in test := false
 crossScalaVersions := List("2.12.11")
 version := "1.0"
 
-val akkaHttpVersion = "10.2.0"
+val akkaHttpVersion = "10.2.1"
 val akkaVersion = "2.6.9"
 val swaggerVersion = "2.0.8"
 
