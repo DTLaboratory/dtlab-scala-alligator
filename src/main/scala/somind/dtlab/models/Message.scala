@@ -138,3 +138,13 @@ final case class TelemetryMsg(p: DtPath, c: Telemetry)
     case _ => this
   }
 }
+
+final case class TakeSnapshot()
+// collection of all props in an actor instance
+final case class DtChildren(
+    children: List[String] = List()
+)
+final case class DtStateHolder[T](
+    state: T,
+    children: DtChildren
+)

@@ -12,6 +12,7 @@ object DtDirectory extends LazyLogging {
 class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
+  override var children: DtChildren = DtChildren()
 
   def validateRelationships(path: DtPath): DtResult = {
     val errs = path
@@ -66,6 +67,10 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
   }
 
   override def receiveCommand: Receive = {
+
+    case _: TakeSnapshot =>
+      logger.debug(s"saving snapshot for children: $children")
+      takeSnapshot(true)
 
     case m: TelemetryMsg if m.path().trail.nonEmpty =>
       isValidTelemetry(m) match {

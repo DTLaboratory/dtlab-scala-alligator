@@ -1,3 +1,4 @@
+.bsp/
 ENV*sh
 examples/*token*
 .bloop/
