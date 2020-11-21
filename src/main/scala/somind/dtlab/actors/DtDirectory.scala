@@ -137,9 +137,10 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
       state = DtTypeMap(state.types - del.typeId)
       Observer("reapplied_type_actor_command_delete_from_jrnl")
 
-    case SnapshotOffer(_, s: DtTypeMap @unchecked) =>
+    case SnapshotOffer(_, snapshot: DtStateHolder[DtTypeMap] @unchecked) =>
+      state = snapshot.state
+      children = snapshot.children
       Observer("recovered_type_actor_state_from_snapshot")
-      state = s
 
     case _: RecoveryCompleted =>
       Observer("resurrected_type_actor")

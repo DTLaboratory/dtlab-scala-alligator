@@ -19,7 +19,6 @@ trait DtActorBase extends Actor with LazyLogging {
   }
 
   def upsert(m: DtMsg[Any]): Unit = {
-
     m.path().trail match {
       case Some(p) =>
         val instanceId = p.instanceId
@@ -32,7 +31,6 @@ trait DtActorBase extends Actor with LazyLogging {
       case e =>
         throw new UnsupportedOperationException(s"no trail: $e")
     }
-
   }
 
 }
