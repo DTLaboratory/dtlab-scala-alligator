@@ -113,6 +113,15 @@ final case class DtTypeMap(
     types: Map[String, DtType]
 )
 
+final case class DtGetChildrenNames(p: DtPath) extends DtMsg[Any] {
+  override def path(): DtPath = p
+  override def content(): Any = None
+  def trailMsg(): DtGetChildrenNames = p.trail match {
+    case Some(tp) => DtGetChildrenNames(tp)
+    case _        => this
+  }
+}
+
 final case class DtGetState(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None

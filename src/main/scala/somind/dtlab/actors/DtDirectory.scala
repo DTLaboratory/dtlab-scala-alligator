@@ -12,7 +12,6 @@ object DtDirectory extends LazyLogging {
 class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
-  override var children: DtChildren = DtChildren()
 
   def validateRelationships(path: DtPath): DtResult = {
     val errs = path
@@ -88,6 +87,10 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
           sender ! e
       }
 
+    case _: DtGetChildrenNames =>
+      logger.debug(s"${self.path} handling DtGetChildrenNames $children")
+      sender ! children
+
     case dt: DtType =>
       state.types.get(dt.name) match {
         case Some(prev) =>
@@ -144,7 +147,7 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
 
     case _: RecoveryCompleted =>
       Observer("resurrected_type_actor")
-      logger.debug(s"${self.path}: Recovery completed. State: $state")
+      logger.debug(s"${self.path}: Recovery completed. State: $state Children: $children")
 
     case x =>
       logger.warn(s"unexpected recover msg: $x")

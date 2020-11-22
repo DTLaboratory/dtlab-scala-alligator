@@ -12,7 +12,6 @@ object DtActor extends LazyLogging {
 class DtActor extends DtPersistentActorBase[DtState] {
 
   override var state: DtState = DtState()
-  override var children: DtChildren = DtChildren()
 
   override def receiveCommand: Receive = {
 
@@ -20,8 +19,12 @@ class DtActor extends DtPersistentActorBase[DtState] {
       logger.debug(s"saving snapshot for children: $children")
       takeSnapshot(true)
 
-    case m: DtMsg[Any @unchecked] if m.path().trail.nonEmpty =>
+    case m: DtMsg[Any @unchecked] if m.path().trail.exists(_.instanceId != "children") =>
       upsert(m)
+
+    case _: DtGetChildrenNames =>
+      logger.debug(s"${self.path} handling DtGetChildrenNames: $children")
+      sender ! children
 
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
@@ -51,7 +54,7 @@ class DtActor extends DtPersistentActorBase[DtState] {
       Observer("recovered_dt_actor_state_from_snapshot")
 
     case _: RecoveryCompleted =>
-      logger.debug(s"${self.path}: Recovery completed. State: $state")
+      logger.debug(s"${self.path}: Recovery completed. State: $state Children: $children")
       Observer("resurrected_dt_actor")
 
     case x =>
