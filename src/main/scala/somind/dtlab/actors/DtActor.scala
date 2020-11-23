@@ -15,8 +15,20 @@ class DtActor extends DtPersistentActorBase[DtState] {
 
   override def receiveCommand: Receive = {
 
-    case m: DtMsg[Any @unchecked] if m.path().trail.nonEmpty =>
+    case _: TakeSnapshot =>
+      takeSnapshot(true)
+
+    case m: DtMsg[Any @unchecked]
+        if m.path().trail.nonEmpty && !m
+          .path()
+          .trail
+          .exists(leaf =>
+            leaf.typeId == self.path.name && leaf.instanceId == "children" && leaf.trail.isEmpty) =>
+      logger.debug(s"${self.path.name} forwarding $m")
       upsert(m)
+
+    case _: DtGetChildrenNames =>
+      sender ! children
 
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
@@ -40,12 +52,14 @@ class DtActor extends DtPersistentActorBase[DtState] {
     case t: Telemetry =>
       state = DtState(state.state + (t.idx -> t))
 
-    case SnapshotOffer(_, s: DtState @unchecked) =>
-      state = s
+    case SnapshotOffer(_, snapshot: DtStateHolder[DtState] @unchecked) =>
+      state = snapshot.state
+      children = snapshot.children
       Observer("recovered_dt_actor_state_from_snapshot")
 
     case _: RecoveryCompleted =>
-      logger.debug(s"${self.path}: Recovery completed. State: $state")
+      logger.debug(
+        s"${self.path}: Recovery completed. State: $state Children: $children")
       Observer("resurrected_dt_actor")
 
     case x =>

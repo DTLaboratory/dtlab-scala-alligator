@@ -67,6 +67,10 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
 
   override def receiveCommand: Receive = {
 
+    case _: TakeSnapshot =>
+      logger.debug(s"saving snapshot for children: $children")
+      takeSnapshot(true)
+
     case m: TelemetryMsg if m.path().trail.nonEmpty =>
       isValidTelemetry(m) match {
         case DtOk() =>
@@ -82,6 +86,10 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
         case e =>
           sender ! e
       }
+
+    case _: DtGetChildrenNames =>
+      logger.debug(s"${self.path} handling DtGetChildrenNames $children")
+      sender ! children
 
     case dt: DtType =>
       state.types.get(dt.name) match {
@@ -132,13 +140,14 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
       state = DtTypeMap(state.types - del.typeId)
       Observer("reapplied_type_actor_command_delete_from_jrnl")
 
-    case SnapshotOffer(_, s: DtTypeMap @unchecked) =>
+    case SnapshotOffer(_, snapshot: DtStateHolder[DtTypeMap] @unchecked) =>
+      state = snapshot.state
+      children = snapshot.children
       Observer("recovered_type_actor_state_from_snapshot")
-      state = s
 
     case _: RecoveryCompleted =>
       Observer("resurrected_type_actor")
-      logger.debug(s"${self.path}: Recovery completed. State: $state")
+      logger.debug(s"${self.path}: Recovery completed. State: $state Children: $children")
 
     case x =>
       logger.warn(s"unexpected recover msg: $x")

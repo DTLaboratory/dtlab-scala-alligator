@@ -10,6 +10,7 @@ import somind.dtlab.models._
 import somind.dtlab.observe.Observer
 import somind.dtlab.routes.functions.Marshallers._
 import somind.dtlab.routes.functions.UnWrappers._
+import spray.json._
 
 /**
   * Enables CRUD for actors and their states.
@@ -118,37 +119,97 @@ object ActorApiRoute
       }
     }
 
+  def applyChildrenFmt(dtp: DtPath): Route = {
+    get {
+      onSuccess(dtDirectory ask DtGetChildrenNames(dtp)) {
+        case c: DtChildren =>
+          Observer("actor_route_get_children_names_success")
+          complete(HttpEntity(ContentTypes.`application/json`, c.children.toJson.prettyPrint))
+        case DtErr(emsg) =>
+          Observer("actor_route_get_failure")
+          complete(StatusCodes.NotFound, emsg)
+        case e =>
+          Observer("actor_route_get_unk_err")
+          logger.warn(s"unable to handle: $e")
+          complete(StatusCodes.InternalServerError)
+      }
+    }
+  }
+
+  def applyChildSegs(segs: List[String]): Route = {
+    Observer("actor_route_children_query")
+    somind.dtlab.models.DtPath(segs :+ "children") match {
+      case Some(p: DtPath) =>
+        val fullPath = somind.dtlab.models.DtPath("root", "root", Some(p))
+        applyChildrenFmt(fullPath)
+      case _ =>
+        logger.warn(s"can not extract DtPath from $segs")
+        Observer("bad_request")
+        complete(StatusCodes.BadRequest)
+    }
+  }
+
   def apply: Route =
     pathPrefix("actor") {
       pathPrefix(Segments(20)) { segs: List[String] =>
         applySegs(segs)
       } ~
+        pathPrefix(Segments(19)) { segs: List[String] =>
+          applyChildSegs(segs)
+        } ~
         pathPrefix(Segments(18)) { segs: List[String] =>
           applySegs(segs)
+        } ~
+        pathPrefix(Segments(17)) { segs: List[String] =>
+          applyChildSegs(segs)
         } ~
         pathPrefix(Segments(16)) { segs: List[String] =>
           applySegs(segs)
         } ~
+        pathPrefix(Segments(15)) { segs: List[String] =>
+          applyChildSegs(segs)
+        } ~
         pathPrefix(Segments(14)) { segs: List[String] =>
           applySegs(segs)
+        } ~
+        pathPrefix(Segments(13)) { segs: List[String] =>
+          applyChildSegs(segs)
         } ~
         pathPrefix(Segments(12)) { segs: List[String] =>
           applySegs(segs)
         } ~
+        pathPrefix(Segments(11)) { segs: List[String] =>
+          applyChildSegs(segs)
+        } ~
         pathPrefix(Segments(10)) { segs: List[String] =>
           applySegs(segs)
+        } ~
+        pathPrefix(Segments(9)) { segs: List[String] =>
+          applyChildSegs(segs)
         } ~
         pathPrefix(Segments(8)) { segs: List[String] =>
           applySegs(segs)
         } ~
+        pathPrefix(Segments(7)) { segs: List[String] =>
+          applyChildSegs(segs)
+        } ~
         pathPrefix(Segments(6)) { segs: List[String] =>
           applySegs(segs)
+        } ~
+        pathPrefix(Segments(5)) { segs: List[String] =>
+          applyChildSegs(segs)
         } ~
         pathPrefix(Segments(4)) { segs: List[String] =>
           applySegs(segs)
         } ~
+        pathPrefix(Segments(3)) { segs: List[String] =>
+          applyChildSegs(segs)
+        } ~
         pathPrefix(Segments(2)) { segs: List[String] =>
           applySegs(segs)
+        } ~
+        pathPrefix(Segments(1)) { segs: List[String] =>
+          applyChildSegs(segs)
         }
 
     }

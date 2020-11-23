@@ -2,18 +2,28 @@ package somind.dtlab.actors
 
 import akka.actor.{Actor, Props}
 import com.typesafe.scalalogging.LazyLogging
-import somind.dtlab.models.DtMsg
+import somind.dtlab.models._
 
-trait DtActorBase extends Actor with LazyLogging {
+trait DtActorBase extends Actor with LazyLogging with JsonSupport {
 
-  def create(m: DtMsg[Any], name: String): Unit =
+  var children: DtChildren = DtChildren()
+
+  def create(m: DtMsg[Any], name: String): Unit = {
+    logger.debug(s"${self.path} create sees $name and sees children: $children")
+    if (!children.children.contains(name)) {
+      children = DtChildren(children = name :: children.children)
+      logger.debug(s"updating children with $name")
+      self ! TakeSnapshot()
+    }
+    logger.debug(s"${self.path} forwarding '$name' from create function: $m")
     context.actorOf(Props[DtActor], name) forward m
+  }
 
   def upsert(m: DtMsg[Any]): Unit = {
-
     m.path().trail match {
       case Some(p) =>
         val instanceId = p.instanceId
+        // note: recursive types not supported yet
         if (self.path.name == p.typeId)
           context
             .child(instanceId)
@@ -23,7 +33,6 @@ trait DtActorBase extends Actor with LazyLogging {
       case e =>
         throw new UnsupportedOperationException(s"no trail: $e")
     }
-
   }
 
 }
