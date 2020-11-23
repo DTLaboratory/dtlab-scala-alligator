@@ -1,3 +1,4 @@
+*.log
 .bsp/
 ENV*sh
 examples/*token*

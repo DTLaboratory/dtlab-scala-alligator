@@ -124,7 +124,7 @@ object ActorApiRoute
       onSuccess(dtDirectory ask DtGetChildrenNames(dtp)) {
         case c: DtChildren =>
           Observer("actor_route_get_children_names_success")
-          complete(HttpEntity(ContentTypes.`application/json`, c.toJson.prettyPrint))
+          complete(HttpEntity(ContentTypes.`application/json`, c.children.toJson.prettyPrint))
         case DtErr(emsg) =>
           Observer("actor_route_get_failure")
           complete(StatusCodes.NotFound, emsg)
@@ -137,10 +137,11 @@ object ActorApiRoute
   }
 
   def applyChildSegs(segs: List[String]): Route = {
-    logger.debug(s"ejs get children **********************************")
     Observer("actor_route_children_query")
     somind.dtlab.models.DtPath(segs :+ "children") match {
-      case Some(p: DtPath) => applyChildrenFmt(p)
+      case Some(p: DtPath) =>
+        val fullPath = somind.dtlab.models.DtPath("root", "root", Some(p))
+        applyChildrenFmt(fullPath)
       case _ =>
         logger.warn(s"can not extract DtPath from $segs")
         Observer("bad_request")

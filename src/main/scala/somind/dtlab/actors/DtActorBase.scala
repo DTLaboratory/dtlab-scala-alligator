@@ -2,18 +2,12 @@ package somind.dtlab.actors
 
 import akka.actor.{Actor, Props}
 import com.typesafe.scalalogging.LazyLogging
-import somind.dtlab.models.{DtChildren, DtMsg, TakeSnapshot}
+import somind.dtlab.models._
 
-trait DtActorBase extends Actor with LazyLogging {
+trait DtActorBase extends Actor with LazyLogging with JsonSupport {
 
   var children: DtChildren = DtChildren()
-  //var children: DtChildren
 
-  // ejs bug!  seems like this children is not visible - is a shadowed
-  // ejs bug!  seems like this children is not visible - is a shadowed
-  // ejs bug!  seems like this children is not visible - is a shadowed
-  // ejs bug!  seems like this children is not visible - is a shadowed
-  // ejs bug!  seems like this children is not visible - is a shadowed
   def create(m: DtMsg[Any], name: String): Unit = {
     logger.debug(s"${self.path} create sees $name and sees children: $children")
     if (!children.children.contains(name)) {
@@ -25,13 +19,7 @@ trait DtActorBase extends Actor with LazyLogging {
     context.actorOf(Props[DtActor], name) forward m
   }
 
-  // bug !!! dtdirectory is flattenning the root - object is a child for some reason that is wrong
-  // bug !!! dtdirectory is flattenning the root - object is a child for some reason that is wrong
-  // bug !!! dtdirectory is flattenning the root - object is a child for some reason that is wrong
-  // bug !!! dtdirectory is flattenning the root - object is a child for some reason that is wrong
-  // bug !!! dtdirectory is flattenning the root - object is a child for some reason that is wrong
   def upsert(m: DtMsg[Any]): Unit = {
-    logger.debug(s"${self.path} upsert: $m")
     m.path().trail match {
       case Some(p) =>
         val instanceId = p.instanceId
