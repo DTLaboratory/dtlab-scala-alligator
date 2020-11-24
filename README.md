@@ -9,12 +9,6 @@ The DtLab is a distributed programmable actor runtime environment.
   * for IOT and non-IOT applications (neural nets, etc...)
   * programmable via API (cURL)
 
-## Under Construction
-
-## Under Construction
-
-## Under Construction
-
 # Repo Organization and Coding Guidelines
 
 Each repository name has the service name, the computer language implementation, and the release name.  The initial
