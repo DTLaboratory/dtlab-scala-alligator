@@ -10,7 +10,7 @@ trait DtActorBase extends Actor with LazyLogging with JsonSupport {
 
   def create(m: DtMsg[Any], name: String): Unit = {
     logger.debug(s"${self.path} create sees $name and sees children: $children")
-    if (!children.children.contains(name)) {
+    if (m.isInstanceOf[TelemetryMsg] && !children.children.contains(name)) {
       children = DtChildren(children = name :: children.children)
       logger.debug(s"updating children with $name")
       self ! TakeSnapshot()

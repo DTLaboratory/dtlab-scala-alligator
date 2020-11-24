@@ -13,6 +13,9 @@ POST /dtlab-alligator/type/machinery
 GET /dtlab-alligator/type/machinery
 
 --
+GET /dtlab-alligator/actor/machinery
+
+--
 GET /dtlab-alligator/actor/machinery/one
 
 --
