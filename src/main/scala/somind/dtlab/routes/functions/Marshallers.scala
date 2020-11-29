@@ -19,9 +19,9 @@ import scala.concurrent.Future
   */
 object Marshallers extends JsonSupport with LazyLogging {
 
-  type Marshaller = (DtState, String, DtPath) => Future[Option[String]]
+  type Marshaller = (Seq[Telemetry], String, DtPath) => Future[Option[String]]
 
-  private def fmt(s: DtState,
+  private def fmt(s: Seq[Telemetry],
                   t: String,
                   dtp: DtPath,
                   dottedName: Boolean = false): Future[Option[String]] = {
@@ -30,9 +30,10 @@ object Marshallers extends JsonSupport with LazyLogging {
       case Some(dt: DtType) =>
         val names: List[String] = dt.props.getOrElse(Set()).toList
         Some(
-          s.state
-            .map(pair => {
-              val (nameIdx, origTelem) = pair
+          s
+            .map(telem => {
+              val nameIdx = telem.idx
+              val origTelem = telem
               val lookedUpName: String = {
                 nameIdx match {
                   case idx if idx >= names.length =>
@@ -51,16 +52,16 @@ object Marshallers extends JsonSupport with LazyLogging {
     }
   }
 
-  def namedFmt(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
+  def namedFmt(s: Seq[Telemetry], t: String, dtp: DtPath): Future[Option[String]] =
     fmt(s, t, dtp)
 
-  def pathedFmt(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
+  def pathedFmt(s: Seq[Telemetry], t: String, dtp: DtPath): Future[Option[String]] =
     fmt(s, t, dtp, dottedName = true)
 
   //noinspection ScalaUnusedSymbol
-  def indexedFmt(s: DtState, t: String, dtp: DtPath): Future[Option[String]] =
+  def indexedFmt(s: Seq[Telemetry], t: String, dtp: DtPath): Future[Option[String]] =
     Future {
-      Some(s.state.values.toJson.prettyPrint)
+      Some(s.toJson.prettyPrint)
     }
 
 }

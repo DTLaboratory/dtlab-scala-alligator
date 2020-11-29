@@ -22,6 +22,12 @@ GET /dtlab-alligator/actor/machinery/one
 GET /dtlab-alligator/actor/machinery/one?limit=5
 
 --
+GET /dtlab-alligator/actor/machinery/one?limit=5&format=named
+
+--
+GET /dtlab-alligator/actor/machinery/one?limit=2&format=pathed
+
+--
 GET /dtlab-alligator/actor/machinery/one?format=named
 
 --
