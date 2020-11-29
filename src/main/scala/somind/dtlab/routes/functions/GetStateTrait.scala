@@ -21,7 +21,7 @@ trait GetStateTrait extends Directives with JsonSupport with LazyLogging {
       onSuccess(dtDirectory ask DtGetState(dtp)) {
         case s: DtState =>
           Observer("actor_route_get_success")
-          onSuccess(marshal(s, dtp.endTypeName(), dtp)) {
+          onSuccess(marshal(s.state.values.toSeq, dtp.endTypeName(), dtp)) {
             case Some(r) =>
               complete(HttpEntity(ContentTypes.`application/json`, r))
             case _ =>

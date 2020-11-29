@@ -7,37 +7,58 @@ import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.Conf._
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import spray.json._
+import somind.dtlab.routes.functions.Marshallers._
 
 trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
 
-  private def applyGetDtJrnl(dtp: DtPath, limit: Int): Route = {
-    get {
-      onSuccess(dtDirectory ask DtGetJrnl(dtp, limit)) {
-        case j: Seq[Telemetry] @unchecked =>
-          Observer("actor_route_get_jrnl_success")
-          complete(
-            HttpEntity(ContentTypes.`application/json`, j.toJson.prettyPrint))
-        case DtErr(emsg) =>
-          Observer("actor_route_get_jrnl_failure")
-          complete(StatusCodes.NotFound, emsg)
-        case e =>
-          Observer("actor_route_get_jrnl_unk_err")
-          logger.warn(s"unable to handle: $e")
-          complete(StatusCodes.InternalServerError)
-      }
+  private def jrnl(dtp: DtPath, limit: Int, marshal: Marshaller): Route = get {
+    onSuccess(dtDirectory ask DtGetJrnl(dtp, limit)) {
+      case s: Seq[Telemetry] @unchecked =>
+        Observer("actor_route_jrnl_success")
+        onSuccess(marshal(s, dtp.endTypeName(), dtp)) {
+          case Some(r) =>
+            complete(HttpEntity(ContentTypes.`application/json`, r))
+          case _ =>
+            complete(StatusCodes.InternalServerError)
+        }
+      case DtErr(emsg) =>
+        Observer("actor_route_jrnl_failure")
+        complete(StatusCodes.NotFound, emsg)
+      case e =>
+        Observer("actor_route_jrnl_unk_err")
+        logger.warn(s"unable to handle: $e")
+        complete(StatusCodes.InternalServerError)
     }
   }
 
-  def handleGetJrnl(segs: List[String], limit: Int): Route = {
+  private def applyJrnl(segs: List[String],
+                        limit: Int,
+                        marshall: Marshaller): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        applyGetDtJrnl(somind.dtlab.models.DtPath("root", "root", p), limit)
+        jrnl(somind.dtlab.models.DtPath("root", "root", p), limit, marshall)
       case _ =>
         logger.warn(s"can not extract DtPath from $segs")
         Observer("bad_request")
         complete(StatusCodes.BadRequest)
     }
   }
+
+  def handleGetJrnl(segs: List[String], limit: Int): Route =
+    parameters('format.?) { format =>
+      {
+        format match {
+          case Some("pathed") =>
+            Observer("actor_route_jrnl_pathed")
+            applyJrnl(segs, limit, pathedFmt)
+          case Some("named") =>
+            Observer("actor_route_jrnl_named")
+            applyJrnl(segs, limit, namedFmt)
+          case _ =>
+            Observer("actor_route_jrnl_idx")
+            applyJrnl(segs, limit, indexedFmt)
+        }
+      }
+    }
 
 }
