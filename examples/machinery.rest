@@ -19,6 +19,9 @@ GET /dtlab-alligator/actor/machinery
 GET /dtlab-alligator/actor/machinery/one
 
 --
+GET /dtlab-alligator/actor/machinery/one?limit=5
+
+--
 GET /dtlab-alligator/actor/machinery/one?format=named
 
 --
@@ -28,7 +31,7 @@ GET /dtlab-alligator/actor/machinery/one?format=pathed
 POST /dtlab-alligator/actor/machinery/one
 {
   "idx": 0,
-  "value": 5.5
+  "value": 5.6
 }
 
 --

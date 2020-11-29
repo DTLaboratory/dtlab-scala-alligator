@@ -9,7 +9,7 @@ object DtDirectory extends LazyLogging {
   def name: String = this.getClass.getName
 }
 
-class DtDirectory extends DtPersistentActorBase[DtTypeMap] {
+class DtDirectory extends DtPersistentActorBase[DtTypeMap, DtType] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
 
