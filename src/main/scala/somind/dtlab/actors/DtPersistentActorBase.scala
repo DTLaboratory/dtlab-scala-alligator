@@ -18,20 +18,27 @@ abstract class DtPersistentActorBase[T, J]
 
   var state: T
 
-  def grabJrnl(limit: Int): Future[Seq[J]] = {
+  def grabJrnl(ilimit: Int, ioffset: Int): Future[Seq[J]] = {
 
-    logger.debug(s"${self.path} jrnl query limit $limit")
-    // for debugging. reads all events every call
+    logger.debug(s"${self.path} jrnl query limit $ilimit and offset $ioffset")
+    val (start: Long, stop: Long) = (ilimit.abs, ioffset.abs) match {
+      case (limit, 0) =>
+        val position = lastSequenceNr - limit + 1
+        (position, Long.MaxValue)
+      case (limit, offset) =>
+        val position = lastSequenceNr - offset + 1
+        (position, position + limit - 1)
+    }
     val readJournal: JdbcReadJournal = PersistenceQuery(system)
       .readJournalFor[JdbcReadJournal](JdbcReadJournal.Identifier)
     val willCompleteTheStream: Source[EventEnvelope, NotUsed] =
-      readJournal.currentEventsByPersistenceId(persistenceId, 0L, Long.MaxValue)
+      readJournal.currentEventsByPersistenceId(persistenceId, start, stop)
 
     val formattedResult: Source[J, NotUsed] =
       willCompleteTheStream.map((e: EventEnvelope) => {
         e.event.asInstanceOf[J]
       })
-    formattedResult.runWith(Sink.seq[J]).map(_.reverse.slice(0, limit))
+    formattedResult.runWith(Sink.seq[J]).map(_.reverse)
   }
 
   override def persistenceId: String =
