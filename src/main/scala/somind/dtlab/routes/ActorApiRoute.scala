@@ -53,73 +53,75 @@ object ActorApiRoute
     }
   }
 
-  private def applyProps(segs: List[String], limit: Option[Int]): Route = {
-    if (limit.nonEmpty)
-      handleGetJrnl(segs, limit.get)
-    else
-      handleGetState(segs)
+  private def applyProps(segs: List[String], limit: Option[Int], offset: Option[Int]): Route = {
+    (limit, offset) match {
+      case _ if limit.nonEmpty =>
+        handleGetJrnl(segs, limit.get, offset.getOrElse(0))
+      case _  =>
+        handleGetState(segs)
+    }
   }
 
   def apply: Route =
     pathPrefix("actor") {
-      parameters('limit.as[Int].?) { (limit) =>
+      parameters('limit.as[Int].?, 'offset.as[Int]?) { (limit, offset) =>
         {
           pathPrefix(Segments(20)) { segs: List[String] =>
-            applyProps(segs, limit)
+            applyProps(segs, limit, offset)
           } ~
             pathPrefix(Segments(19)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(18)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(17)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(16)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(15)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(14)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(13)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(12)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(11)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(10)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(9)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(8)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(7)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(6)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(5)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(4)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(3)) { segs: List[String] =>
               handleGetChildNames(segs)
             } ~
             pathPrefix(Segments(2)) { segs: List[String] =>
-              applyProps(segs, limit)
+              applyProps(segs, limit, offset)
             } ~
             pathPrefix(Segments(1)) { segs: List[String] =>
               handleGetChildNames(segs)

@@ -122,11 +122,11 @@ final case class DtGetChildrenNames(p: DtPath) extends DtMsg[Any] {
   }
 }
 
-final case class DtGetJrnl(p: DtPath, limit: Int = 100) extends DtMsg[Int] {
+final case class DtGetJrnl(p: DtPath, limit: Int = 10, offset: Int = 0) extends DtMsg[(Int, Int)] {
   override def path(): DtPath = p
-  override def content(): Int = limit
+  override def content(): (Int, Int) = (limit, offset)
   def trailMsg(): DtGetJrnl = p.trail match {
-    case Some(tp) => DtGetJrnl(tp, limit)
+    case Some(tp) => DtGetJrnl(tp, limit, offset)
     case _        => this
   }
 }

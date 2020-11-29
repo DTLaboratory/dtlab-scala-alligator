@@ -11,8 +11,11 @@ import somind.dtlab.routes.functions.Marshallers._
 
 trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
 
-  private def jrnl(dtp: DtPath, limit: Int, marshal: Marshaller): Route = get {
-    onSuccess(dtDirectory ask DtGetJrnl(dtp, limit)) {
+  private def jrnl(dtp: DtPath,
+                   limit: Int,
+                   offset: Int,
+                   marshal: Marshaller): Route = get {
+    onSuccess(dtDirectory ask DtGetJrnl(dtp, limit, offset)) {
       case s: Seq[Telemetry] @unchecked =>
         Observer("actor_route_jrnl_success")
         onSuccess(marshal(s, dtp.endTypeName(), dtp)) {
@@ -33,10 +36,14 @@ trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
 
   private def applyJrnl(segs: List[String],
                         limit: Int,
+                        offset: Int,
                         marshall: Marshaller): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        jrnl(somind.dtlab.models.DtPath("root", "root", p), limit, marshall)
+        jrnl(somind.dtlab.models.DtPath("root", "root", p),
+             limit,
+             offset,
+             marshall)
       case _ =>
         logger.warn(s"can not extract DtPath from $segs")
         Observer("bad_request")
@@ -44,19 +51,19 @@ trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
     }
   }
 
-  def handleGetJrnl(segs: List[String], limit: Int): Route =
+  def handleGetJrnl(segs: List[String], limit: Int, offset: Int): Route =
     parameters('format.?) { format =>
       {
         format match {
           case Some("pathed") =>
             Observer("actor_route_jrnl_pathed")
-            applyJrnl(segs, limit, pathedFmt)
+            applyJrnl(segs, limit, offset, pathedFmt)
           case Some("named") =>
             Observer("actor_route_jrnl_named")
-            applyJrnl(segs, limit, namedFmt)
+            applyJrnl(segs, limit, offset, namedFmt)
           case _ =>
             Observer("actor_route_jrnl_idx")
-            applyJrnl(segs, limit, indexedFmt)
+            applyJrnl(segs, limit, offset, indexedFmt)
         }
       }
     }

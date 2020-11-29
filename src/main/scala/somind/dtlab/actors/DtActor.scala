@@ -31,7 +31,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       upsert(m)
 
     case m: DtGetJrnl =>
-      val result = grabJrnl(m.limit)
+      val result = grabJrnl(m.limit, m.offset)
       val sndr = sender()
       result onComplete {
         case Success(r) =>
