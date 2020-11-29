@@ -5,11 +5,13 @@ import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
 
+import scala.concurrent.Await
+
 object DtActor extends LazyLogging {
   def name: String = this.getClass.getName
 }
 
-class DtActor extends DtPersistentActorBase[DtState] {
+class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   override var state: DtState = DtState()
 
@@ -26,6 +28,12 @@ class DtActor extends DtPersistentActorBase[DtState] {
             leaf.typeId == self.path.name && leaf.instanceId == "children" && leaf.trail.isEmpty) =>
       logger.debug(s"${self.path.name} forwarding $m")
       upsert(m)
+
+    case m: DtGetJrnl =>
+      val result = grabJrnl(m.limit)
+      import scala.concurrent.duration._
+      val r = Await.result(result, 3.seconds)
+      sender ! r
 
     case _: DtGetChildrenNames =>
       sender ! children
