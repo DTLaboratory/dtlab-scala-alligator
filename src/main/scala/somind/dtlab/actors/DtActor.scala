@@ -5,7 +5,8 @@ import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
 
-import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 object DtActor extends LazyLogging {
   def name: String = this.getClass.getName
@@ -31,9 +32,13 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
     case m: DtGetJrnl =>
       val result = grabJrnl(m.limit)
-      import scala.concurrent.duration._
-      val r = Await.result(result, 3.seconds)
-      sender ! r
+      val sndr = sender()
+      result onComplete {
+        case Success(r) =>
+          sndr ! r
+        case Failure(exception) =>
+          sndr ! DtErr(exception.getMessage)
+      }
 
     case _: DtGetChildrenNames =>
       sender ! children
