@@ -8,9 +8,10 @@ trait DtActorBase extends Actor with LazyLogging with JsonSupport {
 
   var children: DtChildren = DtChildren()
 
-  def create(m: DtMsg[Any], name: String): Unit = {
+  def create(m: DtMsg[Any], name: String, persist: Boolean): Unit = {
     logger.debug(s"${self.path} create sees $name and sees children: $children")
-    if (m.isInstanceOf[TelemetryMsg] && !children.children.contains(name)) {
+    if (persist && m.isInstanceOf[TelemetryMsg] && !children.children.contains(
+          name)) {
       children = DtChildren(children = name :: children.children)
       logger.debug(s"updating children with $name")
       self ! TakeSnapshot()
@@ -27,9 +28,10 @@ trait DtActorBase extends Actor with LazyLogging with JsonSupport {
         if (self.path.name == p.typeId)
           context
             .child(instanceId)
-            .fold(create(m.trailMsg(), instanceId))(_ forward m.trailMsg())
+            .fold(create(m.trailMsg(), instanceId, persist = true))(
+              _ forward m.trailMsg())
         else
-          context.child(p.typeId).fold(create(m, p.typeId))(_ forward m)
+          context.child(p.typeId).fold(create(m, p.typeId, persist = false))(_ forward m)
       case e =>
         throw new UnsupportedOperationException(s"no trail: $e")
     }
