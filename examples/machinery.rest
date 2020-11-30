@@ -16,6 +16,8 @@ GET /dtlab-alligator/type/machinery
 GET /dtlab-alligator/actor/machinery
 
 --
+GET /dtlab-alligator/actor/machinery/two
+--
 GET /dtlab-alligator/actor/machinery/one
 
 --
@@ -37,10 +39,17 @@ GET /dtlab-alligator/actor/machinery/one?format=named
 GET /dtlab-alligator/actor/machinery/one?format=pathed
 
 --
-POST /dtlab-al6igator/actor/machinery/one
+POST /dtlab-alligator/actor/machinery/one
 {
   "idx": 0,
-  "value": 5.16
+  "value": 5.10
+}
+
+--
+POST /dtlab-alligator/actor/machinery/two
+{
+  "idx": 0,
+  "value": 2.17
 }
 
 --
