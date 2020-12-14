@@ -22,9 +22,7 @@ object Main extends LazyLogging with JsonSupport with HttpSupport {
                 pathPrefix(urlpath) {
                   ignoreTrailingSlash {
                     TypeApiRoute.apply ~
-                      ActorApiRoute.apply ~
-                      OperatorApiRoute.apply ~
-                      LinkApiRoute.apply
+                      ActorApiRoute.apply
                   }
                 }
               }

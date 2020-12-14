@@ -1,6 +1,8 @@
 package somind.dtlab.models
 import java.time.ZonedDateTime
 
+import akka.actor.ActorRef
+
 object DtPath {
   def apply(segs: List[String]): Option[DtPath] = {
     segs match {
@@ -113,29 +115,61 @@ final case class DtTypeMap(
     types: Map[String, DtType]
 )
 
-final case class DtGetChildrenNames(p: DtPath) extends DtMsg[Any] {
+trait DtOperatorImpl {
+  def apply(dtState: DtState, op: Operator, actor: ActorRef): Unit
+}
+
+final case class Operator(name: String,
+                          implementation: String,
+                          params: Option[List[Double]],
+                          input: Option[List[Int]],
+                          output: Option[List[Int]])
+final case class OperatorMap(
+    operators: Map[String, Operator] = Map()
+)
+final case class OperatorMsg(p: DtPath, c: Operator)
+  extends DtMsg[Operator] {
+  def path(): DtPath = p
+  def content(): Operator = c
+  def trailMsg(): DtMsg[Operator] = p.trail match {
+    case Some(tp) =>
+      OperatorMsg(tp, c)
+    case _ => this
+  }
+}
+final case class GetOperators(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None
-  def trailMsg(): DtGetChildrenNames = p.trail match {
-    case Some(tp) => DtGetChildrenNames(tp)
+  def trailMsg(): GetOperators = p.trail match {
+    case Some(tp) => GetOperators(tp)
     case _        => this
   }
 }
 
-final case class DtGetJrnl(p: DtPath, limit: Int = 10, offset: Int = 0) extends DtMsg[(Int, Int)] {
+final case class GetChildrenNames(p: DtPath) extends DtMsg[Any] {
+  override def path(): DtPath = p
+  override def content(): Any = None
+  def trailMsg(): GetChildrenNames = p.trail match {
+    case Some(tp) => GetChildrenNames(tp)
+    case _        => this
+  }
+}
+
+final case class GetJrnl(p: DtPath, limit: Int = 10, offset: Int = 0)
+    extends DtMsg[(Int, Int)] {
   override def path(): DtPath = p
   override def content(): (Int, Int) = (limit, offset)
-  def trailMsg(): DtGetJrnl = p.trail match {
-    case Some(tp) => DtGetJrnl(tp, limit, offset)
+  def trailMsg(): GetJrnl = p.trail match {
+    case Some(tp) => GetJrnl(tp, limit, offset)
     case _        => this
   }
 }
 
-final case class DtGetState(p: DtPath) extends DtMsg[Any] {
+final case class GetState(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None
-  def trailMsg(): DtGetState = p.trail match {
-    case Some(tp) => DtGetState(tp)
+  def trailMsg(): GetState = p.trail match {
+    case Some(tp) => GetState(tp)
     case _        => this
   }
 }
@@ -164,5 +198,6 @@ final case class DtChildren(
 )
 final case class DtStateHolder[T](
     state: T,
-    children: DtChildren
+    children: DtChildren,
+    operators: OperatorMap = OperatorMap()
 )

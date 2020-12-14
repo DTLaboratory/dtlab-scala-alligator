@@ -5,9 +5,9 @@ import akka.http.scaladsl.server._
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.routes.ActorApiRoute.applyTelemetryMsg
-import somind.dtlab.routes.functions.UnMarshallers._
+import somind.dtlab.routes.functions.TelemetryUnMarshallers._
 
-object UnWrappers extends JsonSupport with Directives with LazyLogging {
+object TelemetryUnWrappers extends JsonSupport with Directives with LazyLogging {
 
   type UnWrapper = DtPath => Route
 

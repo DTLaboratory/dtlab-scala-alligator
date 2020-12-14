@@ -30,7 +30,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       logger.debug(s"${self.path.name} forwarding $m")
       upsert(m)
 
-    case m: DtGetJrnl =>
+    case m: GetJrnl =>
       val result = grabJrnl(m.limit, m.offset)
       val sndr = sender()
       result onComplete {
@@ -40,8 +40,18 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
           sndr ! DtErr(exception.getMessage)
       }
 
-    case _: DtGetChildrenNames =>
+    case _: GetOperators =>
+      sender() ! operators
+
+    case _: GetChildrenNames =>
       sender ! children
+
+    case op: OperatorMsg =>
+      operators = OperatorMap(operators.operators + (op.c.name -> op.c))
+      persistAsync(op.c) { _ =>
+        sender ! operators
+        takeSnapshot()
+      }
 
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
@@ -50,7 +60,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
         takeSnapshot()
       }
 
-    case _: DtGetState =>
+    case _: GetState =>
       sender ! state
 
     case _: SaveSnapshotSuccess =>
@@ -68,6 +78,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     case SnapshotOffer(_, snapshot: DtStateHolder[DtState] @unchecked) =>
       state = snapshot.state
       children = snapshot.children
+      operators = snapshot.operators
       Observer("recovered_dt_actor_state_from_snapshot")
 
     case _: RecoveryCompleted =>

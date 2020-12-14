@@ -7,7 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.Conf._
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import somind.dtlab.routes.functions.Marshallers._
+import somind.dtlab.routes.functions.TelemetryMarshallers._
 
 trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
 
@@ -15,7 +15,7 @@ trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
                    limit: Int,
                    offset: Int,
                    marshal: Marshaller): Route = get {
-    onSuccess(dtDirectory ask DtGetJrnl(dtp, limit, offset)) {
+    onSuccess(dtDirectory ask GetJrnl(dtp, limit, offset)) {
       case s: Seq[Telemetry] @unchecked =>
         Observer("actor_route_jrnl_success")
         onSuccess(marshal(s, dtp.endTypeName(), dtp)) {

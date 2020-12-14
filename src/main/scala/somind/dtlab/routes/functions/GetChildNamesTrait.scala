@@ -13,7 +13,7 @@ trait GetChildNamesTrait extends Directives with JsonSupport with LazyLogging {
 
   def applyChildrenFmt(dtp: DtPath): Route = {
     get {
-      onSuccess(dtDirectory ask DtGetChildrenNames(dtp)) {
+      onSuccess(dtDirectory ask GetChildrenNames(dtp)) {
         case c: DtChildren =>
           Observer("actor_route_get_children_names_success")
           complete(

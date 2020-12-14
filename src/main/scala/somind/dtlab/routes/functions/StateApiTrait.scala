@@ -7,18 +7,18 @@ import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.Conf._
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import somind.dtlab.routes.functions.Marshallers._
-import somind.dtlab.routes.functions.UnWrappers._
+import somind.dtlab.routes.functions.TelemetryMarshallers._
+import somind.dtlab.routes.functions.TelemetryUnWrappers._
 
-trait GetStateTrait extends Directives with JsonSupport with LazyLogging {
+trait StateApiTrait extends Directives with JsonSupport with LazyLogging {
 
   private type UnWrapper = DtPath => Route
 
-  private def applyGetDtState(dtp: DtPath,
+  private def applyStateApiHandlers(dtp: DtPath,
                               marshal: Marshaller,
                               unWrapper: UnWrapper): Route = {
     get {
-      onSuccess(dtDirectory ask DtGetState(dtp)) {
+      onSuccess(dtDirectory ask GetState(dtp)) {
         case s: DtState =>
           Observer("actor_route_get_success")
           onSuccess(marshal(s.state.values.toSeq, dtp.endTypeName(), dtp)) {
@@ -47,12 +47,12 @@ trait GetStateTrait extends Directives with JsonSupport with LazyLogging {
       }
   }
 
-  private def applyGetDtStateFmt(segs: List[String],
+  private def applyStateApiFmt(segs: List[String],
                                  marshall: Marshaller,
                                  unWrapper: UnWrapper): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        applyGetDtState(somind.dtlab.models.DtPath("root", "root", p),
+        applyStateApiHandlers(somind.dtlab.models.DtPath("root", "root", p),
                         marshall,
                         unWrapper)
       case _ =>
@@ -62,19 +62,19 @@ trait GetStateTrait extends Directives with JsonSupport with LazyLogging {
     }
   }
 
-  def handleGetState(segs: List[String]): Route =
+  def handleStateApi(segs: List[String]): Route =
     parameters('format.?) { format =>
       {
         format match {
           case Some("pathed") =>
             Observer("actor_route_telemetry_pathed")
-            applyGetDtStateFmt(segs, pathedFmt, NamedUnWrapper)
+            applyStateApiFmt(segs, pathedFmt, NamedUnWrapper)
           case Some("named") =>
             Observer("actor_route_telemetry_named")
-            applyGetDtStateFmt(segs, namedFmt, NamedUnWrapper)
+            applyStateApiFmt(segs, namedFmt, NamedUnWrapper)
           case _ =>
             Observer("actor_route_telemetry_idx")
-            applyGetDtStateFmt(segs, indexedFmt, IdxUnWrapper)
+            applyStateApiFmt(segs, indexedFmt, IdxUnWrapper)
         }
       }
     }
