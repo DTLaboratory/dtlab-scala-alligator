@@ -122,8 +122,8 @@ trait DtOperatorImpl {
 final case class Operator(name: String,
                           implementation: String,
                           params: Option[List[Double]],
-                          input: Option[List[Int]],
-                          output: Option[List[Int]])
+                          input: List[Int],
+                          output: List[Int])
 final case class OperatorMap(
     operators: Map[String, Operator] = Map()
 )

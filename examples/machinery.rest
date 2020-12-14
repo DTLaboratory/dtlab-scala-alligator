@@ -34,7 +34,6 @@ POST /dtlab-alligator/actor/machinery/one/operator
 {
   "name": "count_height_readings",
   "implementation": "count",
-  "params": [],
   "input": [0],
   "output": [1]
 }

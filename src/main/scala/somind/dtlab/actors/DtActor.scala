@@ -16,6 +16,12 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   override var state: DtState = DtState()
 
+  def applyOperator(tm: TelemetryMsg): Unit = {
+    // todo: find operators that list this tm's index as input and apply them
+    val ops = operators.operators.values.filter(_.input.contains(tm.c.idx))
+    logger.debug(s"applying operators $ops")
+  }
+
   override def receiveCommand: Receive = {
 
     case _: TakeSnapshot =>
@@ -53,16 +59,15 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
     case op: OperatorMsg =>
       operators = OperatorMap(operators.operators + (op.c.name -> op.c))
-      persistAsync(op.c) { _ =>
-        sender ! operators
-        takeSnapshot()
-      }
+      takeSnapshot(true)
+      sender ! operators
 
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
       persistAsync(tm.c) { _ =>
-        sender ! DtOk()
+        if (sender != self) sender ! DtOk()
         takeSnapshot()
+        if (sender != self) applyOperator(tm)
       }
 
     case _: GetState =>
