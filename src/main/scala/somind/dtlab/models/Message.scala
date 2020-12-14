@@ -137,6 +137,14 @@ final case class OperatorMsg(p: DtPath, c: Operator)
     case _ => this
   }
 }
+final case class DeleteOperators(p: DtPath) extends DtMsg[Any] {
+  override def path(): DtPath = p
+  override def content(): Any = None
+  def trailMsg(): DeleteOperators = p.trail match {
+    case Some(tp) => DeleteOperators(tp)
+    case _        => this
+  }
+}
 final case class GetOperators(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None

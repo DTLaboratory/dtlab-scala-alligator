@@ -92,5 +92,6 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val dtop: RootJsonFormat[Operator] = jsonFormat5(Operator)
   implicit val dtopm: RootJsonFormat[OperatorMap] = jsonFormat1(OperatorMap)
   implicit val dtgetop: RootJsonFormat[GetOperators] = jsonFormat1(GetOperators)
+  implicit val delop: RootJsonFormat[DeleteOperators] = jsonFormat1(DeleteOperators)
 
 }

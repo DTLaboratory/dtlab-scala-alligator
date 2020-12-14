@@ -25,6 +25,8 @@ GET /dtlab-alligator/actor/machinery/one
 GET /dtlab-alligator/actor/machinery/one?format=named
 
 --
+DELETE /dtlab-alligator/actor/machinery/one/operator
+--
 GET /dtlab-alligator/actor/machinery/one/operator
 
 --

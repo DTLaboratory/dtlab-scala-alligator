@@ -46,6 +46,11 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     case _: GetChildrenNames =>
       sender ! children
 
+    case _: DeleteOperators =>
+      operators = OperatorMap()
+      takeSnapshot(true)
+      sender ! DtOk()
+
     case op: OperatorMsg =>
       operators = OperatorMap(operators.operators + (op.c.name -> op.c))
       persistAsync(op.c) { _ =>

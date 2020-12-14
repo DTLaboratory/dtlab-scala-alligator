@@ -19,9 +19,9 @@ trait OperatorApiTrait extends Directives with JsonSupport with LazyLogging {
           complete(
             HttpEntity(ContentTypes.`application/json`,
                        r.operators.values.toJson.prettyPrint))
-        case DtErr(emsg) =>
+        case DtErr(errorMsg) =>
           Observer("actor_route_get_operators_failure")
-          complete(StatusCodes.NotFound, emsg)
+          complete(StatusCodes.NotFound, errorMsg)
         case e =>
           Observer("actor_route_get_operators_unk_err")
           logger.warn(s"unable to handle: $e")
@@ -30,7 +30,18 @@ trait OperatorApiTrait extends Directives with JsonSupport with LazyLogging {
     } ~
       delete {
         Observer("actor_route_operator_delete")
-        complete(StatusCodes.NotImplemented)
+        onSuccess(dtDirectory ask DeleteOperators(dtp)) {
+          case _: DtOk =>
+            Observer("actor_route_delete_operators_success")
+            complete(StatusCodes.Accepted)
+          case DtErr(emsg) =>
+            Observer("actor_route_delete_operators_failure")
+            complete(StatusCodes.NotFound, emsg)
+          case e =>
+            Observer("actor_route_delete_operators_unk_err")
+            logger.warn(s"unable to handle: $e")
+            complete(StatusCodes.InternalServerError)
+        }
       } ~
       post {
         Observer("actor_route_operator_create")
@@ -40,7 +51,7 @@ trait OperatorApiTrait extends Directives with JsonSupport with LazyLogging {
               Observer("actor_route_create_operator_success")
               complete(
                 HttpEntity(ContentTypes.`application/json`,
-                  r.operators.values.toJson.prettyPrint))
+                           r.operators.values.toJson.prettyPrint))
             case DtErr(emsg) =>
               Observer("actor_route_create_operator_failure")
               complete(StatusCodes.BadRequest, emsg)
