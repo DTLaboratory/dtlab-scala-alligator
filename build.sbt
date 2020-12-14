@@ -17,7 +17,7 @@ parallelExecution in test := false
 crossScalaVersions := List("2.12.11")
 version := "1.0"
 
-val akkaHttpVersion = "10.2.1"
+val akkaHttpVersion = "10.2.2"
 val akkaVersion = "2.6.10"
 val swaggerVersion = "2.0.8"
 
@@ -37,11 +37,11 @@ inThisBuild(List(
 
 libraryDependencies ++=
   Seq(
-    "io.altoo" %% "akka-kryo-serialization" % "1.1.5",
+    "io.altoo" %% "akka-kryo-serialization" % "2.0.1",
     "tech.navicore" %% "navipath" % "4.0.2",
     "org.postgresql" % "postgresql" % "42.2.18",
     "com.lightbend.akka" %% "akka-persistence-jdbc" % "4.0.0",
-    "ch.megard" %% "akka-http-cors" % "1.1.0",
+    "ch.megard" %% "akka-http-cors" % "1.1.1",
     "ch.qos.logback" % "logback-classic" % "1.2.3",
     "com.typesafe" % "config" % "1.4.1",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
