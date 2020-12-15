@@ -75,34 +75,16 @@ final case class LazyDtType(
     DtType(name, props, children, created.getOrElse(ZonedDateTime.now()))
 }
 
-final case class LazyTelemetry(
-    idx: Int,
-    value: Double,
-    datetime: Option[ZonedDateTime]
-) {
-  def telemetry(): Telemetry =
-    Telemetry(idx, value, datetime.getOrElse(ZonedDateTime.now()))
-}
-
 final case class Telemetry(
     idx: Int,
     value: Double,
-    datetime: ZonedDateTime = ZonedDateTime.now()
+    datetime: Option[ZonedDateTime] = Some(ZonedDateTime.now())
 )
-
-final case class LazyNamedTelemetry(
-    name: String,
-    value: Double,
-    datetime: Option[ZonedDateTime]
-) {
-  def telemetry(): NamedTelemetry =
-    NamedTelemetry(name, value, datetime.getOrElse(ZonedDateTime.now()))
-}
 
 final case class NamedTelemetry(
     name: String,
     value: Double,
-    datetime: ZonedDateTime = ZonedDateTime.now()
+    datetime: Option[ZonedDateTime]
 )
 
 // collection of all props in an actor instance
@@ -123,12 +105,12 @@ final case class Operator(name: String,
                           implementation: String,
                           params: Option[List[Double]],
                           input: List[Int],
-                          output: List[Int])
+                          output: List[Int],
+                          created: Option[ZonedDateTime])
 final case class OperatorMap(
     operators: Map[String, Operator] = Map()
 )
-final case class OperatorMsg(p: DtPath, c: Operator)
-  extends DtMsg[Operator] {
+final case class OperatorMsg(p: DtPath, c: Operator) extends DtMsg[Operator] {
   def path(): DtPath = p
   def content(): Operator = c
   def trailMsg(): DtMsg[Operator] = p.trail match {

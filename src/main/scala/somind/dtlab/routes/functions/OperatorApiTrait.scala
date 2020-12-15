@@ -45,7 +45,9 @@ trait OperatorApiTrait extends Directives with JsonSupport with LazyLogging {
       } ~
       post {
         Observer("actor_route_operator_create")
-        entity(as[Operator]) { operator =>
+        entity(as[Operator]) { lazyOp =>
+          val operator =
+            lazyOp.copy(created = Some(java.time.ZonedDateTime.now()))
           onSuccess(dtDirectory ask OperatorMsg(dtp, operator)) {
             case r: OperatorMap =>
               Observer("actor_route_create_operator_success")

@@ -32,9 +32,10 @@ object TelemetryUnWrappers
   }
 
   def NamedUnWrapper(dtp: DtPath): Route = {
-    entity(as[LazyNamedTelemetry]) { ntelem =>
+    entity(as[NamedTelemetry]) { ltelem =>
       {
-        onSuccess(NamedUnMarshaller(Some(ntelem.telemetry()), dtp)) {
+        val ntelem = ltelem.copy(datetime = Some(java.time.ZonedDateTime.now()))
+        onSuccess(NamedUnMarshaller(Some(ntelem), dtp)) {
           case Some(telemetry: Telemetry) =>
             applyTelemetryMsg(dtp, telemetry)
           case _ =>
@@ -49,8 +50,12 @@ object TelemetryUnWrappers
   }
 
   def IdxUnWrapper(dtp: DtPath): Route = {
-    entity(as[LazyTelemetry]) { telem =>
-      applyTelemetryMsg(dtp, telem.telemetry())
+    entity(as[Telemetry]) { ltelem =>
+      {
+        val telemetry =
+          ltelem.copy(datetime = Some(java.time.ZonedDateTime.now()))
+        applyTelemetryMsg(dtp, telemetry)
+      }
     }
   }
 
