@@ -62,17 +62,16 @@ final case class DtType(
     // the ids/names of the types of child actors that this actor type can instantiate
     children: Option[Set[String]],
     // datetime of creation - no updates allowed
-    created: ZonedDateTime = ZonedDateTime.now()
+    created: ZonedDateTime
 )
 
 // for API to avoid setting created
 final case class LazyDtType(
     props: Option[Seq[String]],
-    children: Option[Set[String]],
-    created: Option[ZonedDateTime]
+    children: Option[Set[String]]
 ) {
   def dtType(name: String): DtType =
-    DtType(name, props, children, created.getOrElse(ZonedDateTime.now()))
+    DtType(name, props, children, ZonedDateTime.now())
 }
 
 final case class Telemetry(
