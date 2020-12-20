@@ -21,20 +21,6 @@ val akkaHttpVersion = "10.2.2"
 val akkaVersion = "2.6.10"
 val swaggerVersion = "2.0.8"
 
-inThisBuild(List(
-  organization := "org.somind",
-  homepage := Some(url("https://github.com/navicore/dtlab-scala-alligator")),
-  licenses := List("MIT" -> url("https://github.com/navicore/dtlab-scala-alligator/blob/master/LICENSE")),
-  developers := List(
-    Developer(
-      "navicore",
-      "Ed Sweeney",
-      "ed@onextent.com",
-      url("https://navicore.tech")
-    )
-  )
-))
-
 libraryDependencies ++=
   Seq(
     "io.altoo" %% "akka-kryo-serialization" % "2.0.1",
