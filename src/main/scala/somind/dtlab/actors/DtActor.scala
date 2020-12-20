@@ -4,7 +4,7 @@ import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import somind.dtlab.operators.ApplyBuiltInOperator
+import somind.dtlab.operators.{ApplyComplexBuiltInOperator, ApplySimpleBuiltInOperator}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
@@ -21,8 +21,14 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
     ops.foreach(op => {
-      ApplyBuiltInOperator(t, state, op) match {
-        case Some(t) => self ! t
+      ApplySimpleBuiltInOperator(t, state, op) match {
+        case Some(t) => handleTelemetry(t)
+        case _       => // noop
+      }
+    })
+    ops.foreach(op => {
+      ApplyComplexBuiltInOperator(t, state, op) match {
+        case Some(t) => handleTelemetry(t)
         case _       => // noop
       }
     })
@@ -87,9 +93,6 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       takeSnapshot(true)
       sender ! operators
 
-    // raw telemetry are derived inside the operators and sent from self
-    case t: Telemetry => handleTelemetry(t)
-
     // telemetry msgs are sent with dtpath addressing wrappers and
     // are the entry point / triggers for all complex and simple state change processing
     case tm: TelemetryMsg => handleTelemetryMsg(tm)
@@ -119,13 +122,12 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
     case SnapshotOffer(_, snapshot: DtStateHolder[DtState] @unchecked) =>
       Try {
-        (snapshot.state, snapshot.children, snapshot.operators)
+        // if there is a change in class implementation you will fail here
+        state = snapshot.state
+        children = snapshot.children
+        operators = snapshot.operators
       } match {
-        case Success(s) =>
-          val (sstate, schildren, soperators) = s
-          state = sstate
-          children = schildren
-          operators = soperators
+        case Success(_) =>
           Observer("recovered_dt_actor_state_from_snapshot")
         case Failure(e) =>
           Observer("recovery_of_dt_actor_state_from_snapshot_failed")
