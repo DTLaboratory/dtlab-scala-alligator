@@ -4,6 +4,7 @@ import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
+import scala.util.{Failure, Success, Try}
 
 object DtDirectory extends LazyLogging {
   def name: String = this.getClass.getName
@@ -133,21 +134,45 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap, DtType] {
   override def receiveRecover: Receive = {
 
     case dt: DtType =>
-      state = DtTypeMap(state.types + (dt.name -> dt))
-      Observer("reapplied_type_actor_command_from_jrnl")
+      Try {
+        DtTypeMap(state.types + (dt.name -> dt))
+      } match {
+        case Success(s) =>
+          state = s
+          Observer("reapplied_type_actor_command_from_jrnl")
+        case Failure(e) =>
+          logger.error(s"can not recover: $e", e)
+          Observer("reapplied_type_actor_command_from_jrnl_failed")
+      }
 
     case del: DeleteDtType =>
-      state = DtTypeMap(state.types - del.typeId)
-      Observer("reapplied_type_actor_command_delete_from_jrnl")
+      Try {
+        DtTypeMap(state.types - del.typeId)
+      } match {
+        case Success(s) =>
+          state = s
+          Observer("reapplied_type_actor_command_delete_from_jrnl")
+        case Failure(e) =>
+          logger.error(s"can not recover: $e", e)
+          Observer("reapplied_type_actor_command_delete_from_jrnl_failed")
+      }
 
     case SnapshotOffer(_, snapshot: DtStateHolder[DtTypeMap] @unchecked) =>
-      state = snapshot.state
-      children = snapshot.children
-      Observer("recovered_type_actor_state_from_snapshot")
+      Try {
+        state = snapshot.state
+        children = snapshot.children
+      } match {
+        case Success(_) =>
+          Observer("recovered_type_actor_state_from_snapshot")
+        case Failure(e) =>
+          logger.error(s"can not recover: $e", e)
+          Observer("recovered_type_actor_state_from_snapshot_failure")
+      }
 
     case _: RecoveryCompleted =>
       Observer("resurrected_type_actor")
-      logger.debug(s"${self.path}: Recovery completed. State: $state Children: $children")
+      logger.debug(
+        s"${self.path}: Recovery completed. State: $state Children: $children")
 
     case x =>
       logger.warn(s"unexpected recover msg: $x")
