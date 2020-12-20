@@ -61,14 +61,14 @@ GET /dtlab-alligator/actor/machinery/one?format=pathed
 POST /dtlab-alligator/actor/machinery/one
 {
   "idx": 0,
-  "value": 6.14
+  "value": 9.193
 }
 
 --
 POST /dtlab-alligator/actor/machinery/two
 {
   "idx": 0,
-  "value": 2.17
+  "value": 9.17
 }
 
 --

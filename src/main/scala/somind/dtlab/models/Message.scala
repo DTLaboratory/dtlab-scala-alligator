@@ -1,8 +1,6 @@
 package somind.dtlab.models
 import java.time.ZonedDateTime
 
-import akka.actor.ActorRef
-
 object DtPath {
   def apply(segs: List[String]): Option[DtPath] = {
     segs match {
@@ -97,7 +95,10 @@ final case class DtTypeMap(
 )
 
 trait DtOperatorImpl {
-  def apply(dtState: DtState, op: Operator, actor: ActorRef): Unit
+  def apply(telemetry: Telemetry,
+            dtState: DtState,
+            op: Operator,
+            updateFun: Telemetry => Unit): Unit
 }
 
 final case class Operator(name: String,

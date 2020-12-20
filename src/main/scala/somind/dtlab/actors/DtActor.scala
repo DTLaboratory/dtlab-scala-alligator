@@ -4,6 +4,7 @@ import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
+import somind.dtlab.operators.ApplyBuiltInOperator
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -16,10 +17,12 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   override var state: DtState = DtState()
 
-  def applyOperator(tm: TelemetryMsg): Unit = {
-    // todo: find operators that list this tm's index as input and apply them
-    val ops = operators.operators.values.filter(_.input.contains(tm.c.idx))
-    logger.debug(s"applying operators $ops")
+  def applyOperator(t: Telemetry): Unit = {
+    // find operators that list this t's index as input and apply them
+    val ops = operators.operators.values.filter(_.input.contains(t.idx))
+    ops.foreach(op => {
+      ApplyBuiltInOperator(t, state, op, (t: Telemetry) => { self ! t })
+    })
   }
 
   override def receiveCommand: Receive = {
@@ -62,12 +65,25 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       takeSnapshot(true)
       sender ! operators
 
+    // raw telemetry are derived inside the operators and sent from self
+    case t: Telemetry =>
+      state = DtState(state.state + (t.idx -> t))
+      val sndr = sender()
+      persistAsync(t) { _ =>
+        takeSnapshot()
+      }
+
+    // telemetry msgs are sent with dtpath addressing wrappers and
+    // are the entry point / triggers for all complex and simple state change processing
     case tm: TelemetryMsg =>
       state = DtState(state.state + (tm.c.idx -> tm.c))
+      val sndr = sender()
       persistAsync(tm.c) { _ =>
-        if (sender != self) sender ! DtOk()
         takeSnapshot()
-        if (sender != self) applyOperator(tm)
+        if (sndr != self) {
+          applyOperator(tm.c) // apply operators to effects that come from outside the DT
+          sender ! DtOk()
+        }
       }
 
     case _: GetState =>
