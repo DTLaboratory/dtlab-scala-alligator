@@ -86,7 +86,7 @@ GET /dtlab-alligator/actor/machinery/one
 POST /dtlab-alligator/actor/machinery/one
 {
   "idx": 0,
-  "value": 7.0
+  "value": 6.5
 }
 
 --

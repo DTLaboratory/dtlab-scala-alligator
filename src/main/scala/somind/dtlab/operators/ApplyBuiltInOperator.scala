@@ -18,6 +18,7 @@ object ApplyBuiltInOperator extends DtOperatorImpl with LazyLogging {
       case op =>
         logger.warn(s"can not find built-in operator '$op'")
         None
+
     }
   }
 
