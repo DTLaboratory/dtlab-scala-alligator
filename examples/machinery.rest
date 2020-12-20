@@ -12,7 +12,10 @@ POST /dtlab-alligator/type/machinery
     "height", 
     "height_readings_count",
     "height_readings_max",
-    "height_readings_min"
+    "height_readings_min",
+    "days_online",
+    "hours_online",
+    "minutes_online"
   ]
 }
 
@@ -25,17 +28,17 @@ GET /dtlab-alligator/actor/machinery
 --
 GET /dtlab-alligator/actor/machinery/two
 --
-GET /dtlab-alligator/actor/machinery/one
+GET /dtlab-alligator/actor/machinery/three
 --
-GET /dtlab-alligator/actor/machinery/one?format=named
+GET /dtlab-alligator/actor/machinery/three?format=named
 
 --
-DELETE /dtlab-alligator/actor/machinery/one/operator
+DELETE /dtlab-alligator/actor/machinery/three/operator
 --
-GET /dtlab-alligator/actor/machinery/one/operator
+GET /dtlab-alligator/actor/machinery/three/operator
 
 --
-POST /dtlab-alligator/actor/machinery/one/operator
+POST /dtlab-alligator/actor/machinery/three/operator
 {
   "name": "count_height_readings",
   "implementation": "count",
@@ -45,7 +48,7 @@ POST /dtlab-alligator/actor/machinery/one/operator
 }
 
 --
-POST /dtlab-alligator/actor/machinery/one/operator
+POST /dtlab-alligator/actor/machinery/three/operator
 {
   "name": "max_height_readings",
   "implementation": "max",
@@ -54,7 +57,7 @@ POST /dtlab-alligator/actor/machinery/one/operator
 }
 
 --
-POST /dtlab-alligator/actor/machinery/one/operator
+POST /dtlab-alligator/actor/machinery/three/operator
 {
   "name": "min_height_readings",
   "implementation": "Min",
@@ -63,30 +66,57 @@ POST /dtlab-alligator/actor/machinery/one/operator
 }
 
 --
-GET /dtlab-alligator/actor/machinery/one?limit=10
+POST /dtlab-alligator/actor/machinery/three/operator
+{
+  "name": "days_online",
+  "implementation": "days_active",
+  "input": [0],
+  "output": 4
+}
 
 --
-GET /dtlab-alligator/actor/machinery/one?limit=3&offset=3
+POST /dtlab-alligator/actor/machinery/three/operator
+{
+  "name": "hours_online",
+  "implementation": "hours_active",
+  "input": [0],
+  "output": 5
+}
 
 --
-GET /dtlab-alligator/actor/machinery/one?limit=5&format=named
+POST /dtlab-alligator/actor/machinery/three/operator
+{
+  "name": "minutes_online",
+  "implementation": "minutes_active",
+  "input": [0],
+  "output": 6
+}
 
 --
-GET /dtlab-alligator/actor/machinery/one?limit=2&format=pathed
+GET /dtlab-alligator/actor/machinery/three?limit=10
 
 --
-GET /dtlab-alligator/actor/machinery/one?format=named
+GET /dtlab-alligator/actor/machinery/three?limit=3&offset=3
 
 --
-GET /dtlab-alligator/actor/machinery/one?format=pathed
+GET /dtlab-alligator/actor/machinery/three?limit=5&format=named
 
 --
-GET /dtlab-alligator/actor/machinery/one
+GET /dtlab-alligator/actor/machinery/three?limit=2&format=pathed
+
 --
-POST /dtlab-alligator/actor/machinery/one
+GET /dtlab-alligator/actor/machinery/three?format=named
+
+--
+GET /dtlab-alligator/actor/machinery/three?format=pathed
+
+--
+GET /dtlab-alligator/actor/machinery/three
+--
+POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 0,
-  "value": 6.5
+  "value": 119.15
 }
 
 --
@@ -97,14 +127,14 @@ POST /dtlab-alligator/actor/machinery/two
 }
 
 --
-POST /dtlab-alligator/actor/machinery/one?format=pathed
+POST /dtlab-alligator/actor/machinery/three?format=pathed
 {
-  "name": "machinery.one.height",
+  "name": "machinery.three.height",
   "value": 6.5
 }
 
 --
-POST /dtlab-alligator/actor/machinery/one?format=named
+POST /dtlab-alligator/actor/machinery/three?format=named
 {
   "name": "height",
   "value": 7.5
