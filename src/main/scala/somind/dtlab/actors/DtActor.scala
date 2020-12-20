@@ -7,7 +7,7 @@ import somind.dtlab.observe.Observer
 import somind.dtlab.operators.ApplyBuiltInOperator
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 object DtActor extends LazyLogging {
   def name: String = this.getClass.getName
@@ -21,7 +21,10 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
     ops.foreach(op => {
-      ApplyBuiltInOperator(t, state, op, (t: Telemetry) => { self ! t })
+      ApplyBuiltInOperator(t, state, op) match {
+        case Some(t) => self ! t
+        case _       => // noop
+      }
     })
   }
 
@@ -68,7 +71,6 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     // raw telemetry are derived inside the operators and sent from self
     case t: Telemetry =>
       state = DtState(state.state + (t.idx -> t))
-      val sndr = sender()
       persistAsync(t) { _ =>
         takeSnapshot()
       }
@@ -99,13 +101,30 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
   override def receiveRecover: Receive = {
 
     case t: Telemetry =>
-      state = DtState(state.state + (t.idx -> t))
+      Try {
+        DtState(state.state + (t.idx -> t))
+      } match {
+        case Success(s) =>
+          state = s
+          Observer("recovery_of_dt_actor_state_from_jrnl")
+        case Failure(e) =>
+          Observer("recovery_of_dt_actor_state_from_jrnl_failed")
+          logger.error(s"can not recalculate state: $e", e)
+      }
 
     case SnapshotOffer(_, snapshot: DtStateHolder[DtState] @unchecked) =>
-      state = snapshot.state
-      children = snapshot.children
-      operators = snapshot.operators
-      Observer("recovered_dt_actor_state_from_snapshot")
+      Try {
+        (snapshot.state, snapshot.children, snapshot.operators)
+      } match {
+        case Success(s) =>
+          state = s._1
+          children = s._2
+          operators = s._3
+          Observer("recovered_dt_actor_state_from_snapshot")
+        case Failure(e) =>
+          Observer("recovery_of_dt_actor_state_from_snapshot_failed")
+          logger.error(s"can not recover state: $e", e)
+      }
 
     case _: RecoveryCompleted =>
       logger.debug(
@@ -113,6 +132,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       Observer("resurrected_dt_actor")
 
     case x =>
+      Observer("resurrected_dt_actor_unexpected_msg")
       logger.warn(s"unexpected recover msg: $x")
 
   }
