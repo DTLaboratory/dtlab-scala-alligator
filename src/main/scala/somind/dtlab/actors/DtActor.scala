@@ -122,9 +122,10 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
         (snapshot.state, snapshot.children, snapshot.operators)
       } match {
         case Success(s) =>
-          state = s._1
-          children = s._2
-          operators = s._3
+          val (sstate, schildren, soperators) = s
+          state = sstate
+          children = schildren
+          operators = soperators
           Observer("recovered_dt_actor_state_from_snapshot")
         case Failure(e) =>
           Observer("recovery_of_dt_actor_state_from_snapshot_failed")
