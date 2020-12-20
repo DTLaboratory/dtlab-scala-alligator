@@ -20,9 +20,13 @@ DELETE /dtlab-alligator/actor/orbiting_body/earth
 
 --
 GET /dtlab-alligator/actor/orbiting_body/earth
+--
+GET /dtlab-alligator/actor/orbiting_body
 
 --
 GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865/operator
 
 --
 GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865?format=named

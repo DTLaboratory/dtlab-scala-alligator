@@ -4,9 +4,11 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
+DELETE /dtlab-alligator/type/machinery
+--
 POST /dtlab-alligator/type/machinery
 {
-  "props": ["height"]
+  "props": ["height", "height_readings_count"]
 }
 
 --
@@ -19,6 +21,23 @@ GET /dtlab-alligator/actor/machinery
 GET /dtlab-alligator/actor/machinery/two
 --
 GET /dtlab-alligator/actor/machinery/one
+--
+GET /dtlab-alligator/actor/machinery/one?format=named
+
+--
+DELETE /dtlab-alligator/actor/machinery/one/operator
+--
+GET /dtlab-alligator/actor/machinery/one/operator
+
+--
+POST /dtlab-alligator/actor/machinery/one/operator
+{
+  "name": "count_height_readings",
+  "implementation": "count",
+  "params": [10.1,20.2],
+  "input": [0],
+  "output": [1]
+}
 
 --
 GET /dtlab-alligator/actor/machinery/one?limit=10
@@ -42,14 +61,14 @@ GET /dtlab-alligator/actor/machinery/one?format=pathed
 POST /dtlab-alligator/actor/machinery/one
 {
   "idx": 0,
-  "value": 5.10
+  "value": 9.193
 }
 
 --
 POST /dtlab-alligator/actor/machinery/two
 {
   "idx": 0,
-  "value": 2.17
+  "value": 9.17
 }
 
 --

@@ -7,7 +7,7 @@ import somind.dtlab.models._
 
 import scala.concurrent.Future
 
-object UnMarshallers extends JsonSupport with LazyLogging {
+object TelemetryUnMarshallers extends JsonSupport with LazyLogging {
 
   type UnMarshaller =
     (Option[NamedTelemetry], DtPath) => Future[Option[Telemetry]]

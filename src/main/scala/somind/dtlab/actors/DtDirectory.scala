@@ -87,7 +87,7 @@ class DtDirectory extends DtPersistentActorBase[DtTypeMap, DtType] {
           sender ! e
       }
 
-    case _: DtGetChildrenNames =>
+    case _: GetChildrenNames =>
       logger.debug(s"${self.path} handling DtGetChildrenNames $children")
       sender ! children
 

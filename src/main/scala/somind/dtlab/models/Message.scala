@@ -60,47 +60,28 @@ final case class DtType(
     // the ids/names of the types of child actors that this actor type can instantiate
     children: Option[Set[String]],
     // datetime of creation - no updates allowed
-    created: ZonedDateTime = ZonedDateTime.now()
+    created: ZonedDateTime
 )
 
 // for API to avoid setting created
 final case class LazyDtType(
     props: Option[Seq[String]],
-    children: Option[Set[String]],
-    created: Option[ZonedDateTime]
+    children: Option[Set[String]]
 ) {
   def dtType(name: String): DtType =
-    DtType(name, props, children, created.getOrElse(ZonedDateTime.now()))
-}
-
-final case class LazyTelemetry(
-    idx: Int,
-    value: Double,
-    datetime: Option[ZonedDateTime]
-) {
-  def telemetry(): Telemetry =
-    Telemetry(idx, value, datetime.getOrElse(ZonedDateTime.now()))
+    DtType(name, props, children, ZonedDateTime.now())
 }
 
 final case class Telemetry(
     idx: Int,
     value: Double,
-    datetime: ZonedDateTime = ZonedDateTime.now()
+    datetime: Option[ZonedDateTime] = Some(ZonedDateTime.now())
 )
-
-final case class LazyNamedTelemetry(
-    name: String,
-    value: Double,
-    datetime: Option[ZonedDateTime]
-) {
-  def telemetry(): NamedTelemetry =
-    NamedTelemetry(name, value, datetime.getOrElse(ZonedDateTime.now()))
-}
 
 final case class NamedTelemetry(
     name: String,
     value: Double,
-    datetime: ZonedDateTime = ZonedDateTime.now()
+    datetime: Option[ZonedDateTime]
 )
 
 // collection of all props in an actor instance
@@ -113,29 +94,72 @@ final case class DtTypeMap(
     types: Map[String, DtType]
 )
 
-final case class DtGetChildrenNames(p: DtPath) extends DtMsg[Any] {
+trait DtOperatorImpl {
+  def apply(telemetry: Telemetry,
+            dtState: DtState,
+            op: Operator,
+            updateFun: Telemetry => Unit): Unit
+}
+
+final case class Operator(name: String,
+                          implementation: String,
+                          params: Option[List[Double]],
+                          input: List[Int],
+                          output: List[Int],
+                          created: Option[ZonedDateTime])
+final case class OperatorMap(
+    operators: Map[String, Operator] = Map()
+)
+final case class OperatorMsg(p: DtPath, c: Operator) extends DtMsg[Operator] {
+  def path(): DtPath = p
+  def content(): Operator = c
+  def trailMsg(): DtMsg[Operator] = p.trail match {
+    case Some(tp) =>
+      OperatorMsg(tp, c)
+    case _ => this
+  }
+}
+final case class DeleteOperators(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None
-  def trailMsg(): DtGetChildrenNames = p.trail match {
-    case Some(tp) => DtGetChildrenNames(tp)
+  def trailMsg(): DeleteOperators = p.trail match {
+    case Some(tp) => DeleteOperators(tp)
+    case _        => this
+  }
+}
+final case class GetOperators(p: DtPath) extends DtMsg[Any] {
+  override def path(): DtPath = p
+  override def content(): Any = None
+  def trailMsg(): GetOperators = p.trail match {
+    case Some(tp) => GetOperators(tp)
     case _        => this
   }
 }
 
-final case class DtGetJrnl(p: DtPath, limit: Int = 10, offset: Int = 0) extends DtMsg[(Int, Int)] {
+final case class GetChildrenNames(p: DtPath) extends DtMsg[Any] {
+  override def path(): DtPath = p
+  override def content(): Any = None
+  def trailMsg(): GetChildrenNames = p.trail match {
+    case Some(tp) => GetChildrenNames(tp)
+    case _        => this
+  }
+}
+
+final case class GetJrnl(p: DtPath, limit: Int = 10, offset: Int = 0)
+    extends DtMsg[(Int, Int)] {
   override def path(): DtPath = p
   override def content(): (Int, Int) = (limit, offset)
-  def trailMsg(): DtGetJrnl = p.trail match {
-    case Some(tp) => DtGetJrnl(tp, limit, offset)
+  def trailMsg(): GetJrnl = p.trail match {
+    case Some(tp) => GetJrnl(tp, limit, offset)
     case _        => this
   }
 }
 
-final case class DtGetState(p: DtPath) extends DtMsg[Any] {
+final case class GetState(p: DtPath) extends DtMsg[Any] {
   override def path(): DtPath = p
   override def content(): Any = None
-  def trailMsg(): DtGetState = p.trail match {
-    case Some(tp) => DtGetState(tp)
+  def trailMsg(): GetState = p.trail match {
+    case Some(tp) => GetState(tp)
     case _        => this
   }
 }
@@ -164,5 +188,6 @@ final case class DtChildren(
 )
 final case class DtStateHolder[T](
     state: T,
-    children: DtChildren
+    children: DtChildren,
+    operators: OperatorMap = OperatorMap()
 )

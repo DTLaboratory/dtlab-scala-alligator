@@ -17,7 +17,7 @@ import scala.concurrent.Future
   * A "named" text string is the name of the DT prop.
   * A "pathed" text string is a DtPath with dot notation and the name of the DT prop appended.
   */
-object Marshallers extends JsonSupport with LazyLogging {
+object TelemetryMarshallers extends JsonSupport with LazyLogging {
 
   type Marshaller = (Seq[Telemetry], String, DtPath) => Future[Option[String]]
 

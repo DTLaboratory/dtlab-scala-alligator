@@ -7,6 +7,7 @@ import somind.dtlab.models._
 trait DtActorBase extends Actor with LazyLogging with JsonSupport {
 
   var children: DtChildren = DtChildren()
+  var operators: OperatorMap = OperatorMap()
 
   def create(m: DtMsg[Any], name: String, persist: Boolean): Unit = {
     logger.debug(s"${self.path} create sees $name and sees children: $children")
