@@ -94,18 +94,11 @@ final case class DtTypeMap(
     types: Map[String, DtType]
 )
 
-trait DtOperatorImpl {
-  def apply(telemetry: Telemetry,
-            dtState: DtState,
-            op: Operator,
-            updateFun: Telemetry => Unit): Unit
-}
-
 final case class Operator(name: String,
                           implementation: String,
                           params: Option[List[Double]],
                           input: List[Int],
-                          output: List[Int],
+                          output: Int,
                           created: Option[ZonedDateTime])
 final case class OperatorMap(
     operators: Map[String, Operator] = Map()

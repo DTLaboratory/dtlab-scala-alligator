@@ -8,7 +8,12 @@ DELETE /dtlab-alligator/type/machinery
 --
 POST /dtlab-alligator/type/machinery
 {
-  "props": ["height", "height_readings_count"]
+  "props": [
+    "height", 
+    "height_readings_count",
+    "height_readings_max",
+    "height_readings_min"
+  ]
 }
 
 --
@@ -36,7 +41,25 @@ POST /dtlab-alligator/actor/machinery/one/operator
   "implementation": "count",
   "params": [10.1,20.2],
   "input": [0],
-  "output": [1]
+  "output": 1
+}
+
+--
+POST /dtlab-alligator/actor/machinery/one/operator
+{
+  "name": "max_height_readings",
+  "implementation": "max",
+  "input": [0],
+  "output": 2
+}
+
+--
+POST /dtlab-alligator/actor/machinery/one/operator
+{
+  "name": "min_height_readings",
+  "implementation": "Min",
+  "input": [0],
+  "output": 3
 }
 
 --
@@ -58,10 +81,12 @@ GET /dtlab-alligator/actor/machinery/one?format=named
 GET /dtlab-alligator/actor/machinery/one?format=pathed
 
 --
+GET /dtlab-alligator/actor/machinery/one
+--
 POST /dtlab-alligator/actor/machinery/one
 {
   "idx": 0,
-  "value": 9.193
+  "value": 6.5
 }
 
 --
