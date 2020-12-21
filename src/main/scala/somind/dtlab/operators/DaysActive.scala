@@ -1,11 +1,9 @@
 package somind.dtlab.operators
 
-import java.time.ZonedDateTime
-
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 
-import scala.concurrent.duration.{DAYS, TimeUnit}
+import scala.concurrent.duration.DAYS
 
 /**
   * input is a particular state field - monitor any telemetry for that slot
@@ -13,10 +11,9 @@ import scala.concurrent.duration.{DAYS, TimeUnit}
   */
 object DaysActive extends DtOperatorSimpleImpl with LazyLogging {
 
-
   override def applyImplementation(telemetry: Telemetry,
                                    dtState: DtState,
-                                   op: Operator): Option[Telemetry] = {
+                                   op: Operator): List[Telemetry] = {
 
     activeDuration(telemetry, dtState, op, DAYS)
 

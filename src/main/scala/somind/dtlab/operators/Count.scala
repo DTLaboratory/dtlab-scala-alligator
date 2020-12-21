@@ -11,11 +11,11 @@ object Count extends DtOperatorSimpleImpl with LazyLogging {
 
   override def applyImplementation(telemetry: Telemetry,
                                    dtState: DtState,
-                                   op: Operator): Option[Telemetry] = {
+                                   op: Operator): List[Telemetry] = {
     val oldCount =
-      dtState.state.get(op.output).map(_.value).getOrElse(0.0)
-    val t = Telemetry(op.output, oldCount + 1)
-    Some(t)
+      dtState.state.get(op.output.head).map(_.value).getOrElse(0.0)
+    val t = Telemetry(op.output.head, oldCount + 1)
+    List(t)
 
   }
 

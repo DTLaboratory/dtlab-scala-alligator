@@ -14,7 +14,7 @@ object HoursActive extends DtOperatorSimpleImpl with LazyLogging {
 
   override def applyImplementation(telemetry: Telemetry,
                                    dtState: DtState,
-                                   op: Operator): Option[Telemetry] = {
+                                   op: Operator): List[Telemetry] = {
 
     activeDuration(telemetry, dtState, op, HOURS)
 
