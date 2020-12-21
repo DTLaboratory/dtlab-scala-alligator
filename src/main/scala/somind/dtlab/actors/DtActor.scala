@@ -4,11 +4,9 @@ import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import somind.dtlab.operators.{
-  ApplyComplexBuiltInOperator,
-  ApplySimpleBuiltInOperator
-}
+import somind.dtlab.operators._
 
+// ejs todo: evaluate appropriate exec context
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 
@@ -20,37 +18,34 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   override var state: DtState = DtState()
 
-  def applyOperator(t: Telemetry): Unit = {
+  private def applyOperators(t: Telemetry): Unit = {
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
     ops.foreach(op => {
-      ApplySimpleBuiltInOperator(t, state, op).foreach(r => handleTelemetry(r))
+      ApplySimpleBuiltInOperator(t, state, op).foreach(r => applyOperatorResult(r))
     })
     ops.foreach(op => {
-      ApplyComplexBuiltInOperator(t, state, op).foreach(r => handleTelemetry(r))
+      ApplyComplexBuiltInOperator(t, state, op).foreach(r => applyOperatorResult(r))
     })
   }
 
-  def handleTelemetry(t: Telemetry): Unit = {
+  private def applyOperatorResult(t: Telemetry): Unit = {
     state = DtState(state.state + (t.idx -> t))
-    persistAsync(t) { _ =>
-      takeSnapshot()
-    }
   }
 
-  def handleTelemetryMsg(tm: TelemetryMsg): Unit = {
+  private def handleTelemetryMsg(tm: TelemetryMsg): Unit = {
     state = DtState(state.state + (tm.c.idx -> tm.c))
     val sndr = sender()
     persistAsync(tm.c) { _ =>
       takeSnapshot()
       if (sndr != self) {
-        applyOperator(tm.c) // apply operators to effects that come from outside the DT
+        applyOperators(tm.c) // apply operators to effects that come from outside the DT
         sender ! DtOk()
       }
     }
   }
 
-  def handleGetJrnl(m: GetJrnl): Unit = {
+  private def handleGetJrnl(m: GetJrnl): Unit = {
     val result = grabJrnl(m.limit, m.offset)
     val sndr = sender()
     result onComplete {
@@ -97,6 +92,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     case _: GetState => sender ! state
 
     case _: SaveSnapshotSuccess =>
+      logger.debug("saved snapshot")
     case m =>
       logger.warn(s"unexpected message: $m")
       sender ! None
@@ -111,6 +107,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       } match {
         case Success(s) =>
           state = s
+          applyOperators(t)
           Observer("recovery_of_dt_actor_state_from_jrnl")
         case Failure(e) =>
           Observer("recovery_of_dt_actor_state_from_jrnl_failed")
