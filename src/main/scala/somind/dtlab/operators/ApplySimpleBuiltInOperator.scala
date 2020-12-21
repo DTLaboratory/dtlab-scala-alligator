@@ -2,6 +2,7 @@ package somind.dtlab.operators
 
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models.{DtState, Operator, Telemetry}
+import somind.dtlab.operators.builtins.simple._
 
 /**
  * these built-ins should run before any complex operators that might want some of this info
