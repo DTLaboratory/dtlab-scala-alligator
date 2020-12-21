@@ -62,7 +62,7 @@ The concepts are:
   * Derived doubles' processing is defined by the OPERATOR API.
   * DTs are instances of TYPES created with the ACTOR API.
   * Each type knows its allowed child types.
-  * TODO: current impl does not persist child instance IDs - see how far Alligator can go without this overhead.  Without persisting child IDs the impl presumes you know the IDs of all the DTs you want to ask about.
+  * TODO: ~~current impl does not persist child instance IDs - see how far Alligator can go without this overhead.  Without persisting child IDs the impl presumes you know the IDs of all the DTs you want to ask about.~~
   * Each actor knows its parent automatically (via actor runtime / supervision).
   * The LINK API turns the tree of actor instances into a graph.  Once a link is created a linked actor can see the changes to state of the other actor at a specified granularity.  IE: a factory plant actor can see the changes to the state of cars it manufactured at a certain level of granularity, ie: daily. (THIS NEEDS SOME THOUGHT but the changes that are visible via subscription include child actor creation.  Once the aggregate actor (linked actor) is created it will continue to get all the info it needs to watch the evolving system and create new aggregates to watch new sections of the graph.)  
   * ACTOR API is influenced by prototype-based-programming, some new instances of actors will be clones of a prototype actor of some TYPE with OPERATORS.
