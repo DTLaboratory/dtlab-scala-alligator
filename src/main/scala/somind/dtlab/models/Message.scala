@@ -98,7 +98,7 @@ final case class Operator(name: String,
                           implementation: String,
                           params: Option[List[Double]],
                           input: List[Int],
-                          output: Int,
+                          output: List[Int],
                           created: Option[ZonedDateTime])
 final case class OperatorMap(
     operators: Map[String, Operator] = Map()

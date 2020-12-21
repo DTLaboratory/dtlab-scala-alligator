@@ -7,6 +7,6 @@ trait DtOperatorImpl extends LazyLogging {
 
   def apply(telemetry: Telemetry,
             dtState: DtState,
-            op: Operator): Option[Telemetry]
+            op: Operator): List[Telemetry]
 
 }

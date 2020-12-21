@@ -10,10 +10,10 @@ object ApplyComplexBuiltInOperator extends DtOperatorImpl with LazyLogging {
 
   override def apply(telemetry: Telemetry,
                      dtState: DtState,
-                     op: Operator): Option[Telemetry] = {
+                     op: Operator): List[Telemetry] = {
     op.implementation.toLowerCase() match {
       case _ =>
-        None
+        List()
 
     }
   }

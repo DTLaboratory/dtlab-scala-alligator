@@ -10,7 +10,7 @@ object ApplySimpleBuiltInOperator extends DtOperatorImpl with LazyLogging {
 
   override def apply(telemetry: Telemetry,
                      dtState: DtState,
-                     op: Operator): Option[Telemetry] = {
+                     op: Operator): List[Telemetry] = {
     op.implementation.toLowerCase() match {
       case "count" =>
         Count(telemetry, dtState, op)
@@ -24,8 +24,8 @@ object ApplySimpleBuiltInOperator extends DtOperatorImpl with LazyLogging {
         HoursActive(telemetry, dtState, op)
       case "days_active" =>
         DaysActive(telemetry, dtState, op)
-      case op =>
-        None
+      case _ =>
+        List()
 
     }
   }

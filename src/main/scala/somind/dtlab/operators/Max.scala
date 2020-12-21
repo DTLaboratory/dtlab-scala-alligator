@@ -11,19 +11,19 @@ object Max extends DtOperatorSimpleImpl with LazyLogging {
 
   override def applyImplementation(telemetry: Telemetry,
                                    dtState: DtState,
-                                   op: Operator): Option[Telemetry] = {
+                                   op: Operator): List[Telemetry] = {
 
     val previousMax =
       dtState.state
-        .get(op.output)
+        .get(op.output.head)
         .map(_.value)
         .getOrElse(Int.MinValue.toDouble)
 
     if (telemetry.value > previousMax) {
-      val output = Telemetry(op.output, telemetry.value)
-      Some(output)
+      val output = Telemetry(op.output.head, telemetry.value)
+      List(output)
     } else
-      None
+      List()
 
   }
 }

@@ -4,7 +4,10 @@ import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
-import somind.dtlab.operators.{ApplyComplexBuiltInOperator, ApplySimpleBuiltInOperator}
+import somind.dtlab.operators.{
+  ApplyComplexBuiltInOperator,
+  ApplySimpleBuiltInOperator
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
@@ -21,16 +24,10 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
     ops.foreach(op => {
-      ApplySimpleBuiltInOperator(t, state, op) match {
-        case Some(t) => handleTelemetry(t)
-        case _       => // noop
-      }
+      ApplySimpleBuiltInOperator(t, state, op).foreach(r => handleTelemetry(r))
     })
     ops.foreach(op => {
-      ApplyComplexBuiltInOperator(t, state, op) match {
-        case Some(t) => handleTelemetry(t)
-        case _       => // noop
-      }
+      ApplyComplexBuiltInOperator(t, state, op).foreach(r => handleTelemetry(r))
     })
   }
 

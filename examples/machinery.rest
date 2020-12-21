@@ -15,7 +15,8 @@ POST /dtlab-alligator/type/machinery
     "height_readings_min",
     "days_online",
     "hours_online",
-    "minutes_online"
+    "minutes_online",
+    "height_first_seen"
   ]
 }
 
@@ -44,7 +45,7 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "implementation": "count",
   "params": [10.1,20.2],
   "input": [0],
-  "output": 1
+  "output": [1]
 }
 
 --
@@ -53,7 +54,7 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "name": "max_height_readings",
   "implementation": "max",
   "input": [0],
-  "output": 2
+  "output": [2]
 }
 
 --
@@ -62,7 +63,7 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "name": "min_height_readings",
   "implementation": "Min",
   "input": [0],
-  "output": 3
+  "output": [3]
 }
 
 --
@@ -71,7 +72,7 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "name": "days_online",
   "implementation": "days_active",
   "input": [0],
-  "output": 4
+  "output": [4, 7]
 }
 
 --
@@ -80,7 +81,7 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "name": "hours_online",
   "implementation": "hours_active",
   "input": [0],
-  "output": 5
+  "output": [5, 7]
 }
 
 --
@@ -89,7 +90,7 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "name": "minutes_online",
   "implementation": "minutes_active",
   "input": [0],
-  "output": 6
+  "output": [6, 7]
 }
 
 --
@@ -116,7 +117,7 @@ GET /dtlab-alligator/actor/machinery/three
 POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 0,
-  "value": 119.15
+  "value": 119.16
 }
 
 --
