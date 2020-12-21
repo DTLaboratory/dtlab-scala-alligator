@@ -22,7 +22,7 @@ trait DtOperatorSimpleImpl extends DtOperatorImpl with LazyLogging {
     val lastCount = prevState.map(_.value).getOrElse(0.0)
     val newCount = unit.toChronoUnit
       .between(prevDate, telemetry.datetime.getOrElse(ZonedDateTime.now())) + lastCount
-    if (newCount > 0 || prevState.isEmpty) {
+    if (newCount > lastCount || prevState.isEmpty) {
       val t = Telemetry(op.output, newCount)
       Some(t)
     } else
