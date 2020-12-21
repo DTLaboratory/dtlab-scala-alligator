@@ -1,12 +1,13 @@
-package somind.dtlab.operators
+package somind.dtlab.operators.builtins.simple
 
 import com.typesafe.scalalogging.LazyLogging
-import somind.dtlab.models._
+import somind.dtlab.models.{DtState, Operator, Telemetry}
+import somind.dtlab.operators.DtOperatorSimpleImpl
 
 /**
-  * input is a particular state field - monitor any telemetry for that slot
-  * output incremented forever - so real input is output :)
-  */
+ * input is a particular state field - monitor any telemetry for that slot
+ * output incremented forever - so real input is output :)
+ */
 object Count extends DtOperatorSimpleImpl with LazyLogging {
 
   override def applyImplementation(telemetry: Telemetry,

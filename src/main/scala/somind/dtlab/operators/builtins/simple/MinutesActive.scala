@@ -1,14 +1,15 @@
-package somind.dtlab.operators
+package somind.dtlab.operators.builtins.simple
 
 import com.typesafe.scalalogging.LazyLogging
-import somind.dtlab.models._
+import somind.dtlab.models.{DtState, Operator, Telemetry}
+import somind.dtlab.operators.DtOperatorSimpleImpl
 
 import scala.concurrent.duration.MINUTES
 
 /**
-  * input is a particular state field - monitor any telemetry for that slot
-  * output incremented forever - so real input is output :)
-  */
+ * input is a particular state field - monitor any telemetry for that slot
+ * output incremented forever - so real input is output :)
+ */
 object MinutesActive extends DtOperatorSimpleImpl with LazyLogging {
 
 
