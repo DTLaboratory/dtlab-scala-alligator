@@ -127,7 +127,7 @@ POST /dtlab-alligator/actor/machinery/two
 }
 
 --
-POST /dtlab-alligator/actor/machinery/three?format=pathed
+POST /dtlab-alligator/actor/machinery/one?format=pathed
 {
   "name": "machinery.three.height",
   "value": 6.5
