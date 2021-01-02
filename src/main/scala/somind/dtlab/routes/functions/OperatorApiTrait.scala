@@ -81,7 +81,9 @@ trait OperatorApiTrait extends Directives with JsonSupport with LazyLogging {
   def handleOperatorApi(segs: List[String]): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        applyApiHandlers(somind.dtlab.models.DtPath(new DtTypeName("root"), "root", p))
+        applyApiHandlers(
+          somind.dtlab.models
+            .DtPath(new DtTypeName("root"), new DtInstanceName("root"), p))
       case _ =>
         logger.warn(s"can not extract DtPath from $segs")
         Observer("bad_request")

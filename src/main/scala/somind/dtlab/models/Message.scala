@@ -8,13 +8,14 @@ object DtPath {
     segs match {
       case s if s.length < 2 => None
       case s =>
-        Option(DtPath(DtTypeName(s.head), s(1), DtPath(s.drop(2))))
+        Option(
+          DtPath(DtTypeName(s.head), DtInstanceName(s(1)), DtPath(s.drop(2))))
     }
   }
 }
 
 case class DtPath(typeId: DtTypeName,
-                  instanceId: String,
+                  instanceId: DtInstanceName,
                   trail: Option[DtPath] = None) {
   // convenience method to get the final typeName for validation
   def endTypeName(): DtTypeName = {
@@ -26,9 +27,9 @@ case class DtPath(typeId: DtTypeName,
   }
   def relationships(): List[(String, String)] = {
     trail match {
-      case None                         => List()
+      case None                              => List()
       case Some(dt) if typeId.name == "root" => dt.relationships()
-      case Some(dt)                     => (typeId.name, dt.typeId.name) :: dt.relationships()
+      case Some(dt)                          => (typeId.name, dt.typeId.name) :: dt.relationships()
     }
   }
   private def pathToString(p: DtPath): String = {
@@ -51,6 +52,10 @@ final case class DtOk() extends DtResult
 final case class DtErr(message: String) extends DtResult
 
 final case class DeleteDtType(typeId: DtTypeName)
+
+final case class DtInstanceName(name: String) {
+  override def toString: String = name
+}
 
 final case class DtTypeName(name: String) {
   override def toString: String = name

@@ -28,8 +28,8 @@ trait DtActorBase extends Actor with LazyLogging with JsonSupport {
         // note: recursive types not supported yet
         if (self.path.name == p.typeId.name)
           context
-            .child(instanceId)
-            .fold(create(m.trailMsg(), instanceId, persist = true))(
+            .child(instanceId.name)
+            .fold(create(m.trailMsg(), instanceId.name, persist = true))(
               _ forward m.trailMsg())
         else
           context.child(p.typeId.name).fold(create(m, p.typeId.name, persist = false))(_ forward m)

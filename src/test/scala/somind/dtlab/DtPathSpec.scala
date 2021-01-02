@@ -2,7 +2,7 @@ package somind.dtlab
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import somind.dtlab.models.{DtPath, DtState, DtTypeName, Telemetry}
+import somind.dtlab.models.{DtInstanceName, DtPath, DtState, DtTypeName, Telemetry}
 
 class DtPathSpec extends AnyFlatSpec with should.Matchers {
 
@@ -14,13 +14,13 @@ class DtPathSpec extends AnyFlatSpec with should.Matchers {
     dtpo should be('defined)
     dtpo match {
       case Some(dtp) =>
-        dtp.instanceId should be("t1")
+        dtp.instanceId should be(DtInstanceName("t1"))
         dtp.typeId should be(DtTypeName("mytype1"))
         dtp.trail should be('defined)
         dtp.trail match {
           case Some(trailDtp) =>
             trailDtp.typeId should be(DtTypeName("mysubtype1"))
-            trailDtp.instanceId should be("s1")
+            trailDtp.instanceId should be(DtInstanceName("s1"))
           case _ =>
             fail()
         }

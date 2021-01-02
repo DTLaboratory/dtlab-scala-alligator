@@ -54,6 +54,17 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
+  implicit object DtInstanceName extends JsonFormat[DtInstanceName] {
+    def write(name: DtInstanceName): JsValue = JsString(name.name)
+    def read(value: JsValue): DtInstanceName = {
+      value match {
+        case JsString(s) => new DtInstanceName(s)
+        case _ =>
+          throw DeserializationException("Expected DtInstanceName string")
+      }
+    }
+  }
+
   implicit object DtTypeName extends JsonFormat[DtTypeName] {
     def write(name: DtTypeName): JsValue = JsString(name.name)
     def read(value: JsValue): DtTypeName = {

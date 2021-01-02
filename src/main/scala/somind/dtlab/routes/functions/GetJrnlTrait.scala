@@ -40,7 +40,8 @@ trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
                         marshall: Marshaller): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        jrnl(somind.dtlab.models.DtPath(new DtTypeName("root"), "root", p),
+        jrnl(somind.dtlab.models
+               .DtPath(new DtTypeName("root"), new DtInstanceName("root"), p),
              limit,
              offset,
              marshall)

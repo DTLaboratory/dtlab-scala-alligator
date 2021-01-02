@@ -15,8 +15,8 @@ trait StateApiTrait extends Directives with JsonSupport with LazyLogging {
   private type UnWrapper = DtPath => Route
 
   private def applyStateApiHandlers(dtp: DtPath,
-                              marshal: Marshaller,
-                              unWrapper: UnWrapper): Route = {
+                                    marshal: Marshaller,
+                                    unWrapper: UnWrapper): Route = {
     get {
       onSuccess(dtDirectory ask GetState(dtp)) {
         case s: DtState =>
@@ -48,13 +48,15 @@ trait StateApiTrait extends Directives with JsonSupport with LazyLogging {
   }
 
   private def applyStateApiFmt(segs: List[String],
-                                 marshall: Marshaller,
-                                 unWrapper: UnWrapper): Route = {
+                               marshall: Marshaller,
+                               unWrapper: UnWrapper): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        applyStateApiHandlers(somind.dtlab.models.DtPath(new DtTypeName("root"), "root", p),
-                        marshall,
-                        unWrapper)
+        applyStateApiHandlers(
+          somind.dtlab.models
+            .DtPath(new DtTypeName("root"), new DtInstanceName("root"), p),
+          marshall,
+          unWrapper)
       case _ =>
         logger.warn(s"can not extract DtPath from $segs")
         Observer("bad_request")

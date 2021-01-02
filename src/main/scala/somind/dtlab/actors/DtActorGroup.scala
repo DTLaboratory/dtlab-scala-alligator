@@ -7,10 +7,10 @@ import somind.dtlab.models.DtMsg
 class DtActorGroup extends Actor with LazyLogging {
 
   def create(m: DtMsg[Any]): Unit =
-    context.actorOf(Props[DtActor], m.path().instanceId) forward m
+    context.actorOf(Props[DtActor], m.path().instanceId.name) forward m
 
   def upsert(m: DtMsg[Any]): Unit =
-    context.child(m.path().instanceId).fold(create(m))(_ forward m)
+    context.child(m.path().instanceId.name).fold(create(m))(_ forward m)
 
   override def receive: Receive = {
 
