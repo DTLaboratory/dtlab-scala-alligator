@@ -52,7 +52,7 @@ trait StateApiTrait extends Directives with JsonSupport with LazyLogging {
                                  unWrapper: UnWrapper): Route = {
     somind.dtlab.models.DtPath(segs) match {
       case p: Some[DtPath] =>
-        applyStateApiHandlers(somind.dtlab.models.DtPath("root", "root", p),
+        applyStateApiHandlers(somind.dtlab.models.DtPath(new DtTypeName("root"), "root", p),
                         marshall,
                         unWrapper)
       case _ =>

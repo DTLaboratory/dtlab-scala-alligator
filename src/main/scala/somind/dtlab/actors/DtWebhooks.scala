@@ -1,16 +1,13 @@
 package somind.dtlab.actors
 
 import akka.persistence._
-import com.typesafe.scalalogging.LazyLogging
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
+
 import scala.util.{Failure, Success, Try}
 
-object DtDirectory extends LazyLogging {
-  def name: String = this.getClass.getName
-}
 
-class DtDirectory extends DtPersistentActorBase[DtTypeMap, DtType] {
+class DtWebhooks extends DtPersistentActorBase[DtTypeMap, DtType] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
 

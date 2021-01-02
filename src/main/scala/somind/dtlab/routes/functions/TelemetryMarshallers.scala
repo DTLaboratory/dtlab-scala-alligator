@@ -19,10 +19,10 @@ import scala.concurrent.Future
   */
 object TelemetryMarshallers extends JsonSupport with LazyLogging {
 
-  type Marshaller = (Seq[Telemetry], String, DtPath) => Future[Option[String]]
+  type Marshaller = (Seq[Telemetry], DtTypeName, DtPath) => Future[Option[String]]
 
   private def fmt(s: Seq[Telemetry],
-                  t: String,
+                  t: DtTypeName,
                   dtp: DtPath,
                   dottedName: Boolean = false): Future[Option[String]] = {
     val f = dtDirectory ask t
@@ -52,14 +52,14 @@ object TelemetryMarshallers extends JsonSupport with LazyLogging {
     }
   }
 
-  def namedFmt(s: Seq[Telemetry], t: String, dtp: DtPath): Future[Option[String]] =
+  def namedFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =
     fmt(s, t, dtp)
 
-  def pathedFmt(s: Seq[Telemetry], t: String, dtp: DtPath): Future[Option[String]] =
+  def pathedFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =
     fmt(s, t, dtp, dottedName = true)
 
   //noinspection ScalaUnusedSymbol
-  def indexedFmt(s: Seq[Telemetry], t: String, dtp: DtPath): Future[Option[String]] =
+  def indexedFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =
     Future {
       Some(s.toJson.prettyPrint)
     }

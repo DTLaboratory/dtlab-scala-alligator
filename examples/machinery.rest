@@ -138,7 +138,7 @@ POST /dtlab-alligator/actor/machinery/one?format=pathed
 POST /dtlab-alligator/actor/machinery/three?format=named
 {
   "name": "height",
-  "value": 7.5
+  "value": 877.5
 }
 
 --

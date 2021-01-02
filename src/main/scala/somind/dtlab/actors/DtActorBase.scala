@@ -26,13 +26,13 @@ trait DtActorBase extends Actor with LazyLogging with JsonSupport {
       case Some(p) =>
         val instanceId = p.instanceId
         // note: recursive types not supported yet
-        if (self.path.name == p.typeId)
+        if (self.path.name == p.typeId.name)
           context
             .child(instanceId)
             .fold(create(m.trailMsg(), instanceId, persist = true))(
               _ forward m.trailMsg())
         else
-          context.child(p.typeId).fold(create(m, p.typeId, persist = false))(_ forward m)
+          context.child(p.typeId.name).fold(create(m, p.typeId.name, persist = false))(_ forward m)
       case e =>
         throw new UnsupportedOperationException(s"no trail: $e")
     }

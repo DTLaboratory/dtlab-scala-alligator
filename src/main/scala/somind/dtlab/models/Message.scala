@@ -8,16 +8,16 @@ object DtPath {
     segs match {
       case s if s.length < 2 => None
       case s =>
-        Option(DtPath(s.head, s(1), DtPath(s.drop(2))))
+        Option(DtPath(DtTypeName(s.head), s(1), DtPath(s.drop(2))))
     }
   }
 }
 
-case class DtPath(typeId: String,
+case class DtPath(typeId: DtTypeName,
                   instanceId: String,
                   trail: Option[DtPath] = None) {
   // convenience method to get the final typeName for validation
-  def endTypeName(): String = {
+  def endTypeName(): DtTypeName = {
     trail match {
       case Some(t) =>
         t.endTypeName()
@@ -27,8 +27,8 @@ case class DtPath(typeId: String,
   def relationships(): List[(String, String)] = {
     trail match {
       case None                         => List()
-      case Some(dt) if typeId == "root" => dt.relationships()
-      case Some(dt)                     => (typeId, dt.typeId) :: dt.relationships()
+      case Some(dt) if typeId.name == "root" => dt.relationships()
+      case Some(dt)                     => (typeId.name, dt.typeId.name) :: dt.relationships()
     }
   }
   private def pathToString(p: DtPath): String = {
@@ -50,12 +50,16 @@ sealed trait DtResult
 final case class DtOk() extends DtResult
 final case class DtErr(message: String) extends DtResult
 
-final case class DeleteDtType(typeId: String)
+final case class DeleteDtType(typeId: DtTypeName)
+
+final case class DtTypeName(name: String) {
+  override def toString: String = name
+}
 
 // particular type of a kind
 final case class DtType(
     // the name of our type
-    name: String,
+    name: DtTypeName,
     // the names of the properties (called props instead of attributes because
     // values of props can change - values of attributes cannot change)
     props: Option[Seq[String]],
@@ -70,7 +74,7 @@ final case class LazyDtType(
     props: Option[Seq[String]],
     children: Option[Set[String]]
 ) {
-  def dtType(name: String): DtType =
+  def dtType(name: DtTypeName): DtType =
     DtType(name, props, children, ZonedDateTime.now())
 }
 
@@ -96,7 +100,34 @@ final case class DtState(
 
 // collection of all types in domain
 final case class DtTypeMap(
-    types: Map[String, DtType]
+    types: Map[DtTypeName, DtType]
+)
+
+final case class DtWebHookTarget(
+    host: String, // ie: myexample.com
+    path: String, // /hit/me/here/12345-000-12345-1234567
+    tls: Boolean, // causes webhook to be https: or http:
+    clientCertificate: Option[String]
+)
+
+sealed trait DtEventType
+final case class Creation() extends DtEventType
+final case class StateChange() extends DtEventType
+final case class NewChild() extends DtEventType
+final case class Destruction() extends DtEventType
+
+final case class DtWebHook(
+    name: String, // the name of our webhook
+    target: DtWebHookTarget,
+    dtPrefix: Option[DtPath],
+    dtType: DtTypeName,
+    eventType: DtEventType,
+    created: Option[ZonedDateTime] = Some(ZonedDateTime.now())
+)
+
+// collection of all types in domain
+final case class DtWebhookMap(
+    webhooks: Map[String, DtWebHook]
 )
 
 final case class Operator(name: String,

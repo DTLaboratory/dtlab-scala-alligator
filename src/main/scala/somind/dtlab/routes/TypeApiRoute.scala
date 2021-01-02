@@ -17,8 +17,9 @@ object TypeApiRoute
     with HttpSupport {
 
   def apply: Route = {
-    path("type" / Segment) { typeId =>
+    path("type" / Segment) { tid =>
       get {
+        val typeId = new DtTypeName(tid)
         onSuccess(dtDirectory ask typeId) {
           case Some(currentType: DtType) =>
             Observer("type_route_get_success")
@@ -35,6 +36,7 @@ object TypeApiRoute
         }
       } ~
         delete {
+          val typeId = new DtTypeName(tid)
           onSuccess(dtDirectory ask DeleteDtType(typeId)) {
             case DtOk() =>
               Observer("type_route_delete_success")
@@ -50,6 +52,7 @@ object TypeApiRoute
         } ~ post {
         decodeRequest {
           entity(as[LazyDtType]) { ldt =>
+            val typeId = new DtTypeName(tid)
             val newType = ldt.dtType(typeId)
             onSuccess(dtDirectory ask newType) {
               case Some(currentType: DtType)

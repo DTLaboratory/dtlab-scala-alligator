@@ -34,7 +34,7 @@ trait GetChildNamesTrait extends Directives with JsonSupport with LazyLogging {
     Observer("actor_route_children_query")
     somind.dtlab.models.DtPath(segs :+ "children") match {
       case Some(p: DtPath) =>
-        val fullPath = somind.dtlab.models.DtPath("root", "root", Some(p))
+        val fullPath = somind.dtlab.models.DtPath(new DtTypeName("root"), "root", Some(p))
         applyChildrenFmt(fullPath)
       case _ =>
         logger.warn(s"can not extract DtPath from $segs")

@@ -33,16 +33,48 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
+  implicit object DtEventType extends JsonFormat[DtEventType] {
+    def write(tp: DtEventType): JsValue = tp match {
+      case _: Creation    => JsString("Creation")
+      case _: StateChange => JsString("StateChange")
+      case _: NewChild    => JsString("NewChild")
+      case _: Destruction => JsString("Destruction")
+      case _ =>
+        throw DeserializationException("Expected DtEventType")
+    }
+    def read(value: JsValue): DtEventType = {
+      value match {
+        case JsString("Creation")    => Creation()
+        case JsString("StateChange") => StateChange()
+        case JsString("NewChild")    => NewChild()
+        case JsString("Destruction") => Destruction()
+        case _ =>
+          throw DeserializationException("Expected DtEventType string")
+      }
+    }
+  }
+
+  implicit object DtTypeName extends JsonFormat[DtTypeName] {
+    def write(name: DtTypeName): JsValue = JsString(name.name)
+    def read(value: JsValue): DtTypeName = {
+      value match {
+        case JsString(s) => new DtTypeName(s)
+        case _ =>
+          throw DeserializationException("Expected DtTypeName string")
+      }
+    }
+  }
+
   implicit object DtPath extends JsonFormat[DtPath] {
     def write(dtp: DtPath): JsValue = JsString(dtp.toString)
     def read(value: JsValue): DtPath = {
       value match {
         case JsString(s) =>
-         somind.dtlab.models.DtPath(s.split("/").toList) match {
-           case Some(dtp) => dtp
-           case _ =>
-             throw DeserializationException("Expected DtPath string")
-         }
+          somind.dtlab.models.DtPath(s.split("/").toList) match {
+            case Some(dtp) => dtp
+            case _ =>
+              throw DeserializationException("Expected DtPath string")
+          }
         case _ =>
           throw DeserializationException("Expected DtPath string")
       }
@@ -73,23 +105,36 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
-  implicit val dttFormat: RootJsonFormat[DtType] = jsonFormat4(DtType)
-  implicit val tel: RootJsonFormat[Telemetry] = jsonFormat3(Telemetry)
-  implicit val telm: RootJsonFormat[TelemetryMsg] = jsonFormat2(TelemetryMsg)
-  implicit val ntel: RootJsonFormat[NamedTelemetry] = jsonFormat3(NamedTelemetry)
-  implicit val ldt: RootJsonFormat[LazyDtType] = jsonFormat2(LazyDtType)
-  implicit val dts: RootJsonFormat[DtState] = jsonFormat1(DtState)
-  implicit val child: RootJsonFormat[DtChildren] = jsonFormat1(DtChildren)
-  implicit val getchild: RootJsonFormat[GetChildrenNames] = jsonFormat1(GetChildrenNames)
-  implicit val getstate: RootJsonFormat[GetState] = jsonFormat1(GetState)
-  implicit val getjrnl: RootJsonFormat[GetJrnl] = jsonFormat3(GetJrnl)
-  implicit val dttm: RootJsonFormat[DtTypeMap] = jsonFormat1(DtTypeMap)
-  implicit val sholder: RootJsonFormat[DtStateHolder[DtState]] = jsonFormat3(DtStateHolder[DtState])
-  implicit val mholder: RootJsonFormat[DtStateHolder[DtTypeMap]] = jsonFormat3(DtStateHolder[DtTypeMap])
-  implicit val snCmd: RootJsonFormat[TakeSnapshot] = jsonFormat0(TakeSnapshot)
-  implicit val dtop: RootJsonFormat[Operator] = jsonFormat6(Operator)
-  implicit val dtopm: RootJsonFormat[OperatorMap] = jsonFormat1(OperatorMap)
-  implicit val dtgetop: RootJsonFormat[GetOperators] = jsonFormat1(GetOperators)
-  implicit val delop: RootJsonFormat[DeleteOperators] = jsonFormat1(DeleteOperators)
+  implicit val _i01: RootJsonFormat[DtType] = jsonFormat4(DtType)
+  implicit val _i02: RootJsonFormat[Telemetry] = jsonFormat3(Telemetry)
+  implicit val _i03: RootJsonFormat[TelemetryMsg] = jsonFormat2(TelemetryMsg)
+  implicit val _i04: RootJsonFormat[NamedTelemetry] = jsonFormat3(
+    NamedTelemetry)
+  implicit val _i05: RootJsonFormat[LazyDtType] = jsonFormat2(LazyDtType)
+  implicit val _i06: RootJsonFormat[DtState] = jsonFormat1(DtState)
+  implicit val _i07: RootJsonFormat[DtChildren] = jsonFormat1(DtChildren)
+  implicit val _i08: RootJsonFormat[GetChildrenNames] = jsonFormat1(
+    GetChildrenNames)
+  implicit val _i09: RootJsonFormat[GetState] = jsonFormat1(GetState)
+  implicit val _i10: RootJsonFormat[GetJrnl] = jsonFormat3(GetJrnl)
+  implicit val _i11: RootJsonFormat[DtTypeMap] = jsonFormat1(DtTypeMap)
+  implicit val _i12: RootJsonFormat[DtStateHolder[DtState]] = jsonFormat3(
+    DtStateHolder[DtState])
+  implicit val _i13: RootJsonFormat[DtStateHolder[DtTypeMap]] = jsonFormat3(
+    DtStateHolder[DtTypeMap])
+  implicit val _i14: RootJsonFormat[TakeSnapshot] = jsonFormat0(TakeSnapshot)
+  implicit val _i15: RootJsonFormat[Operator] = jsonFormat6(Operator)
+  implicit val _i16: RootJsonFormat[OperatorMap] = jsonFormat1(OperatorMap)
+  implicit val _i17: RootJsonFormat[GetOperators] = jsonFormat1(GetOperators)
+  implicit val _i18: RootJsonFormat[DeleteOperators] = jsonFormat1(
+    DeleteOperators)
+  implicit val _i19: RootJsonFormat[Creation] = jsonFormat0(Creation)
+  implicit val _i20: RootJsonFormat[NewChild] = jsonFormat0(NewChild)
+  implicit val _i21: RootJsonFormat[Destruction] = jsonFormat0(Destruction)
+  implicit val _i22: RootJsonFormat[StateChange] = jsonFormat0(StateChange)
+  implicit val _i23: RootJsonFormat[DtWebHookTarget] = jsonFormat4(
+    DtWebHookTarget)
+  implicit val _i24: RootJsonFormat[DtWebHook] = jsonFormat6(DtWebHook)
+  implicit val _i25: RootJsonFormat[DtWebhookMap] = jsonFormat1(DtWebhookMap)
 
 }
