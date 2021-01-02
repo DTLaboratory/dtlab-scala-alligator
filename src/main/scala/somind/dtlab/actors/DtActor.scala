@@ -19,6 +19,10 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
   override var state: DtState = DtState()
 
   private def applyOperators(t: Telemetry): Unit = {
+
+    def applyOperatorResult(t: Telemetry): Unit =
+      state = DtState(state.state + (t.idx -> t))
+
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
     ops.foreach(op => {
@@ -27,10 +31,6 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     ops.foreach(op => {
       ApplyComplexBuiltInOperator(t, state, op).foreach(r => applyOperatorResult(r))
     })
-  }
-
-  private def applyOperatorResult(t: Telemetry): Unit = {
-    state = DtState(state.state + (t.idx -> t))
   }
 
   private def handleTelemetryMsg(tm: TelemetryMsg): Unit = {
@@ -74,6 +74,9 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     case _: GetOperators => sender() ! operators
 
     case _: GetChildrenNames => sender ! children
+
+    case _: GetActorInfo =>
+      sender ! ActorInfo(persistenceId, self)
 
     case _: DeleteOperators =>
       operators = OperatorMap()

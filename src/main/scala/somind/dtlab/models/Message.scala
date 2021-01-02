@@ -1,6 +1,8 @@
 package somind.dtlab.models
 import java.time.ZonedDateTime
 
+import akka.actor.ActorRef
+
 object DtPath {
   def apply(segs: List[String]): Option[DtPath] = {
     segs match {
@@ -72,6 +74,9 @@ final case class LazyDtType(
     DtType(name, props, children, ZonedDateTime.now())
 }
 
+// helper msg for internal dtpath-to-akka-ref info and for cloning via persistenceId
+final case class ActorInfo(persistenceId: String, ref: ActorRef)
+
 final case class Telemetry(
     idx: Int,
     value: Double,
@@ -110,6 +115,17 @@ final case class OperatorMsg(p: DtPath, c: Operator) extends DtMsg[Operator] {
     case Some(tp) =>
       OperatorMsg(tp, c)
     case _ => this
+  }
+}
+
+// use to get an actor ref you can cache and bypass the DtPath routing overhead
+// use to get an actor persistenceId if you are cloning an instance
+final case class GetActorInfo(p: DtPath) extends DtMsg[Any] {
+  override def path(): DtPath = p
+  override def content(): Any = None
+  def trailMsg(): GetActorInfo = p.trail match {
+    case Some(tp) => GetActorInfo(tp)
+    case _        => this
   }
 }
 final case class DeleteOperators(p: DtPath) extends DtMsg[Any] {
