@@ -1,5 +1,5 @@
 name := "DtLab"
-organization := "org.somind"
+organization := "com.dtlaboratory"
 javacOptions ++= Seq("-source", "1.11", "-target", "1.11") 
 scalacOptions ++= Seq(
   "-target:jvm-1.8"
