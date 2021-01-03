@@ -18,7 +18,6 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
     case _: SaveSnapshotSuccess =>
     case m =>
       logger.warn(s"unexpected message: $m")
-      sender ! None
 
   }
 

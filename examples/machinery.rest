@@ -27,6 +27,8 @@ GET /dtlab-alligator/type/machinery
 GET /dtlab-alligator/actor/machinery
 
 --
+GET /dtlab-alligator/actor/machinery/twonew
+--
 GET /dtlab-alligator/actor/machinery/two
 --
 GET /dtlab-alligator/actor/machinery/three

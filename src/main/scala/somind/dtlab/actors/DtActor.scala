@@ -2,6 +2,7 @@ package somind.dtlab.actors
 
 import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
+import somind.dtlab.Conf.webhooks
 import somind.dtlab.models._
 import somind.dtlab.observe.Observer
 import somind.dtlab.operators._
@@ -26,10 +27,12 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
     ops.foreach(op => {
-      ApplySimpleBuiltInOperator(t, state, op).foreach(r => applyOperatorResult(r))
+      ApplySimpleBuiltInOperator(t, state, op).foreach(r =>
+        applyOperatorResult(r))
     })
     ops.foreach(op => {
-      ApplyComplexBuiltInOperator(t, state, op).foreach(r => applyOperatorResult(r))
+      ApplyComplexBuiltInOperator(t, state, op).foreach(r =>
+        applyOperatorResult(r))
     })
   }
 
@@ -65,7 +68,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
           .path()
           .trail
           .exists(leaf =>
-            leaf.typeId == self.path.name && leaf.instanceId == "children" && leaf.trail.isEmpty) =>
+            leaf.typeId.name == self.path.name && leaf.instanceId.name == "children" && leaf.trail.isEmpty) =>
       logger.debug(s"${self.path.name} forwarding $m")
       upsert(m)
 
@@ -98,7 +101,6 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       logger.debug("saved snapshot")
     case m =>
       logger.warn(s"unexpected message: $m")
-      sender ! None
 
   }
 
@@ -135,6 +137,12 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       logger.debug(
         s"${self.path}: Recovery completed. State: $state Children: $children")
       Observer("resurrected_dt_actor")
+
+      if (state.state.isEmpty) {
+        logger.debug(
+          s" *** ejs *** create actor: ${self.path.toStringWithoutAddress}")
+        webhooks ! Creation()
+      }
 
     case x =>
       Observer("resurrected_dt_actor_unexpected_msg")
