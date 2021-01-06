@@ -33,21 +33,17 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
-  implicit object DtEventType extends JsonFormat[DtEventType] {
-    def write(tp: DtEventType): JsValue = tp match {
+  implicit object DtEventType extends JsonFormat[DtEvent] {
+    def write(tp: DtEvent): JsValue = tp match {
       case _: Creation    => JsString("Creation")
       case _: StateChange => JsString("StateChange")
-      case _: NewChild    => JsString("NewChild")
-      case _: Destruction => JsString("Destruction")
       case _ =>
         throw DeserializationException("Expected DtEventType")
     }
-    def read(value: JsValue): DtEventType = {
+    def read(value: JsValue): DtEvent = {
       value match {
         case JsString("Creation")    => Creation()
         case JsString("StateChange") => StateChange()
-        case JsString("NewChild")    => NewChild()
-        case JsString("Destruction") => Destruction()
         case _ =>
           throw DeserializationException("Expected DtEventType string")
       }
@@ -140,12 +136,11 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val _i18: RootJsonFormat[DeleteOperators] = jsonFormat1(
     DeleteOperators)
   implicit val _i19: RootJsonFormat[Creation] = jsonFormat0(Creation)
-  implicit val _i20: RootJsonFormat[NewChild] = jsonFormat0(NewChild)
-  implicit val _i21: RootJsonFormat[Destruction] = jsonFormat0(Destruction)
   implicit val _i22: RootJsonFormat[StateChange] = jsonFormat0(StateChange)
-  implicit val _i23: RootJsonFormat[DtWebHookTarget] = jsonFormat4(
+  implicit val _i23: RootJsonFormat[DtWebHookTarget] = jsonFormat5(
     DtWebHookTarget)
   implicit val _i24: RootJsonFormat[DtWebHook] = jsonFormat6(DtWebHook)
   implicit val _i25: RootJsonFormat[DtWebhookMap] = jsonFormat1(DtWebhookMap)
+  implicit val _i26: RootJsonFormat[DeleteWebhook] = jsonFormat1(DeleteWebhook)
 
 }

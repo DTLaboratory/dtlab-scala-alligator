@@ -138,11 +138,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
         s"${self.path}: Recovery completed. State: $state Children: $children")
       Observer("resurrected_dt_actor")
 
-      if (state.state.isEmpty) {
-        logger.debug(
-          s" *** ejs *** create actor: ${self.path.toStringWithoutAddress}")
-        webhooks ! Creation()
-      }
+      if (state.state.isEmpty && children.children.isEmpty) webhooks ! Creation()
 
     case x =>
       Observer("resurrected_dt_actor_unexpected_msg")

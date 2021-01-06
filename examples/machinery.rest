@@ -119,7 +119,7 @@ GET /dtlab-alligator/actor/machinery/three
 POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 0,
-  "value": 119.16
+  "value": 119.161
 }
 
 --
@@ -142,6 +142,25 @@ POST /dtlab-alligator/actor/machinery/three?format=named
   "name": "height",
   "value": 877.6
 }
+
+--
+# WEBHOOK
+GET /dtlab-alligator/webhook/fleetmgr
+--
+DELETE /dtlab-alligator/webhook/fleetmgr
+--
+POST /dtlab-alligator/webhook/fleetmgr
+{
+  "target": {
+    "host": "localhost",
+    "port": 8081,
+    "path": "/dtlab-alligator/telemetry",
+    "tls": false
+  },
+  "dtType": "*",
+  "eventType": "StateChange"
+}
+
 
 --
 GET /fitness

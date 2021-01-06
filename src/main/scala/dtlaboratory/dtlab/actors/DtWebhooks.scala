@@ -12,12 +12,57 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
 
   override def receiveCommand: Receive = {
 
+    case wid: String =>
+      state.webhooks.get(wid) match {
+        case Some(wh) =>
+          sender ! Some(wh)
+        case _ =>
+          sender ! None
+      }
+
+    case DeleteWebhook(wid) =>
+      state.webhooks.get(wid) match {
+        case Some(prev) =>
+          state = DtWebhookMap(state.webhooks - wid)
+          sender ! Some(prev)
+        case _ =>
+          sender ! None
+      }
+
     case wh: DtWebHook =>
-      logger.debug(s"create / update webhook: $wh")
+      state.webhooks.get(wh.name.getOrElse("unknown")) match {
+        case Some(prev) =>
+          sender ! Some(prev)
+        case _ =>
+          state = DtWebhookMap(state.webhooks + (wh.name.getOrElse("unknown") -> wh))
+          persistAsync(wh) { _ =>
+            sender ! Some(wh)
+            takeSnapshot()
+            logger.debug(s"create / update webhook: $wh")
+          }
+      }
+
+    case _: StateChange =>
+      state.webhooks.values
+        .filter(_.eventType == StateChange())
+        .foreach(wh => {
+          logger.debug(
+            s"testing state-change webhook ${wh.name} against event from ${sender()}")
+          // ejs todo invoke webhook
+        })
+
+    case _: Creation =>
+      state.webhooks.values
+        .filter(_.eventType == Creation())
+        .foreach(wh => {
+          logger.debug(
+            s"testing creation webhook ${wh.name} against event from ${sender()}")
+          // ejs todo invoke webhook
+        })
 
     case _: SaveSnapshotSuccess =>
     case m =>
-      logger.warn(s"unexpected message: $m")
+      logger.warn(s"unexpected message: $m from ${sender()}")
 
   }
 
@@ -25,7 +70,7 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
 
     case wh: DtWebHook =>
       Try {
-        DtWebhookMap(state.webhooks + (wh.name -> wh))
+        DtWebhookMap(state.webhooks + (wh.name.getOrElse("unknown") -> wh))
       } match {
         case Success(s) =>
           state = s

@@ -111,23 +111,22 @@ final case class DtTypeMap(
 
 final case class DtWebHookTarget(
     host: String, // ie: myexample.com
+    port: Int, // ie: 443
     path: String, // /hit/me/here/12345-000-12345-1234567
     tls: Boolean, // causes webhook to be https: or http:
     clientCertificate: Option[String]
 )
 
-sealed trait DtEventType
-final case class Creation() extends DtEventType
-final case class StateChange() extends DtEventType
-final case class NewChild() extends DtEventType
-final case class Destruction() extends DtEventType
+sealed trait DtEvent
+final case class Creation() extends DtEvent
+final case class StateChange() extends DtEvent
 
 final case class DtWebHook(
-    name: String, // the name of our webhook
+    name: Option[String] = None,
     target: DtWebHookTarget,
     dtPrefix: Option[DtPath],
     dtType: DtTypeName,
-    eventType: DtEventType,
+    eventType: DtEvent,
     created: Option[ZonedDateTime] = Some(ZonedDateTime.now())
 )
 
@@ -135,6 +134,8 @@ final case class DtWebHook(
 final case class DtWebhookMap(
     webhooks: Map[String, DtWebHook]
 )
+
+final case class DeleteWebhook(name: String)
 
 final case class Operator(name: String,
                           implementation: String,
