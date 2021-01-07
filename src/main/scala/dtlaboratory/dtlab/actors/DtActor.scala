@@ -43,6 +43,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       takeSnapshot()
       if (sndr != self) {
         applyOperators(tm.c) // apply operators to effects that come from outside the DT
+        webhooks ! StateChange()
         sender ! DtOk()
       }
     }

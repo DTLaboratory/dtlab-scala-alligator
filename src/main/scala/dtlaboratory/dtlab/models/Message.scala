@@ -1,10 +1,14 @@
 package dtlaboratory.dtlab.models
 
 import java.time.ZonedDateTime
-
 import akka.actor.ActorRef
+import com.typesafe.scalalogging.LazyLogging
 
-object DtPath {
+object DtPath extends LazyLogging {
+
+  def applyActorRef(actorRef: ActorRef): Option[DtPath] =
+    apply(actorRef.path.elements.slice(2, 999).toList)
+
   def apply(segs: List[String]): Option[DtPath] = {
     segs match {
       case s if s.length < 2 => None
@@ -120,6 +124,8 @@ final case class DtWebHookTarget(
 sealed trait DtEvent
 final case class Creation() extends DtEvent
 final case class StateChange() extends DtEvent
+
+final case class DtEventMsg(event: DtEvent, source: DtPath, created: ZonedDateTime = ZonedDateTime.now())
 
 final case class DtWebHook(
     name: Option[String] = None,

@@ -42,23 +42,21 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
           }
       }
 
-    case _: StateChange =>
-      state.webhooks.values
-        .filter(_.eventType == StateChange())
-        .foreach(wh => {
-          logger.debug(
-            s"testing state-change webhook ${wh.name} against event from ${sender()}")
-          // ejs todo invoke webhook
-        })
-
-    case _: Creation =>
-      state.webhooks.values
-        .filter(_.eventType == Creation())
-        .foreach(wh => {
-          logger.debug(
-            s"testing creation webhook ${wh.name} against event from ${sender()}")
-          // ejs todo invoke webhook
-        })
+    case ev: DtEvent =>
+      dtlaboratory.dtlab.models.DtPath.applyActorRef(sender()) match {
+        case Some(dtp) =>
+          state.webhooks.values
+            .filter(_.eventType == ev)
+            // todo: add a filter for dtpath prefix
+            .foreach(wh => {
+              val eventMsg = DtEventMsg(ev, dtp)
+              logger.debug(
+                s"testing webhook ${wh.name} for payload $eventMsg")
+              // ejs todo invoke webhook
+            })
+        case _ =>
+          logger.warn(s"can not extract DtPath from sender ${sender()}")
+      }
 
     case _: SaveSnapshotSuccess =>
     case m =>
