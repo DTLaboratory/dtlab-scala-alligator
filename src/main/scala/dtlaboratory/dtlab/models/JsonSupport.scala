@@ -99,6 +99,18 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
+  // ejs why is datetime not printed in 8601?  confirm json is in 8601
   implicit object ZonedDateTime extends JsonFormat[ZonedDateTime] {
     def write(dt: ZonedDateTime): JsValue =
       JsString(get8601(new Date(dt.toInstant.toEpochMilli))) // ugh.  replace SimpleDateFormat with new java.time.* stuff

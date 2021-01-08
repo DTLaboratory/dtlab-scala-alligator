@@ -60,6 +60,9 @@ class DtPathFromActorRefSpec extends AnyFlatSpec with should.Matchers {
     myDtPath should be ('defined)
     myDtPath.get.toString should be ("/mytype/myinstance")
 
+    val myEvent = DtEventMsg(Creation(), myDtPath.get)
+    println(myEvent)
+
   }
 
 }

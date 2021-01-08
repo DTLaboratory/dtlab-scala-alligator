@@ -45,13 +45,13 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
     case ev: DtEvent =>
       dtlaboratory.dtlab.models.DtPath.applyActorRef(sender()) match {
         case Some(dtp) =>
+          val eventMsg = DtEventMsg(ev, dtp)
           state.webhooks.values
             .filter(_.eventType == ev)
             // todo: add a filter for dtpath prefix
             .foreach(wh => {
-              val eventMsg = DtEventMsg(ev, dtp)
               logger.debug(
-                s"testing webhook ${wh.name} for payload $eventMsg")
+                s"invoking webhook ${wh.name} for $ev event")
               // ejs todo invoke webhook
             })
         case _ =>
