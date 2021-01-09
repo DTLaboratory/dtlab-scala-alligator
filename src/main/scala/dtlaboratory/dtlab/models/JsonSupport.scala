@@ -1,12 +1,17 @@
 package dtlaboratory.dtlab.models
 
-import java.time.{ZoneOffset, ZonedDateTime}
-import java.util.{Date, UUID}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import com.typesafe.scalalogging.LazyLogging
 import dtlaboratory.dtlab.models
 import spray.json._
 
-trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
+import java.time.{ZoneOffset, ZonedDateTime}
+import java.util.{Date, UUID}
+
+trait JsonSupport
+    extends SprayJsonSupport
+    with DefaultJsonProtocol
+    with LazyLogging {
 
   val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX",
                                                   java.util.Locale.US)
@@ -17,11 +22,6 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 
   def get8601(date: java.util.Date): String =
     dateFormat.format(date)
-
-  def now8601(): String = {
-    val now = new java.util.Date()
-    get8601(now)
-  }
 
   implicit object Date extends JsonFormat[Date] {
     def write(dt: java.util.Date): JsValue = JsString(get8601(dt))
@@ -99,21 +99,10 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     }
   }
 
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
-  // ejs why is datetime not printed in 8601?  confirm json is in 8601
   implicit object ZonedDateTime extends JsonFormat[ZonedDateTime] {
     def write(dt: ZonedDateTime): JsValue =
       JsString(get8601(new Date(dt.toInstant.toEpochMilli))) // ugh.  replace SimpleDateFormat with new java.time.* stuff
+
     def read(value: JsValue): ZonedDateTime = {
       value match {
         case JsString(dt) =>
@@ -154,5 +143,6 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val _i24: RootJsonFormat[DtWebHook] = jsonFormat6(DtWebHook)
   implicit val _i25: RootJsonFormat[DtWebhookMap] = jsonFormat1(DtWebhookMap)
   implicit val _i26: RootJsonFormat[DeleteWebhook] = jsonFormat1(DeleteWebhook)
+  implicit val _i27: RootJsonFormat[DtEventMsg] = jsonFormat3(DtEventMsg)
 
 }

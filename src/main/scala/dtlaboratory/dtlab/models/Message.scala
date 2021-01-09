@@ -125,7 +125,9 @@ sealed trait DtEvent
 final case class Creation() extends DtEvent
 final case class StateChange() extends DtEvent
 
-final case class DtEventMsg(event: DtEvent, source: DtPath, created: ZonedDateTime = ZonedDateTime.now())
+final case class DtEventMsg(event: DtEvent,
+                            source: DtPath,
+                            created: ZonedDateTime = ZonedDateTime.now())
 
 final case class DtWebHook(
     name: Option[String] = None,

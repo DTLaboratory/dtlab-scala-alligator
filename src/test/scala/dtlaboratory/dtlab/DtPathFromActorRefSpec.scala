@@ -34,7 +34,7 @@ class MyDtDirectory() extends Actor {
   }
 }
 
-class DtPathFromActorRefSpec extends AnyFlatSpec with should.Matchers {
+class DtPathFromActorRefSpec extends AnyFlatSpec with should.Matchers with JsonSupport {
 
   def requestDuration: Duration = {
     val t = "120 seconds"
@@ -55,13 +55,14 @@ class DtPathFromActorRefSpec extends AnyFlatSpec with should.Matchers {
 
     val myRef = Await.result(f, 3.second).asInstanceOf[ActorRef]
 
-    val myDtPath = DtPath.applyActorRef(myRef)
+    val myDtPath = dtlaboratory.dtlab.models.DtPath.applyActorRef(myRef)
 
     myDtPath should be ('defined)
     myDtPath.get.toString should be ("/mytype/myinstance")
 
     val myEvent = DtEventMsg(Creation(), myDtPath.get)
-    println(myEvent)
+    import spray.json._
+    println(myEvent.toJson)
 
   }
 

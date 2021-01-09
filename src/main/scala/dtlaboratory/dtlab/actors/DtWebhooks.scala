@@ -1,9 +1,12 @@
 package dtlaboratory.dtlab.actors
 
+import akka.http.scaladsl.model.StatusCodes
 import akka.persistence._
+import dtlaboratory.dtlab.actors.functions.PostWebhook
 import dtlaboratory.dtlab.models._
 import dtlaboratory.dtlab.observe.Observer
 
+import scala.concurrent.Await
 import scala.util.{Failure, Success, Try}
 
 class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
@@ -34,7 +37,8 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
         case Some(prev) =>
           sender ! Some(prev)
         case _ =>
-          state = DtWebhookMap(state.webhooks + (wh.name.getOrElse("unknown") -> wh))
+          state = DtWebhookMap(
+            state.webhooks + (wh.name.getOrElse("unknown") -> wh))
           persistAsync(wh) { _ =>
             sender ! Some(wh)
             takeSnapshot()
@@ -50,9 +54,15 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
             .filter(_.eventType == ev)
             // todo: add a filter for dtpath prefix
             .foreach(wh => {
-              logger.debug(
-                s"invoking webhook ${wh.name} for $ev event")
-              // ejs todo invoke webhook
+              logger.debug(s"invoking webhook ${wh.name} for $ev event")
+              import scala.concurrent.duration._
+              Await.result(PostWebhook(wh, eventMsg), 3.seconds) match {
+                case StatusCodes.Accepted =>
+                  logger.debug(s"webhook ${wh.name} successful")
+                case s =>
+                  logger.warn(
+                    s"webhook ${wh.name} unsuccessful. code: $s payload: $eventMsg")
+              }
             })
         case _ =>
           logger.warn(s"can not extract DtPath from sender ${sender()}")

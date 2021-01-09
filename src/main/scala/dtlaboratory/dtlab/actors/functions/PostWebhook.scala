@@ -5,7 +5,7 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.{Http, HttpExt}
 import dtlaboratory.dtlab.Conf._
 import dtlaboratory.dtlab.HttpSupport
-import dtlaboratory.dtlab.models.{DtEvent, DtWebHook, JsonSupport}
+import dtlaboratory.dtlab.models._
 import spray.json._
 
 import scala.concurrent.Future
@@ -14,9 +14,10 @@ object PostWebhook extends JsonSupport with HttpSupport {
 
   val http: HttpExt = Http(system)
 
-  def apply(webhook: DtWebHook, event: DtEvent): Future[StatusCode] = {
+  def apply(webhook: DtWebHook, event: DtEventMsg): Future[StatusCode] = {
     val newUri =
       HttpRequest(
+        method = HttpMethods.POST,
         entity = HttpEntity(ContentTypes.`application/json`,
                             event.toJson.compactPrint),
         uri = Uri()

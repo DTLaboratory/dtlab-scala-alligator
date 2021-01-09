@@ -153,13 +153,14 @@ POST /dtlab-alligator/webhook/fleetmgr-ss
 {
   "target": {
     "host": "localhost",
-    "port": 8081,
-    "path": "/dtlab-alligator/telemetry",
+    "port": 8082,
+    "path": "/dtlab-alligator/ingest/telemetry/fleetmgr-ss",
     "tls": false
   },
   "dtType": "*",
   "eventType": "StateChange"
 }
+--
 GET /dtlab-alligator/webhook/fleetmgr-cr
 --
 DELETE /dtlab-alligator/webhook/fleetmgr-cr
@@ -168,8 +169,8 @@ POST /dtlab-alligator/webhook/fleetmgr-cr
 {
   "target": {
     "host": "localhost",
-    "port": 8081,
-    "path": "/dtlab-alligator/telemetry",
+    "port": 8082,
+    "path": "/dtlab-alligator/ingest/telemetry/fleetmgr-cr",
     "tls": false
   },
   "dtType": "*",
