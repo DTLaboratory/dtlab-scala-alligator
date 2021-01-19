@@ -52,8 +52,12 @@ object TelemetryUnWrappers
   def IdxUnWrapper(dtp: DtPath): Route = {
     entity(as[Telemetry]) { ltelem =>
       {
-        val telemetry =
-          ltelem.copy(datetime = Some(java.time.ZonedDateTime.now()))
+        val telemetry: Telemetry = ltelem.datetime match {
+          case Some(_) =>
+            ltelem
+          case _ =>
+            ltelem.copy(datetime = Some(java.time.ZonedDateTime.now()))
+        }
         applyTelemetryMsg(dtp, telemetry)
       }
     }
