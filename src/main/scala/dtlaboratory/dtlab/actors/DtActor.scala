@@ -2,9 +2,9 @@ package dtlaboratory.dtlab.actors
 
 import akka.persistence._
 import com.typesafe.scalalogging.LazyLogging
+import dtlaboratory.dtlab.Conf.webhooks
 import dtlaboratory.dtlab.models._
 import dtlaboratory.dtlab.observe.Observer
-import dtlaboratory.dtlab.Conf.webhooks
 import dtlaboratory.dtlab.operators._
 
 // ejs todo: evaluate appropriate exec context
@@ -19,10 +19,15 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   override var state: DtState = DtState()
 
+  /*  temp state so that each operator can see old state
+   *  and only apply all changes once at end
+   */
   private def applyOperators(t: Telemetry): Unit = {
 
+    var newState = state
+
     def applyOperatorResult(t: Telemetry): Unit =
-      state = DtState(state.state + (t.idx -> t))
+      newState = DtState(newState.state + (t.idx -> t))
 
     // find operators that list this t's index as input and apply them
     val ops = operators.operators.values.filter(_.input.contains(t.idx))
@@ -34,19 +39,31 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
       ApplyComplexBuiltInOperator(t, state, op).foreach(r =>
         applyOperatorResult(r))
     })
+
+    state = newState
+
   }
 
-  private def handleTelemetryMsg(tm: TelemetryMsg): Unit = {
-    state = DtState(state.state + (tm.c.idx -> tm.c))
+  private def handleTelemetry(t: Telemetry, recover: Boolean = false): Unit = {
+
+    val oldState = state.state.values.map(_.value)
+
+    applyOperators(t) // apply operators to effects that come from outside the DT
+    state = DtState(state.state + (t.idx -> t))
     val sndr = sender()
-    persistAsync(tm.c) { _ =>
-      takeSnapshot()
-      if (sndr != self) {
-        applyOperators(tm.c) // apply operators to effects that come from outside the DT
-        webhooks ! StateChange()
-        sender ! DtOk()
+    if (!recover)
+      persistAsync(t) { _ =>
+        takeSnapshot()
+        if (sndr != self) {
+          if (!oldState.equals(state.state.values.map(_.value))) {
+            logger.debug(s"state change")
+            webhooks ! StateChange()
+          } else {
+            logger.debug(s"no state change")
+          }
+          sndr ! DtOk()
+        }
       }
-    }
   }
 
   private def handleGetJrnl(m: GetJrnl): Unit = {
@@ -94,7 +111,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
     // telemetry msgs are sent with dtpath addressing wrappers and
     // are the entry point / triggers for all complex and simple state change processing
-    case tm: TelemetryMsg => handleTelemetryMsg(tm)
+    case tm: TelemetryMsg => handleTelemetry(tm.c)
 
     case _: GetState => sender ! state
 
@@ -108,17 +125,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
   override def receiveRecover: Receive = {
 
     case t: Telemetry =>
-      Try {
-        DtState(state.state + (t.idx -> t))
-      } match {
-        case Success(s) =>
-          state = s
-          applyOperators(t)
-          Observer("recovery_of_dt_actor_state_from_jrnl")
-        case Failure(e) =>
-          Observer("recovery_of_dt_actor_state_from_jrnl_failed")
-          logger.error(s"can not recalculate state: $e", e)
-      }
+      handleTelemetry(t, recover = true)
 
     case SnapshotOffer(_, snapshot: DtStateHolder[DtState] @unchecked) =>
       Try {
@@ -139,7 +146,8 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
         s"${self.path}: Recovery completed. State: $state Children: $children")
       Observer("resurrected_dt_actor")
 
-      if (state.state.isEmpty && children.children.isEmpty) webhooks ! Creation()
+      if (state.state.isEmpty && children.children.isEmpty)
+        webhooks ! Creation()
 
     case x =>
       Observer("resurrected_dt_actor_unexpected_msg")
