@@ -119,11 +119,11 @@ GET /dtlab-alligator/actor/machinery/three
 POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 0,
-  "value": 119.161
+  "value": 123.45
 }
 
 --
-POST /dtlab-alligator/actor/machinery/two
+POST /dtlab-alligator/actor/machinery/won
 {
   "idx": 0,
   "value": 9.17
