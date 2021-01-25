@@ -33,17 +33,34 @@ trait JsonSupport
     }
   }
 
+  implicit object DtEventTypeType extends JsonFormat[DtEventType] {
+    def write(tp: DtEventType): JsValue = tp match {
+      case _: CreationEventType    => JsString("Creation")
+      case _: StateChangeEventType => JsString("StateChange")
+      case _ =>
+        throw DeserializationException("Expected DtEventType")
+    }
+    def read(value: JsValue): DtEventType = {
+      value match {
+        case JsString("Creation")    => CreationEventType()
+        case JsString("StateChange") => StateChangeEventType()
+        case _ =>
+          throw DeserializationException("Expected DtEventType string")
+      }
+    }
+  }
+
   implicit object DtEventType extends JsonFormat[DtEvent] {
     def write(tp: DtEvent): JsValue = tp match {
-      case _: Creation    => JsString("Creation")
-      case _: StateChange => JsString("StateChange")
+      case _: Creation           => JsString("Creation")
+      case StateChange(newState) => newState.toJson
       case _ =>
         throw DeserializationException("Expected DtEventType")
     }
     def read(value: JsValue): DtEvent = {
       value match {
-        case JsString("Creation")    => Creation()
-        case JsString("StateChange") => StateChange()
+        case JsString("Creation") => Creation()
+        case newState: JsObject   => newState.convertTo[StateChange]
         case _ =>
           throw DeserializationException("Expected DtEventType string")
       }
@@ -137,12 +154,12 @@ trait JsonSupport
   implicit val _i18: RootJsonFormat[DeleteOperators] = jsonFormat1(
     DeleteOperators)
   implicit val _i19: RootJsonFormat[Creation] = jsonFormat0(Creation)
-  implicit val _i22: RootJsonFormat[StateChange] = jsonFormat0(StateChange)
+  implicit val _i22: RootJsonFormat[StateChange] = jsonFormat1(StateChange)
   implicit val _i23: RootJsonFormat[DtWebHookTarget] = jsonFormat5(
     DtWebHookTarget)
   implicit val _i24: RootJsonFormat[DtWebHook] = jsonFormat6(DtWebHook)
   implicit val _i25: RootJsonFormat[DtWebhookMap] = jsonFormat1(DtWebhookMap)
   implicit val _i26: RootJsonFormat[DeleteWebhook] = jsonFormat1(DeleteWebhook)
-  implicit val _i27: RootJsonFormat[DtEventMsg] = jsonFormat3(DtEventMsg)
+  implicit val _i27: RootJsonFormat[DtEventMsg] = jsonFormat4(DtEventMsg)
 
 }

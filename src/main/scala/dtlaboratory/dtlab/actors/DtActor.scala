@@ -46,18 +46,23 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   private def handleTelemetry(t: Telemetry, recover: Boolean = false): Unit = {
 
+    val sndr = sender()
     val oldState = state.state.values.map(_.value)
 
     applyOperators(t) // apply operators to effects that come from outside the DT
     state = DtState(state.state + (t.idx -> t))
-    val sndr = sender()
+
     if (!recover)
       persistAsync(t) { _ =>
         takeSnapshot()
         if (sndr != self) {
+          // it might seem like a waste to check for state change here instead of before
+          // persist but the event sourcing idea is to jrnl all input, not to process the
+          // data in the jrnl - if rules change later about what constitutes a state change,
+          // this code will still work with old jrnls
           if (!oldState.equals(state.state.values.map(_.value))) {
             logger.debug(s"state change")
-            webhooks ! StateChange()
+            webhooks ! StateChange(state.state.values.toList)
           } else {
             logger.debug(s"no state change")
           }
