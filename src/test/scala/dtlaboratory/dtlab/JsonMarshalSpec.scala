@@ -39,14 +39,19 @@ class JsonMarshalSpec
     resurrected.newState.length should be(2)
 
     val segs = List("mytype1", "t1", "mysubtype1", "s1")
-    val dtPath = dtlaboratory.dtlab.models.DtPath(segs).get
-    val msg: DtEventMsg = DtEventMsg(event = resurrected,
-                                     source = dtPath,
-                                     eventType = StateChangeEventType())
-    val s3: String = msg.toJson.prettyPrint
-    s3.toCharArray should contain('{')
-    s3.toCharArray should contain('}')
-    s3.toCharArray should contain('\n')
+    dtlaboratory.dtlab.models.DtPath(segs) match {
+      case Some(dtPath) =>
+        val msg: DtEventMsg = DtEventMsg(event = resurrected,
+                                         source = dtPath,
+                                         eventType = StateChangeEventType())
+        val s3: String = msg.toJson.prettyPrint
+        s3.toCharArray should contain('{')
+        s3.toCharArray should contain('}')
+        s3.toCharArray should contain('\n')
+      case _ =>
+        fail()
+    }
+
   }
 
 }
