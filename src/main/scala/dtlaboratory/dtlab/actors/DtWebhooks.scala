@@ -31,11 +31,15 @@ class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
   }
 
   def handleDtEvent(ev: DtEvent, sndr: ActorRef): Unit = {
+    val evt = ev match {
+      case _: Creation => CreationEventType()
+      case _ =>  StateChangeEventType()
+    }
     dtlaboratory.dtlab.models.DtPath.applyActorRef(sndr) match {
       case Some(dtp) =>
-        val eventMsg = DtEventMsg(ev, dtp)
+        val eventMsg = DtEventMsg(ev, StateChangeEventType(), dtp)
         state.webhooks.values
-          .filter(_.eventType == ev)
+          .filter(_.eventType == evt)
           // todo: add a filter for dtpath prefix
           .foreach(wh => {
             logger.debug(s"invoking webhook ${wh.name} for $ev event")

@@ -5,9 +5,9 @@ import akka.persistence.PersistentActor
 import akka.persistence.jdbc.query.scaladsl.JdbcReadJournal
 import akka.persistence.query.{EventEnvelope, PersistenceQuery}
 import akka.stream.scaladsl.{Sink, Source}
-import dtlaboratory.dtlab.models.{DtStateHolder, StateChange}
-import dtlaboratory.dtlab.observe.Observer
 import dtlaboratory.dtlab.Conf._
+import dtlaboratory.dtlab.models.DtStateHolder
+import dtlaboratory.dtlab.observe.Observer
 
 import scala.concurrent.Future
 
@@ -49,7 +49,6 @@ abstract class DtPersistentActorBase[T, J]
       saveSnapshot(DtStateHolder[T](state, children, operators))
       Observer("actor_saved_state_snapshot")
     }
-    webhooks ! StateChange()
   }
 
 }

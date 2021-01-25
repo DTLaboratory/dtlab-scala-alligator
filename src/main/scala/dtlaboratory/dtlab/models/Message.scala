@@ -121,11 +121,16 @@ final case class DtWebHookTarget(
     clientCertificate: Option[String]
 )
 
+sealed trait DtEventType
+final case class CreationEventType() extends DtEventType
+final case class StateChangeEventType() extends DtEventType
+
 sealed trait DtEvent
 final case class Creation() extends DtEvent
-final case class StateChange() extends DtEvent
+final case class StateChange(newState: List[Telemetry]) extends DtEvent
 
 final case class DtEventMsg(event: DtEvent,
+                            eventType: DtEventType,
                             source: DtPath,
                             created: ZonedDateTime = ZonedDateTime.now())
 
@@ -134,7 +139,7 @@ final case class DtWebHook(
     target: DtWebHookTarget,
     dtPrefix: Option[DtPath],
     dtType: DtTypeName,
-    eventType: DtEvent,
+    eventType: DtEventType,
     created: Option[ZonedDateTime] = Some(ZonedDateTime.now())
 )
 

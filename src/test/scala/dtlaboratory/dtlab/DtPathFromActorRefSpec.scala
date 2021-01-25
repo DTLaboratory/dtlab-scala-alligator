@@ -60,7 +60,7 @@ class DtPathFromActorRefSpec extends AnyFlatSpec with should.Matchers with JsonS
     myDtPath should be ('defined)
     myDtPath.get.toString should be ("/mytype/myinstance")
 
-    val myEvent = DtEventMsg(Creation(), myDtPath.get)
+    val myEvent = DtEventMsg(Creation(), CreationEventType(), myDtPath.get)
     import spray.json._
     println(myEvent.toJson)
 

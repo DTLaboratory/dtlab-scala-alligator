@@ -4,6 +4,8 @@ Content-Type: application/json; charset=utf-8
 --
 
 --
+GET /dtlab-alligator/type/machinery
+--
 DELETE /dtlab-alligator/type/machinery
 --
 POST /dtlab-alligator/type/machinery
@@ -17,6 +19,14 @@ POST /dtlab-alligator/type/machinery
     "hours_online",
     "minutes_online",
     "height_first_seen"
+  ]
+}
+
+--
+POST /dtlab-alligator/type/wh_monitor
+{
+  "props": [
+    "count"
   ]
 }
 
@@ -137,40 +147,44 @@ POST /dtlab-alligator/actor/machinery/one?format=pathed
 }
 
 --
-POST /dtlab-alligator/actor/machinery/three3?format=named
+POST /dtlab-alligator/actor/machinery/three?format=named
 {
   "name": "height",
-  "value": 877.6
+  "value": 877.7
 }
 
 --
 # WEBHOOK
-GET /dtlab-alligator/webhook/fleetmgr-ss
+GET /dtlab-alligator/actor/wh_monitor/statechange
+
 --
-DELETE /dtlab-alligator/webhook/fleetmgr-ss
+# WEBHOOK
+GET /dtlab-alligator/webhook/fleetmgrss
 --
-POST /dtlab-alligator/webhook/fleetmgr-ss
+DELETE /dtlab-alligator/webhook/fleetmgrss
+--
+POST /dtlab-alligator/webhook/fleetmgrss
 {
   "target": {
     "host": "localhost",
     "port": 8082,
-    "path": "/dtlab-alligator/ingest/telemetry/fleetmgr-ss",
+    "path": "/dtlab-alligator/ingest/telemetry/fleetmgrss",
     "tls": false
   },
   "dtType": "*",
   "eventType": "StateChange"
 }
 --
-GET /dtlab-alligator/webhook/fleetmgr-cr
+GET /dtlab-alligator/webhook/fleetmgrcr
 --
-DELETE /dtlab-alligator/webhook/fleetmgr-cr
+DELETE /dtlab-alligator/webhook/fleetmgrcr
 --
-POST /dtlab-alligator/webhook/fleetmgr-cr
+POST /dtlab-alligator/webhook/fleetmgrcr
 {
   "target": {
     "host": "localhost",
     "port": 8082,
-    "path": "/dtlab-alligator/ingest/telemetry/fleetmgr-cr",
+    "path": "/dtlab-alligator/ingest/telemetry/fleetmgrcr",
     "tls": false
   },
   "dtType": "*",

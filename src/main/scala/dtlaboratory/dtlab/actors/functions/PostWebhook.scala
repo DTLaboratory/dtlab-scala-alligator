@@ -28,7 +28,16 @@ object PostWebhook extends JsonSupport with HttpSupport {
       )
     logger.debug(s"posting webhook ${webhook.name} to " + newUri)
 
-    http.singleRequest(newUri).map(_.status)
+    http
+      .singleRequest(newUri)
+      .map(r => {
+        if (r.status == StatusCodes.NotFound)
+          logger.warn(
+            s"could not post webhook. remote service ${newUri.uri} reports path not found")
+        else if (r.status.isFailure())
+          logger.warn(s"could not post webhook. $r")
+        r.status
+      })
   }
 
 }
