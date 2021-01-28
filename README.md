@@ -10,26 +10,6 @@ The DtLab is a distributed programmable actor runtime environment.
   * for IOT and non-IOT applications (neural nets, etc...)
   * programmable via API (cURL)
 
-# Repo Organization and Coding Guidelines
-
-Each repository name has the service name, the computer language
-implementation, and the release name.  The initial release names are
-[animals](https://gist.github.com/navicore/b578e4c6e15d125b1a04ec522e295acf) in
-alphabetic order (open to better names).  The idea is that a newer incompatible
-approach to the service implementation can fork off without the overhead of
-a git fork.
-*See Hickey on semantic versioning "If it is not backward compatible, rename it."*
-
-```
-<projectName>-<langName>-<versionName>
-
-eg: dtlab-scala-alligator
-```
-
-The build system is (will be) opinionated lint-enabled, `scalafmt` with code stats reports.
-
-API is understood best by reading the tests in `src/scala/test`.
-
 # RUNTIME
 
   * Akka typed actors
@@ -161,3 +141,24 @@ or
 npm i -g redoc-cli
 redoc-cli serve ./ reference/dtlab-alligator.v1.yaml
 ```
+
+# Repo Organization and Coding Guidelines
+
+Each repository name has the service name, the computer language
+implementation, and the release name.  The initial release names are
+[animals](https://gist.github.com/navicore/b578e4c6e15d125b1a04ec522e295acf) in
+alphabetic order (open to better names).  The idea is that a newer incompatible
+approach to the service implementation can fork off without the overhead of
+a git fork.
+*See Hickey on semantic versioning "If it is not backward compatible, rename it."*
+
+```
+<projectName>-<langName>-<versionName>
+
+eg: dtlab-scala-alligator
+```
+
+The build system is (will be) opinionated lint-enabled, `scalafmt` with code stats reports.
+
+API is understood best by reading the tests in `src/scala/test`.
+
