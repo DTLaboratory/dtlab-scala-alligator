@@ -8,6 +8,11 @@ import dtlaboratory.dtlab.models._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
+/**
+ * helper functions that know if a child being updated needs to be created
+ *
+ * this code also maintains the persisted child list
+ */
 trait DtActorBase extends Actor with LazyLogging with JsonSupport {
 
   var children: DtChildren = DtChildren()

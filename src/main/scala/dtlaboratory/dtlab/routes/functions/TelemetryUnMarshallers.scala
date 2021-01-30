@@ -7,6 +7,9 @@ import dtlaboratory.dtlab.Conf._
 
 import scala.concurrent.Future
 
+/**
+ * some ugliness to allow the APIs to use verbose type field names instead of indexes of fields
+ */
 object TelemetryUnMarshallers extends JsonSupport with LazyLogging {
 
   type UnMarshaller =

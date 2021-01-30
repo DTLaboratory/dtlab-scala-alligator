@@ -10,6 +10,9 @@ import dtlaboratory.dtlab.models._
 import dtlaboratory.dtlab.observe.Observer
 import spray.json._
 
+/**
+ * Maintain per-DT operators here.  Operator specs are stored in the DTs themselves.
+ */
 trait OperatorApiTrait extends Directives with JsonSupport with LazyLogging {
 
   private def applyGet(dtp: DtPath): Route = {

@@ -6,6 +6,10 @@ import dtlaboratory.dtlab.models.{DtState, Operator, Telemetry}
 
 import scala.concurrent.duration.TimeUnit
 
+/**
+ * simple operators are non-blocking stateless functions that only need
+ * new telemetry, old state, and static parameters to do their work
+ */
 trait DtOperatorSimpleImpl extends DtOperatorImpl with LazyLogging {
 
   /**

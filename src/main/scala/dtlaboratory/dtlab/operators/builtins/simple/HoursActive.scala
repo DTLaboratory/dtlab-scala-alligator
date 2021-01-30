@@ -12,7 +12,14 @@ import scala.concurrent.duration.HOURS
  */
 object HoursActive extends DtOperatorSimpleImpl with LazyLogging {
 
-
+  /**
+   *
+   * @param telemetry triggers the invocation
+   * @param dtState prev state before all operators act on this telemetry
+   * @param op the op needs to specify input even though it does not process
+   *           it - the input is just the trigger for invocation
+   * @return
+   */
   override def applyImplementation(telemetry: Telemetry,
                                    dtState: DtState,
                                    op: Operator): List[Telemetry] = {

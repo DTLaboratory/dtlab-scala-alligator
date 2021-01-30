@@ -5,8 +5,7 @@ import dtlaboratory.dtlab.models.{DtState, Operator, Telemetry}
 import dtlaboratory.dtlab.operators.DtOperatorSimpleImpl
 
 /**
- * input is a particular state field - monitor any telemetry for that slot
- * output incremented forever - so real input is both the t val and the output val
+ * keep track of the min value ever seen and store it in a dedicated field
  */
 object Min extends DtOperatorSimpleImpl with LazyLogging {
 

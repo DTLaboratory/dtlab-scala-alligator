@@ -11,6 +11,17 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
+/**
+ * an actor that reposts events from the DTs to interested remote
+ * systems via webhook.
+ *
+ * all DTs send dtevents to this actor
+ *
+ * maintains webhook specs.  this is currently a naive singleton.
+ * TODO: allow per-node sharding.
+ * no reason this can't be aligned as a per-JVM publisher with each
+ * sharing the master store of webhooks.
+ */
 class DtWebhooks extends DtPersistentActorBase[DtWebhookMap, DtWebHook] {
 
   override var state: DtWebhookMap = DtWebhookMap(webhooks = Map())

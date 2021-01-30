@@ -10,6 +10,9 @@ import dtlaboratory.dtlab.observe.Observer
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
+/**
+ * global conf - get actor system and singleton refs here
+ */
 object Conf extends LazyLogging {
 
   implicit val system: ActorSystem = ActorSystem("DtLab-system")

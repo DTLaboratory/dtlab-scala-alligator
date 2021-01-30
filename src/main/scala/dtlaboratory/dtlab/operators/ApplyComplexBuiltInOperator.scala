@@ -5,6 +5,8 @@ import dtlaboratory.dtlab.models.{DtState, Operator, Telemetry}
 
 /**
  * these built-ins should run before any complex operators that might want some of this info
+ *
+ * complex operators rely on a dependency graph mechanism still to be designed
  */
 object ApplyComplexBuiltInOperator extends DtOperatorImpl with LazyLogging {
 
