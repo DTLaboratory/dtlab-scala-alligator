@@ -11,6 +11,11 @@ object DtDirectory extends LazyLogging {
   def name: String = this.getClass.getName
 }
 
+/**
+ * the entrypoint on each node for the root actor.
+ *
+ * TODO: shard !!
+ */
 class DtDirectory extends DtPersistentActorBase[DtTypeMap, DtType] {
 
   override var state: DtTypeMap = DtTypeMap(types = Map())
