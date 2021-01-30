@@ -9,6 +9,11 @@ import dtlaboratory.dtlab.models._
 import dtlaboratory.dtlab.observe.Observer
 import spray.json._
 
+/**
+ * get child names from intermediate "type" child actors.  ie, if a DT has
+ * children of type 'device' then it has a single child named 'device' holding all
+ * the device DTs.  use this API to ask that device actor to list 'device' DTs it has by ID.
+ */
 trait GetChildNamesTrait extends Directives with JsonSupport with LazyLogging {
 
   def applyChildrenFmt(dtp: DtPath): Route = {

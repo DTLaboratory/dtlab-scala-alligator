@@ -10,6 +10,9 @@ import dtlaboratory.dtlab.models._
 import dtlaboratory.dtlab.observe.Observer
 import spray.json._
 
+/**
+ * manage webhooks here - apply them globally by eventtype  or specify scope by dt path
+ */
 object WebhookApiRoute
     extends JsonSupport
     with LazyLogging

@@ -10,6 +10,9 @@ import dtlaboratory.dtlab.Conf._
 import TelemetryMarshallers._
 import dtlaboratory.dtlab.observe.Observer
 
+/**
+ * query the event sourced persistence with this API with offset/limit bookmarking
+ */
 trait GetJrnlTrait extends Directives with JsonSupport with LazyLogging {
 
   private def jrnl(dtp: DtPath,

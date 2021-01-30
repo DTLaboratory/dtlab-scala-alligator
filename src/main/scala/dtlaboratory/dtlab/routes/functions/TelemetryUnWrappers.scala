@@ -9,6 +9,9 @@ import dtlaboratory.dtlab.Conf._
 import TelemetryUnMarshallers._
 import dtlaboratory.dtlab.observe.Observer
 
+/**
+ * some ugliness to allow the APIs to use verbose type field names instead of indexes of fields
+ */
 object TelemetryUnWrappers
     extends JsonSupport
     with Directives

@@ -11,6 +11,9 @@ import dtlaboratory.dtlab.observe.Observer
 import dtlaboratory.dtlab.routes.functions.TelemetryMarshallers._
 import dtlaboratory.dtlab.routes.functions.TelemetryUnWrappers._
 
+/**
+ * some ugliness to allow the APIs to use verbose type field names instead of indexes of fields
+ */
 trait StateApiTrait extends Directives with JsonSupport with LazyLogging {
 
   private type UnWrapper = DtPath => Route

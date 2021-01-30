@@ -15,15 +15,20 @@ object DtActor extends LazyLogging {
   def name: String = this.getClass.getName
 }
 
+/**
+ * this is the main DT code.  this code creates the actor that
+ * implements all DTs.  it maintains the DT state and schedules
+ * all operators and publishes dtevents to support webhook
+ * integration
+ */
 class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
 
   override var state: DtState = DtState()
 
-  /*  temp state so that each operator can see old state
-   *  and only apply all changes once at end
-   */
   private def applyOperators(t: Telemetry): Unit = {
 
+    // temp state so that each operator can see old state
+    // and only apply all changes once at end
     var newState = state
 
     def applyOperatorResult(t: Telemetry): Unit =
@@ -40,6 +45,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
         applyOperatorResult(r))
     })
 
+    // apply operator output all at once
     state = newState
 
   }
@@ -59,7 +65,7 @@ class DtActor extends DtPersistentActorBase[DtState, Telemetry] {
           // it might seem like a waste to check for state change here instead of before
           // persist but the event sourcing idea is to jrnl all input, not to process the
           // data in the jrnl - if rules change later about what constitutes a state change,
-          // this code will still work with old jrnls
+          // or a clone calculates state differently, this code will still work with old jrnls
           if (!oldState.equals(state.state.values.map(_.value))) {
             logger.debug(s"state change")
             webhooks ! StateChange(state.state.values.toList)

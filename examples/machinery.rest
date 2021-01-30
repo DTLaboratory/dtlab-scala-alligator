@@ -97,6 +97,8 @@ POST /dtlab-alligator/actor/machinery/three/operator
 }
 
 --
+DELETE /dtlab-alligator/actor/machinery/three/operator
+--
 POST /dtlab-alligator/actor/machinery/three/operator
 {
   "name": "minutes_online",
@@ -105,6 +107,8 @@ POST /dtlab-alligator/actor/machinery/three/operator
   "output": [6, 7]
 }
 
+--
+GET /dtlab-alligator/actor/machinery/three?format=named
 --
 GET /dtlab-alligator/actor/machinery/three?limit=10
 
@@ -129,7 +133,7 @@ GET /dtlab-alligator/actor/machinery/three
 POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 0,
-  "value": 123.45
+  "value": 123.46
 }
 
 --

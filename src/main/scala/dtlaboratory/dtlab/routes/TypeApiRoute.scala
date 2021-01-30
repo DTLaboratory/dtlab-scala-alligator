@@ -10,6 +10,9 @@ import dtlaboratory.dtlab.observe.Observer
 import dtlaboratory.dtlab.Conf._
 import spray.json._
 
+/**
+ * manage types here
+ */
 object TypeApiRoute
     extends JsonSupport
     with LazyLogging

@@ -10,6 +10,14 @@ import dtlaboratory.dtlab.operators.DtOperatorSimpleImpl
  */
 object Count extends DtOperatorSimpleImpl with LazyLogging {
 
+  /**
+   *
+   * @param telemetry current observation
+   * @param dtState state before
+   * @param op specify triggering input and single field by idx to
+   *           store the count
+   * @return new state to be applied after all other operators run
+   */
   override def applyImplementation(telemetry: Telemetry,
                                    dtState: DtState,
                                    op: Operator): List[Telemetry] = {
