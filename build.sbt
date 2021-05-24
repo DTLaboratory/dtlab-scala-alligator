@@ -26,7 +26,7 @@ libraryDependencies ++=
     "io.altoo" %% "akka-kryo-serialization" % "2.2.0",
     "tech.navicore" %% "navipath" % "4.0.2",
     "org.postgresql" % "postgresql" % "42.2.20",
-    "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.0",
+    "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.1",
     "ch.megard" %% "akka-http-cors" % "1.1.1",
     "ch.qos.logback" % "logback-classic" % "1.2.3",
     "com.typesafe" % "config" % "1.4.1",
