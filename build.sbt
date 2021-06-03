@@ -14,23 +14,23 @@ version := "0.1.0"
 
 parallelExecution in test := false
 
-crossScalaVersions := List("2.13.5")
+crossScalaVersions := List("2.13.6")
 version := "1.0"
 
 val akkaHttpVersion = "10.2.4"
-val akkaVersion = "2.6.13"
+val akkaVersion = "2.6.14"
 val swaggerVersion = "2.0.8"
 
 libraryDependencies ++=
   Seq(
-    "io.altoo" %% "akka-kryo-serialization" % "2.1.0",
+    "io.altoo" %% "akka-kryo-serialization" % "2.2.0",
     "tech.navicore" %% "navipath" % "4.0.2",
-    "org.postgresql" % "postgresql" % "42.2.19",
-    "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.0",
+    "org.postgresql" % "postgresql" % "42.2.20",
+    "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.1",
     "ch.megard" %% "akka-http-cors" % "1.1.1",
     "ch.qos.logback" % "logback-classic" % "1.2.3",
     "com.typesafe" % "config" % "1.4.1",
-    "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+    "com.typesafe.scala-logging" %% "scala-logging" % "3.9.3",
     "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
     "com.typesafe.akka" %% "akka-protobuf" % akkaVersion,
     "com.typesafe.akka" %% "akka-persistence" % akkaVersion,
@@ -39,9 +39,9 @@ libraryDependencies ++=
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
     "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
-    "org.json4s" %% "json4s-native" % "3.6.11",
-    "com.github.nscala-time" %% "nscala-time" % "2.26.0",
-    "org.scalatest" %% "scalatest" % "3.2.6" % "test"
+    "org.json4s" %% "json4s-native" % "4.0.0",
+    "org.scalatest" %% "scalatest" % "3.2.9" % "test",
+    "com.github.nscala-time" %% "nscala-time" % "2.28.0"
   )
 
 assemblyJarName in assembly := s"${name.value}.jar"
