@@ -1,4 +1,6 @@
+.scalafmt.conf
 *.log
+project/metals.sbt
 .bsp/
 ENV*sh
 examples/*token*
