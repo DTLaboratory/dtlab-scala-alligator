@@ -28,7 +28,7 @@ libraryDependencies ++=
     "org.postgresql" % "postgresql" % "42.2.23",
     "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.1",
     "ch.megard" %% "akka-http-cors" % "1.1.1",
-    "ch.qos.logback" % "logback-classic" % "1.2.4",
+    "ch.qos.logback" % "logback-classic" % "1.2.5",
     "com.typesafe" % "config" % "1.4.1",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
     "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
