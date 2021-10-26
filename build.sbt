@@ -1,12 +1,13 @@
 name := "DtLab"
 organization := "com.dtlaboratory"
-javacOptions ++= Seq("-source", "1.11", "-target", "1.11") 
+javacOptions ++= Seq("-source", "1.11", "-target", "1.11")
 scalacOptions ++= Seq(
   "-target:jvm-1.8"
 )
 fork := true
 javaOptions in test ++= Seq(
-  "-Xms128M", "-Xmx256M",
+  "-Xms128M",
+  "-Xmx256M",
   "-XX:+CMSClassUnloadingEnabled"
 )
 
@@ -24,12 +25,13 @@ val swaggerVersion = "2.0.8"
 libraryDependencies ++=
   Seq(
     "io.altoo" %% "akka-kryo-serialization" % "2.2.0",
-    "tech.navicore" %% "navipath" % "4.0.2",
+    "tech.navicore" %% "navipath" % "4.1.0",
     "org.postgresql" % "postgresql" % "42.3.0",
     "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.4",
     "ch.megard" %% "akka-http-cors" % "1.1.2",
     "ch.qos.logback" % "logback-classic" % "1.2.6",
     "com.typesafe" % "config" % "1.4.1",
+    "com.typesafe" %% "ssl-config-core" % "0.6.0",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
     "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
     "com.typesafe.akka" %% "akka-protobuf" % akkaVersion,
@@ -47,9 +49,8 @@ libraryDependencies ++=
 assemblyJarName in assembly := s"${name.value}.jar"
 
 assemblyMergeStrategy in assembly := {
-  case PathList("reference.conf") => MergeStrategy.concat
+  case PathList("reference.conf")                      => MergeStrategy.concat
   case x if x.endsWith("io.netty.versions.properties") => MergeStrategy.first
-  case PathList("META-INF", _ @ _*) => MergeStrategy.discard
-  case _ => MergeStrategy.first
+  case PathList("META-INF", _ @_*)                     => MergeStrategy.discard
+  case _                                               => MergeStrategy.first
 }
-
