@@ -8,6 +8,6 @@ COPY target/scala-2.12/*.jar /app/
 
 WORKDIR /app
 
-CMD java -jar ./DtLab.jar
 # override CMD from your orchestrator with appropriate jvm args, -Xms1024m -Xmx15360m etc...
+CMD java -Dlog4j2.formatMsgNoLookups=true -Xms256m -Xmx512m -jar ./DtLab.jar
 
