@@ -19,7 +19,7 @@ crossScalaVersions := List("2.13.7")
 version := "1.0"
 
 val akkaHttpVersion = "10.2.7"
-val akkaVersion = "2.6.17"
+val akkaVersion = "2.6.18"
 val swaggerVersion = "2.0.8"
 
 libraryDependencies ++=
