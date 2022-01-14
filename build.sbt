@@ -15,7 +15,7 @@ version := "0.1.0"
 
 parallelExecution in test := false
 
-crossScalaVersions := List("2.13.7")
+crossScalaVersions := List("2.13.8")
 version := "1.0"
 
 val akkaHttpVersion = "10.2.7"
