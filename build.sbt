@@ -30,7 +30,7 @@ libraryDependencies ++=
     "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.0.4",
     "ch.megard" %% "akka-http-cors" % "1.1.3",
     "ch.qos.logback" % "logback-classic" % "1.2.10",
-    "com.typesafe" % "config" % "1.4.1",
+    "com.typesafe" % "config" % "1.4.2",
     "com.typesafe" %% "ssl-config-core" % "0.6.0",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
     "com.typesafe.akka" %% "akka-persistence-query" % akkaVersion,
