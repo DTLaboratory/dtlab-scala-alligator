@@ -12,7 +12,7 @@ The DtLab is a distributed programmable actor runtime environment.
 
 # RUNTIME
 
-  * Akka typed actors
+  * Akka actors
   * Event-sourcing persistence
     * snapshotting meta (prop names) and current state
     * journaling of input - only tuples of (key: Int, value: double), one at a time
