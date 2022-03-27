@@ -22,9 +22,39 @@ object TelemetryMarshallers extends JsonSupport with LazyLogging {
   type Marshaller = (Seq[Telemetry], DtTypeName, DtPath) => Future[Option[String]]
 
   private def fmt(s: Seq[Telemetry],
+                   t: DtTypeName,
+                   dtp: DtPath,
+                   dottedName: Boolean = false): Future[Option[Seq[NamedTelemetry]]] = {
+    val f = dtDirectory ask t
+    f.map {
+      case Some(dt: DtType) =>
+        val names: List[String] = dt.props.getOrElse(Set()).toList
+        Some(
+          s
+            .map(telem => {
+              val nameIdx = telem.idx
+              val origTelem = telem
+              val lookedUpName: String = {
+                nameIdx match {
+                  case idx if idx >= names.length =>
+                    "unknown"
+                  case idx if dottedName =>
+                    s"$dtp/${names(idx)}".replace('/', '.').substring(11)
+                  case idx =>
+                    names(idx)
+                }
+              }
+              NamedTelemetry(lookedUpName, origTelem.value, origTelem.datetime)
+            }))
+      case _ => None
+    }
+  }
+
+  private def nfmt(s: Seq[Telemetry],
                   t: DtTypeName,
                   dtp: DtPath,
                   dottedName: Boolean = false): Future[Option[String]] = {
+    /*
     val f = dtDirectory ask t
     f.map {
       case Some(dt: DtType) =>
@@ -50,13 +80,36 @@ object TelemetryMarshallers extends JsonSupport with LazyLogging {
             .prettyPrint)
       case _ => None
     }
+     */
+    fmt(s, t, dtp, dottedName).map {
+      case Some(s: Seq[NamedTelemetry]) => Some(s.toJson.prettyPrint)
+      case _ => None
+    }
   }
 
+  private def ofmt(s: Seq[Telemetry],
+                  t: DtTypeName,
+                  dtp: DtPath,
+                  dottedName: Boolean = false): Future[Option[String]] = {
+
+    fmt(s, t, dtp, dottedName).map((r: Option[Seq[NamedTelemetry]]) => {
+
+      r.map((q: Seq[NamedTelemetry]) => {
+        q.map(i => i.name -> i.value).toMap
+        //q.map(i => i.name -> Seq(("value" -> i.value, "datetime" -> i.datetime)).toMap).toMap
+      }.toJson.prettyPrint)
+
+    })
+  }
+
+  def objFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =
+    ofmt(s, t, dtp)
+
   def namedFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =
-    fmt(s, t, dtp)
+    nfmt(s, t, dtp)
 
   def pathedFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =
-    fmt(s, t, dtp, dottedName = true)
+    nfmt(s, t, dtp, dottedName = true)
 
   //noinspection ScalaUnusedSymbol
   def indexedFmt(s: Seq[Telemetry], t: DtTypeName, dtp: DtPath): Future[Option[String]] =

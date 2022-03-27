@@ -36,19 +36,19 @@ object TelemetryUnWrappers
 
   def NamedUnWrapper(dtp: DtPath): Route = {
     entity(as[NamedTelemetry]) { ltelem =>
-      {
-        val ntelem = ltelem.copy(datetime = Some(java.time.ZonedDateTime.now()))
-        onSuccess(NamedUnMarshaller(Some(ntelem), dtp)) {
-          case Some(telemetry: Telemetry) =>
-            applyTelemetryMsg(dtp, telemetry)
-          case _ =>
-            logger.warn(s"can not unmarshall telemetry")
-            complete(
-              StatusCodes.BadRequest,
-              s"Can not validate - please check that type definition '${dtp
-                .endTypeName()}' exists and supports property '${ntelem.name}'.")
-        }
+    {
+      val ntelem = ltelem.copy(datetime = Some(java.time.ZonedDateTime.now()))
+      onSuccess(NamedUnMarshaller(Some(ntelem), dtp)) {
+        case Some(telemetry: Telemetry) =>
+          applyTelemetryMsg(dtp, telemetry)
+        case _ =>
+          logger.warn(s"can not unmarshall telemetry")
+          complete(
+            StatusCodes.BadRequest,
+            s"Can not validate - please check that type definition '${dtp
+              .endTypeName()}' exists and supports property '${ntelem.name}'.")
       }
+    }
     }
   }
 
