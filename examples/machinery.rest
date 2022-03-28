@@ -1,4 +1,7 @@
 http://localhost:8081
+#https://sandbox.dtlaboratory.com
+
+#Authorization: Bearer haha
 
 Content-Type: application/json; charset=utf-8
 --
@@ -44,6 +47,11 @@ GET /dtlab-alligator/actor/machinery/two
 GET /dtlab-alligator/actor/machinery/three
 --
 GET /dtlab-alligator/actor/machinery/three?format=named
+
+--
+GET /dtlab-alligator/actor/machinery/
+--
+GET /dtlab-alligator/actor/machinery/three?format=object
 
 --
 DELETE /dtlab-alligator/actor/machinery/three/operator
@@ -128,12 +136,16 @@ GET /dtlab-alligator/actor/machinery/three?format=named
 GET /dtlab-alligator/actor/machinery/three?format=pathed
 
 --
+GET /dtlab-alligator/actor/machinery
+--
+GET /dtlab-alligator/actor/machinery/
+--
 GET /dtlab-alligator/actor/machinery/three
 --
 POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 0,
-  "value": 123.46
+  "value": 123.4699
 }
 
 --
