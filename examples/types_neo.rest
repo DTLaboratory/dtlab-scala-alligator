@@ -1,0 +1,33 @@
+http://localhost:8081
+
+Content-Type: application/json; charset=utf-8
+
+--
+
+--
+GET /dtlab-alligator/type/orbiting_body
+
+--
+GET /dtlab-alligator/type/object
+
+--
+DELETE /dtlab-alligator/type/object
+
+--
+POST /dtlab-alligator/type/object
+{
+  "props": ["absolute_magnitude", "diameter_min", "diameter_max", "miles_per_hour", "distance_in_miles"]
+}
+
+--
+POST /dtlab-alligator/type/orbiting_body
+{
+  "children": ["object"]
+}
+
+--
+GET /fitness
+
+--
+GET /observe
+
