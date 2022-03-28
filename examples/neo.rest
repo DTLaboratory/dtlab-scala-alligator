@@ -1,0 +1,48 @@
+http://localhost:8081
+
+Content-Type: application/json; charset=utf-8
+--
+
+--
+DELETE /dtlab-alligator/actor/orbiting_body/earth
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth
+--
+GET /dtlab-alligator/actor/orbiting_body
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865/operator
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865?format=named
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3799865?format=pathed
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3827337
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/haha
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/2440012
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object/3726710
+
+--
+GET /dtlab-alligator/actor/orbiting_body
+
+--
+GET /dtlab-alligator/actor/orbiting_body/earth/object
+
+--
+GET /fitness
+
+--
+GET /observe
+

@@ -75,18 +75,31 @@ object TelemetryMarshallers extends JsonSupport with LazyLogging {
 
     fmt(s, t, dtp, dottedName).map((r: Option[Seq[NamedTelemetry]]) => {
 
+      //tmi
+      //val fullpathval = dtp.toString.replace('/', '.').substring(11).toJson
+
+      val dtval = s
+        .maxBy(x => { x.datetime.map(_.toString).getOrElse("") })
+        .datetime
+        .toJson
+
       val data: Option[JsValue] = r.map((q: Seq[NamedTelemetry]) =>
         q.map(i => i.name -> i.value).toMap.toJson
       )
 
       data match {
         case Some(dval: JsValue) =>
-          val nval = dtp.instanceId.toString.toJson
+          val nval = dtp.trail
+            .map(_.instanceId)
+            .getOrElse(new DtInstanceName("unknown"))
+            .toJson
           val tval = dtp.endTypeName().toString.toJson
           Some(
             Seq(
               "instanceId" -> nval,
               "dtType" -> tval,
+              //"path" -> fullpathval,
+              "datetime" -> dtval,
               "state" -> dval
             ).toMap.toJson.prettyPrint
           )
