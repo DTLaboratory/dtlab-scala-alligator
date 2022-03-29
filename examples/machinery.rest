@@ -146,7 +146,7 @@ GET /dtlab-alligator/actor/machinery/three
 POST /dtlab-alligator/actor/machinery/three
 {
   "idx": 1,
-  "value": 23.5
+  "value": 23.6
 }
 
 --

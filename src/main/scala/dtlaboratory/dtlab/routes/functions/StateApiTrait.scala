@@ -80,7 +80,7 @@ trait StateApiTrait extends Directives with JsonSupport with LazyLogging {
             applyStateApiFmt(segs, namedFmt, NamedUnWrapper)
           case Some("object") =>
             Observer("actor_route_telemetry_object")
-            applyStateApiFmt(segs, objFmt, NamedUnWrapper) // TODO: make for obj or make it unsupported
+            applyStateApiFmt(segs, objFmt, NamedUnWrapper) // TODO: make for object
           case _ =>
             Observer("actor_route_telemetry_idx")
             applyStateApiFmt(segs, indexedFmt, IdxUnWrapper)
