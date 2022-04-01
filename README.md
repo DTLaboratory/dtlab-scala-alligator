@@ -27,7 +27,6 @@ The DtLab is a distributed programmable actor runtime environment.
 ```
 TYPE OPERATOR ACTOR LINK
 ```
-*NOTE, only the TYPE API and the ACTOR API will probably be coded in Alligator*
 
 This is the kernel of the DTLab.
 
