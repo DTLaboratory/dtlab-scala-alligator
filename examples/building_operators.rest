@@ -1,0 +1,17 @@
+http://localhost:8081
+#https://sandbox.dtlaboratory.com
+
+#Authorization: Bearer haha
+
+Content-Type: application/json; charset=utf-8
+--
+
+--
+GET /dtlab-alligator/type/building
+
+--
+GET /fitness
+
+--
+GET /observe
+

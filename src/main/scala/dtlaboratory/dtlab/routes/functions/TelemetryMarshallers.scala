@@ -103,12 +103,19 @@ object TelemetryMarshallers extends JsonSupport with LazyLogging {
               Seq()
           }
 
+          val stateSeq = s match {
+            case _ if s.nonEmpty =>
+              Seq("state" -> dval)
+            case _ =>
+              Seq()
+          }
+
           Some(
             (dtSeq ++
+            stateSeq ++
             Seq(
               "instanceId" -> nval,
-              "dtType" -> tval,
-              "state" -> dval
+              "dtType" -> tval
             )).toMap.toJson.prettyPrint
           )
         case _ =>
