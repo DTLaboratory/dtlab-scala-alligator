@@ -6,6 +6,7 @@ import dtlaboratory.dtlab.Conf._
 import dtlaboratory.dtlab.models._
 import spray.json._
 
+import scala.annotation.tailrec
 import scala.concurrent.Future
 
 /** Enable working with telemetry with meaningful names instead of the index values from
@@ -75,29 +76,40 @@ object TelemetryMarshallers extends JsonSupport with LazyLogging {
 
     fmt(s, t, dtp, dottedName).map((r: Option[Seq[NamedTelemetry]]) => {
 
-      val dtval = s
-        .maxBy(x => { x.datetime.map(_.toString).getOrElse("") })
-        .datetime
-        .toJson
-
       val data: Option[JsValue] = r.map((q: Seq[NamedTelemetry]) =>
         q.map(i => i.name -> i.value).toMap.toJson
       )
 
+      @tailrec
+      def trailInstanceId(dtp: DtPath): DtInstanceName = {
+        dtp.trail match {
+          case Some(t: DtPath) =>
+            trailInstanceId(t)
+          case None =>
+            dtp.instanceId
+        }
+      }
+
       data match {
         case Some(dval: JsValue) =>
-          val nval = dtp.trail
-            .map(_.instanceId)
-            .getOrElse(new DtInstanceName("unknown"))
-            .toJson
-          val tval = dtp.endTypeName().toString.toJson
+          val nval: JsValue = trailInstanceId(dtp).toJson
+          val tval: JsValue = dtp.endTypeName().toString.toJson
+
+          val dtSeq = s match {
+            case _ if s.nonEmpty =>
+              val dtval = s.maxBy(x => { x.datetime.map(_.toString).getOrElse("") }).datetime.toJson
+              Seq("datetime" -> dtval)
+            case _ =>
+              Seq()
+          }
+
           Some(
+            (dtSeq ++
             Seq(
               "instanceId" -> nval,
               "dtType" -> tval,
-              "datetime" -> dtval,
               "state" -> dval
-            ).toMap.toJson.prettyPrint
+            )).toMap.toJson.prettyPrint
           )
         case _ =>
           None

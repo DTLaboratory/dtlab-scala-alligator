@@ -16,7 +16,13 @@ DELETE /dtlab-alligator/type/object
 --
 POST /dtlab-alligator/type/object
 {
-  "props": ["absolute_magnitude", "diameter_min", "diameter_max", "miles_per_hour", "distance_in_miles"]
+  "props": [
+    "absolute_magnitude",
+    "diameter_min",
+    "diameter_max",
+    "miles_per_hour",
+    "distance_in_miles"
+  ]
 }
 
 --
