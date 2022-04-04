@@ -1,0 +1,43 @@
+http://localhost:8081
+#https://sandbox.dtlaboratory.com
+
+#Authorization: Bearer haha
+
+Content-Type: application/json; charset=utf-8
+--
+
+--
+GET /dtlab-alligator/actor/building/one/floor/
+--
+GET /dtlab-alligator/actor/building/one/floor/3/room/9?format=object
+--
+GET /dtlab-alligator/actor/building/one/floor/3/room/9/window/3?format=object
+--
+GET /dtlab-alligator/actor/building/one/floor/3/room/9/window/2?format=object
+--
+GET /dtlab-alligator/actor/building/one/floor/3/room/9/window/2
+--
+GET /dtlab-alligator/actor/building/one/floor/3/room/9/window/2?format=named
+--
+GET /dtlab-alligator/actor/building/one/floor/3/room/9/window/2?format=pathed
+--
+POST /dtlab-alligator/actor/building/one/floor/3/room/9/window/2?format=named
+{
+  "name": "unlocked",
+  "value": 1.0
+}
+--
+POST /dtlab-alligator/actor/building/one/floor/3/room/9/window/2?format=named
+{
+  "name": "open",
+  "value": 0.0
+}
+
+
+
+--
+GET /fitness
+
+--
+GET /observe
+

@@ -143,10 +143,13 @@ GET /dtlab-alligator/actor/machinery/
 --
 GET /dtlab-alligator/actor/machinery/three
 --
+GET /dtlab-alligator/actor/machinery/three?format=object
+
+--
 POST /dtlab-alligator/actor/machinery/three
 {
-  "idx": 1,
-  "value": 23.5
+  "idx": 0,
+  "value": 119.99
 }
 
 --

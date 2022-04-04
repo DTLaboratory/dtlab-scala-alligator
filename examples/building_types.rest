@@ -1,0 +1,91 @@
+http://localhost:8081
+#https://sandbox.dtlaboratory.com
+
+#Authorization: Bearer haha
+
+Content-Type: application/json; charset=utf-8
+--
+
+--
+GET /dtlab-alligator/type/building
+--
+POST /dtlab-alligator/type/building
+{
+  "props": [
+    "latitude", 
+    "longitude"
+  ],
+  "children": ["floor"]
+}
+--
+DELETE /dtlab-alligator/type/building
+
+--
+GET /dtlab-alligator/type/floor
+--
+POST /dtlab-alligator/type/floor
+{
+  "children": ["room", "stairs", "hallway"]
+}
+--
+DELETE /dtlab-alligator/type/floor
+
+--
+GET /dtlab-alligator/type/room
+--
+POST /dtlab-alligator/type/room
+{
+  "props": ["temperature", "humidity"],
+  "children": ["door", "window"]
+}
+--
+DELETE /dtlab-alligator/type/room
+
+--
+GET /dtlab-alligator/type/stairs
+--
+POST /dtlab-alligator/type/stairs
+{
+  "props": ["temperature", "humidity"],
+  "children": ["door", "window"]
+}
+--
+DELETE /dtlab-alligator/type/stairs
+
+--
+GET /dtlab-alligator/type/hallway
+--
+POST /dtlab-alligator/type/hallway
+{
+  "props": ["temperature", "humidity"],
+  "children": ["door", "window", "temperature", "humidity"]
+}
+--
+DELETE /dtlab-alligator/type/hallway
+
+--
+GET /dtlab-alligator/type/window
+--
+POST /dtlab-alligator/type/window
+{
+  "props": ["open", "unlocked"]
+}
+--
+DELETE /dtlab-alligator/type/window
+
+--
+GET /dtlab-alligator/type/door
+--
+POST /dtlab-alligator/type/door
+{
+  "props": ["open", "unlocked"]
+}
+--
+DELETE /dtlab-alligator/type/door
+
+--
+GET /fitness
+
+--
+GET /observe
+
