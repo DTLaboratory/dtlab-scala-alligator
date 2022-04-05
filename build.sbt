@@ -41,7 +41,7 @@ libraryDependencies ++=
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
     "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
-    "org.json4s" %% "json4s-native" % "4.0.4",
+    "org.json4s" %% "json4s-native" % "4.0.5",
     "org.scalatest" %% "scalatest" % "3.2.11" % "test",
     "com.github.nscala-time" %% "nscala-time" % "2.30.0"
   )
