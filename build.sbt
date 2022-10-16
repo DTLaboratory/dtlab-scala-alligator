@@ -29,7 +29,7 @@ libraryDependencies ++=
     "org.postgresql" % "postgresql" % "42.5.0",
     "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.1.0",
     "ch.megard" %% "akka-http-cors" % "1.1.3",
-    "ch.qos.logback" % "logback-classic" % "1.4.3",
+    "ch.qos.logback" % "logback-classic" % "1.4.4",
     "com.typesafe" % "config" % "1.4.2",
     "com.typesafe" %% "ssl-config-core" % "0.6.1",
     "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
