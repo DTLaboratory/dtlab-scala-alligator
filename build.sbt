@@ -24,7 +24,7 @@ val swaggerVersion = "2.0.8"
 
 libraryDependencies ++=
   Seq(
-    "io.altoo" %% "akka-kryo-serialization" % "2.5.1",
+    "io.altoo" %% "akka-kryo-serialization" % "2.5.2",
     "tech.navicore" %% "navipath" % "4.1.3",
     "org.postgresql" % "postgresql" % "42.6.0",
     "com.lightbend.akka" %% "akka-persistence-jdbc" % "5.2.1",
