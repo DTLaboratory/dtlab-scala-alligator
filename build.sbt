@@ -15,7 +15,7 @@ version := "0.1.0"
 
 parallelExecution in test := false
 
-scalaVersion := "2.13.12"
+scalaVersion := "2.13.13"
 version := "1.0"
 
 val akkaVersion = "2.7.0"
